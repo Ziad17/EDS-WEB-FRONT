@@ -3,6 +3,7 @@
 try {
     $conn = new PDO("sqlsrv:server = tcp:dms-kfs.database.windows.net,1433; Database = DMS_db", "ziadmohamd456", "01015790817aA");
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    print("sucess");
     
 }
 catch (PDOException $e) {
@@ -11,10 +12,10 @@ catch (PDOException $e) {
 }
 
 // SQL Server Extension Sample Code:
-$connectionInfo = array("UID" => "ziadmohamd456", "pwd" => "01015790817aA", "Database" => "DMS_db", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
-$serverName = "tcp:dms-kfs.database.windows.net,1433";
-$conn = sqlsrv_connect($serverName, $connectionInfo);
-if($conn)
-{echo 'connection successful';}
-else{echo 'no connection';}
+//$connectionInfo = array("UID" => "ziadmohamd456", "pwd" => "01015790817aA", "Database" => "DMS_db", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
+//$serverName = "tcp:dms-kfs.database.windows.net,1433";
+//$conn = sqlsrv_connect($serverName, $connectionInfo);
+//if($conn)
+//{echo 'connection successful';}
+//else{echo 'no connection';}
 ?>
