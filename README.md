@@ -1,4 +1,10 @@
 # EDS-WEB-FRONT&BACK
 
-
-<h2>text</h2>
+<div>
+<h2>
+  Project Dependencies 
+ </h2>
+<h3>PHP-Sqlsrv Extension</h2>
+  <p>This is an external driver library provided by microsoft to access MSSQL databases
+  docs: https://riptutorial.com/php/topic/4467/using-sqlsrv</p>
+</div>
