@@ -3,9 +3,16 @@
 
 <div>
 <h2>
-  Main Technologu Stack 
+  Main Technology Stack 
  </h2>
   <ul>
+    <li>HTML 5</li>
+    <li>CSS 3</li>
+    <li>JavaScript</li>
+    <li>PHP 7.4</li>
+    <li>MSSQL Database</li>
+    <li>Microsoft Azure Server Hosting</li>
+    <li>Azure CI/CD build pipelines</li>
     <li>PHP 7.4</li>
     </ul>
 </div>
