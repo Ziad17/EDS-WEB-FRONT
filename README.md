@@ -2,6 +2,10 @@
 
 
 <div>
+  development is still in progress but to enable visual progress measurments, the main branch will deply its content on this link <a href="https://kfsdocs.azurewebsites.net/"></a>
+  </div>
+
+<div>
 <h2>
   Main Technology Stack 
  </h2>
