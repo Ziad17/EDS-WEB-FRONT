@@ -11,12 +11,12 @@ body {
   background-color: #f5f5f5;
 }
 
-.form-register {
+/*.form-register {
   width: 100%;
-  max-width: 330px;
+  max-width: 450px;
   padding: 15px;
   margin: auto;
-}
+}*/
 
 .form-register .form-control {
   position: relative;
@@ -54,8 +54,21 @@ div.input-group-text{
   height: 46px;
 }
 .card-primary.card-outline {
-    border-top: 3px solid #007bff;
+    border-top:    3px solid #007bff;
+    border-bottom: 3px solid #007bff;
     }
     input{
       direction: rtl;
+    }
+    .login{
+    background-color: #0274b4;
+    }
+    .login:hover{
+      color: #0274b4;
+      background-color: #fff;
+      border:1px solid #0274b4;
+      font-size: 20px;
+      font-weight: 600;
+      transition: .5s;
+
     }
