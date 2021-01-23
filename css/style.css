@@ -1,5 +1,4 @@
 
-
 body {
   font-family: "Poppins", Arial, sans-serif;
   font-size: 14px;
@@ -152,8 +151,7 @@ a[data-toggle="collapse"] {
   transition: all 0.3s; }
 
 
-.footer p {
-  color: rgba(255, 255, 255, 0.5); }
+
 .footer {
    position: fixed;
    left: 0;
@@ -163,6 +161,7 @@ a[data-toggle="collapse"] {
    color: white;
    text-align: center;
     border-top: 5px solid #f8b739;
+    padding-top: 10px
 }
 .navbar-light .navbar-nav .nav-link{
   color: #f8b739
