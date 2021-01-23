@@ -9,19 +9,62 @@
 	<link rel="stylesheet" href="css/all.min.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/style.css">
+  <style type="text/css" media="screen">
+
+  .file-drop-area
+   {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    height: 100px;
+    max-width: 100%;
+    padding: 25px;
+    border: 6px dashed #bebebe;
+    border-radius: 3px;
+    transition: 0.2s;
+    margin-bottom: 20px;
+    &.is-active {
+      background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+.file-msg {
+  font-size: medium;
+  font-weight: 300;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left:auto;
+}
+
+.file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+  align-self: center;
+  &:focus {
+    outline: none;
+  }
+}
+
+  </style>
   </head>
   <body>
-		<div class="wrapper d-flex align-items-stretch">
+		<div  class="wrapper d-flex align-items-stretch">
 			<nav  id="sidebar">
-				<div style="position:fixed" align="center" class="p-4 pt-5">
-		  		<a href="img/undraw_folder_39kl.svg"><img style="border-radius: 50%" src="img/undraw_folder_39kl.svg" width="200px" height="200px" alt=""></a>
+				<div  align="center" class="p-4 pt-5 sidch">
+<!-- 		  		<a href="img/undraw_folder_39kl.svg"><img style="border-radius: 50%" src="img/undraw_folder_39kl.svg" width="200px" height="200px" alt=""></a>
 					<hr style="color: #fff;background-color: #fff">
 					<h6  style="color: #fff;">Eng:Ahmed Hesham</h6>
 					<span class="country">Web Designer</span>
-					<hr style="color: #fff;background-color: #fff">
+					<hr style="color: #fff;background-color: #fff"> -->
 	        <ul  class="list-unstyled components mb-5">
 	          <li class="active">
-	            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+	            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> Home &nbsp &nbsp </a>
 	            <ul class="collapse list-unstyled" id="homeSubmenu">
                 <li>
                     <a href="#">Home 1</a>
@@ -38,7 +81,7 @@
 	              <a href="#">About</a>
 	          </li>
 	          <li>
-              <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+              <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> Pages &nbsp &nbsp</a>
               <ul class="collapse list-unstyled" id="pageSubmenu">
                 <li>
                     <a href="#">Page 1</a>
@@ -67,21 +110,21 @@
         <!-- Page Content  -->
       <div id="content" class="p-4 p-md-5">
 
-        <nav align="center" class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
 
-            <button style="position:fixed" type="button" id="sidebarCollapse" class="btn btn-outline-dark">
-              <i  class="fa fa-bars"></i>
+            <button  type="button" id="sidebarCollapse" class="btn btn-outline-dark">
+              <i  class="fas fa-chevron-right"></i>
               <span class="sr-only">Toggle Menu</span>
             </button>
             <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fa fa-bars"></i>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="nav navbar-nav ml-auto">
+            <div align="center" class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="nav navbar-nav ml-auto ">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home</a>
+                    <a class="nav-link active" href="#">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">About</a>
@@ -99,21 +142,28 @@
 		<div class="container">
 			<div class="row">
 			  <div align="center" class="col-md-12">
-					<img src="img/undraw_folder_39kl.svg" width="300" height="250" alt="">
+          <div class="file-drop-area">
+           <i style="color: orange;font-size: 22px" class="fas fa-cloud-upload-alt"></i>
+                <span class="file-msg">
+                          Folder is empty.<br>
+                        Click, or drag your first file here!
+                </span>
+             
+            <input class="file-input" type="file" multiple>
+          </div>
 				</div>
 			</div>					 
 			<h2 class="mb-4">Sidebar #01</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> 
-		  <h2 class="mb-4">Sidebar #02</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-		  <h2 class="mb-4">Sidebar #03</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-		  <h2 class="mb-4">Sidebar #04</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        
+          <footer class="row">
+            <div class="col-md-12 footer">
+              <p>Footer</p>
+            </div>
+          </footer>
+          
+      
 	    </div>
        
       </div>
@@ -124,5 +174,35 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/all.min.js"></script>
+    <script  type="text/javascript" charset="utf-8" async defer>
+    	
+      var $fileInput = $('.file-input');
+var $droparea = $('.file-drop-area');
+
+// highlight drag area
+$fileInput.on('dragenter focus click', function() {
+  $droparea.addClass('is-active');
+});
+
+// back to normal state
+$fileInput.on('dragleave blur drop', function() {
+  $droparea.removeClass('is-active');
+});
+
+// change inner text
+$fileInput.on('change', function() {
+  var filesCount = $(this)[0].files.length;
+  var $textContainer = $(this).prev();
+
+  if (filesCount === 1) {
+    // if single file is selected, show file name
+    var fileName = $(this).val().split('\\').pop();
+    $textContainer.text(fileName);
+  } else {
+    // otherwise show number of files
+    $textContainer.text(filesCount + ' files selected');
+  }
+});
+    </script>
   </body>
 </html>
