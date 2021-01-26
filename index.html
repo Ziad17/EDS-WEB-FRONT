@@ -5,66 +5,23 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- logo  -->
-  <link rel="icon" type="image/x-icon" href="img/logo (2).jpeg">
+  <link rel="icon" type="image/png" href="img/favicon.png" />
 	<link rel="stylesheet" href="css/all.min.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/style.css">
-  <style type="text/css" media="screen">
 
-  .file-drop-area
-   {
-    position: relative;
-    text-align: center;
-    width: 100%;
-    height: 100px;
-    max-width: 100%;
-    padding: 25px;
-    border: 6px dashed #bebebe;
-    border-radius: 3px;
-    transition: 0.2s;
-    margin-bottom: 20px;
-    &.is-active {
-      background-color: rgba(255, 255, 255, 0.05);
-  }
-}
-.file-msg {
-  font-size: medium;
-  font-weight: 300;
-  line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-left:auto;
-}
-
-.file-input {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  cursor: pointer;
-  opacity: 0;
-  align-self: center;
-  &:focus {
-    outline: none;
-  }
-}
-
-  </style>
   </head>
-  <body>
+  <body style=" background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH_LKg2LsPjQYf-pAzGkFWj8ypfQ-OUkVYHw&usqp=CAU);">
 		<div  class="wrapper d-flex align-items-stretch">
 			<nav  id="sidebar">
 				<div  align="center" class="p-4 pt-5 sidch">
-<!-- 		  		<a href="img/undraw_folder_39kl.svg"><img style="border-radius: 50%" src="img/undraw_folder_39kl.svg" width="200px" height="200px" alt=""></a>
-					<hr style="color: #fff;background-color: #fff">
-					<h6  style="color: #fff;">Eng:Ahmed Hesham</h6>
+		  		<a href="img/undraw_male_avatar_323b.svg"><img style="border-radius: 50%;padding: 5px" src="img/undraw_male_avatar_323b.svg" width="100px" height="100px" alt=""></a>
+					<h6  style="color: #fff;text-shadow: 5px 5px 5px #fff">Eng:Ahmed Hesham</h6>
 					<span class="country">Web Designer</span>
-					<hr style="color: #fff;background-color: #fff"> -->
+					<hr style="color: #fff;background-color: #fff;">
 	        <ul  class="list-unstyled components mb-5">
 	          <li class="active">
-	            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> Home &nbsp &nbsp </a>
+	            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-home"></i> Home &nbsp &nbsp </a>
 	            <ul class="collapse list-unstyled" id="homeSubmenu">
                 <li>
                     <a href="#">Home 1</a>
@@ -78,19 +35,19 @@
 	            </ul>
 	          </li>
 	          <li>
-	              <a href="#">About</a>
+	              <a href="#"><i class="fas fa-project-diagram"></i> Project</a>
 	          </li>
 	          <li>
-              <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> Pages &nbsp &nbsp</a>
+              <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fas fa-university"></i> Colleges </a>
               <ul class="collapse list-unstyled" id="pageSubmenu">
                 <li>
-                    <a href="#">Page 1</a>
+                    <a href="#"><i class="fas fa-vials"></i> Science and Engineering</a>
                 </li>
                 <li>
-                    <a href="#">Page 2</a>
+                    <a href="#"><i class="fas fa-hand-holding-medical"></i> Medical colleges</a>
                 </li>
                 <li>
-                    <a href="#">Page 3</a>
+                    <a href="#"><i class="far fa-building"></i> Humanitarian and educational</a>
                 </li>
               </ul>
 	          </li>
@@ -98,7 +55,10 @@
               <a href="#">Portfolio</a>
 	          </li>
 	          <li>
-              <a href="#">Contact</a>
+              <a  href="#"><button onMouseOver="this.style.color='#f8b739'"
+        onMouseOut="this.style.color='#f8b739'" type="button" class="btn " data-toggle="modal" data-target="#section">
+                <i class="fas fa-stream"></i> Create new section
+              </button></a>
 	          </li>
 	        </ul>
 
@@ -109,7 +69,82 @@
 
         <!-- Page Content  -->
       <div id="content" class="p-4 p-md-5">
-
+      <div>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+                <!-- Button trigger modal -->
+        <button type="button" class="btn " data-toggle="modal" data-target="#section">
+          <i class="fas fa-stream"></i> Create new section
+        </button> 
+          <!-- Modal Create new section -->
+  <div class="modal fade" id="section" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content ">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-stream"></i> New Section</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="formGroupExampleInput">Create new section</label>
+              <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Section Name">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-warning">Creat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--End Modal section -->
+        </li>
+          <li class="nav-item" role="presentation">
+              <!--   Button trigger modal -->
+        <button type="button" class="btn " data-toggle="modal" data-target="#Folder">
+          <i class="fas fa-folder-plus"></i> Create new Folder
+        </button> 
+          <!-- Modal Create new Folder -->
+  <div class="modal fade" id="Folder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content ">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-folder-plus"></i> New Folder</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="formGroupExampleInput">Create new Folder</label>
+              <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Section Name">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-warning">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--End Modal -->
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+          </li>
+        </ul>
+      </div>
+<!-- <div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+</div> -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
 
@@ -139,6 +174,7 @@
             </div>
           </div>
         </nav>
+
 		<div class="container">
 			<div class="row">
 			  <div align="center" class="col-md-12">
@@ -156,7 +192,11 @@
 			<h2 class="mb-4">Sidebar #01</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> 
-        
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
           <footer class="row">
             <div class="col-md-12 footer">
                   <p class="mb-3 text-muted">&copy; 2021 <a href="mailto:ahmedheshamesmail@gmail.com?subject=feedback">Ahmed hesham</a></p>
