@@ -1,0 +1,4 @@
+<?php
+
+define("PHONE_NUMBER_LENGTH",11);
+define("ACADMIC_NUMBER_LENGTH",16);
