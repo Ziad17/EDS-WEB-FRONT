@@ -4,42 +4,47 @@ require 'Action.php';
 class PersonAction extends Action
 {
     private PersonPermissions $myPersonPermissions;
-    private PersonRef $myPersonRef;
+    private array $roleAndPermissionSum=array("ROLE"=>0,"PERMISSION_SUM"=>0);
 
     /**
      * PersonAction constructor.
-     * @param PersonPermissions $myPersonPermissions
-     * @param PersonRef $myPersonRef
+     * @param Person $myPersonRef
      */
-    public function __construct(PersonPermissions $myPersonPermissions, PersonRef $myPersonRef,DatabaseConnection $db)
+    public function __construct(Person $myPersonRef)
     {
-        $this->databaseConnection=$db;
-        $this->myPersonPermissions = $myPersonPermissions;
-        $this->myPersonRef = $myPersonRef;
+            parent::setConnection($this);
+            //TODO throw exceptions
+            $this->myPersonRef = $myPersonRef;
+            $this->getPersonRoleAndPermissions();
+            $this->myPersonPermissions=new PersonPermissions($this->roleAndPermissionSum["PERMISSION_SUM"]);
+
     }
 
 
+    public function getPersonRoleAndPermissions()
+    {
+        //TODO:query to get both role and permission sum
+
+        $this->roleAndPermissionSum["ROLE"]=1;
+        $this->roleAndPermissionSum["PERMISSION_SUM"]=1024;
+
+    }
     public function getPersonData(String $email):Person
     {}
-    public function getPersonFiles(String $email):Person
+    public function getPersonFiles(String $email):array //of files
     {}
-    public function activatePerson(String $targetEmail):Person
+    public function activatePerson(String $targetEmail):bool
     {}
-    public function deactivatePerson(String $targetEmail):Person
+    public function deactivatePerson(String $targetEmail):bool
     {}
-    public function getAllPersonsHierarchy():Person
+    public function getAllPersonsHierarchy():array //of persons
     {}
-    public function getAllPersonInInstitution():Person
+    public function getAllPersonInInstitution(int $institutionID):array //of persons
     {}
 
 
 
-getPersonData	String Email	Person
-getPersonFiles	String Email	collection of Files
-activatePerson 	String targetEmail	Boolean
-deactivatePerson	String targetEmail	Boolean
-getAllPersonsHierarchy	-	Tree-Like structure represents all persons
-getAllPersonInInstitution	Int InstitutionID	Tree-Like structure represents all persons
+
 
 
 

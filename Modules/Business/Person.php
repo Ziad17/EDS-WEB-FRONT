@@ -3,6 +3,21 @@
 
 class Person
 {
+    /**
+     * @return string
+     */
+    public function getBio(): string
+    {
+        return $this->bio;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhd(): string
+    {
+        return $this->phd;
+    }
 
     private string $Email;
     private string $acadmicNumber;
@@ -11,7 +26,18 @@ class Person
     private string $lastName;
     private string $Institution;
     private string $Gender;
-    private String $phoneNumber;
+    private string $phoneNumber;
+    private string $bio;
+    private string $phd;
+    private string $city;
+
+    /**
+     * @return string
+     */
+    public function getCity(): string
+    {
+        return $this->city;
+    }
 
 
     /**
@@ -23,9 +49,26 @@ class Person
      * @param String $lastName
      * @param String $Institution
      * @param String $Gender
+     * @param string $bio
+     * @param string $phd
+     * @param string $city
      */
-    public function __construct(string $Email, string $acadmicNumber, string $firstName, string $middleName, string $lastName, string $Institution, string $Gender)
+    public function __construct(string $Email,
+                                string $acadmicNumber,
+                                string $firstName,
+                                string $middleName,
+                                string $lastName,
+                                string $Institution,
+                                string $Gender,
+                                string $phoneNumber,
+                                string $bio,
+                                string $phd,
+                                string $city)
     {
+        $this->phoneNumber=$phoneNumber;
+        $this->city = $city;
+        $this->phd = $phd;
+        $this->bio = $bio;
         $this->Email = $Email;
         $this->acadmicNumber = $acadmicNumber;
         $this->firstName = $firstName;

@@ -8,6 +8,9 @@ class Institution
     private Int $ID;
     private String $name;
     private String $website;
+    private bool $insideCampus;
+
+
     private array $emails;
     private array $phones;
 
@@ -19,9 +22,9 @@ class Institution
      * @param array $emails
      * @param array $phones
      */
-    public function __construct(int $ID, string $name, string $website, array $emails, array $phones)
+    public function __construct( string $name, string $website,bool $insideCampus, array $emails, array $phones)
     {
-        $this->ID = $ID;
+        $this->insideCampus=$insideCampus;
         $this->name = $name;
         $this->website = $website;
         $this->emails = $emails;
@@ -37,6 +40,13 @@ class Institution
     public function getID(): int
     {
         return $this->ID;
+    }
+    /**
+     * @return bool
+     */
+    public function isInsideCampus(): bool
+    {
+        return $this->insideCampus;
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
-require './Business/Person.php';
-require 'Validator.php';
+
 
 class PersonValidator extends Validator
 {
@@ -13,12 +12,12 @@ class PersonValidator extends Validator
     }
     public function validate(): bool
     {
-        $this->ERROR = validateEmail();
-        $this->ERROR = validateSingleName();
-        $this->ERROR = validateNumber();
-        $this->ERROR = validateInstitusion();
-        $this->ERROR = validateAcadmicNumber();
-        $this->ERROR = validateGender();
+        $this->ERROR = $this->validateEmail();
+        $this->ERROR = $this->validateSingleName();
+        $this->ERROR = $this->validateNumber();
+        $this->ERROR = $this->validateInstitution();
+        $this->ERROR = $this->validateAcademicNumber();
+        $this->ERROR = $this->validateGender();
 
         return $this->isErrorPresent();
     }
@@ -59,7 +58,7 @@ class PersonValidator extends Validator
     {
         return '';
     }
-    public function validateAcadmicNumber(): string
+    public function validateAcademicNumber(): string
     {
 
         if (filter_var($this->personToValidate->getAcadmicNumber(), FILTER_SANITIZE_NUMBER_INT)) {
