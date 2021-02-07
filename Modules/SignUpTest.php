@@ -8,7 +8,7 @@ try {
         "mohamed",
         "fathy",
         "Computer and Information",
-        "Female",
+        "Male",
         "01286725073","", "", "ALEX");
     $mainAction = new MainAction();
     $arr = $mainAction->SignUp($person, "123456", $person->getAcadmicNumber());

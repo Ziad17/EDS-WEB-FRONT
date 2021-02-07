@@ -13,7 +13,10 @@ abstract class Permissions
     {
         return $this->permissions_bit_array;
     }
-
+    public function getPermissionsFromBitArray(int $index): bool
+    {
+        return $this->permissions_bit_array[$index];
+    }
     public abstract function populatePermissionsArray(int $permissionSum);
     public  function initAllFalse()
     {

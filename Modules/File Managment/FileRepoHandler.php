@@ -7,15 +7,15 @@ class FileRepoHandler
 {
     //TODO: Move every ConnectionString to environment variables
     private string $connectionString;
-    private FileAction $fileAction;
+    private FileFolderAction $fileAction;
     private BlobRestProxy $blobClient;
 
     /**
      * FileRepoHandler constructor.
-     * @param FileAction $fileAction
+     * @param FileFolderAction $fileAction
      * @throws ConnectionException
      */
-    public function __construct(FileAction $fileAction)
+    public function __construct(FileFolderAction $fileAction)
     {
         $this->fileAction = $fileAction;
         try {
