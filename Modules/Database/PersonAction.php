@@ -61,6 +61,8 @@ class PersonAction extends Action
 
     public function getPersonData(string $email): Person
     {
+
+        //TODO: ADD PersonActionLogs
         //REQUIRED_PERMISSION=VIEW_PERSON_PROFILE=0
         if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->VIEW_PERSON_PROFILE)) {
             $conn = $this->getDatabaseConnection();
@@ -114,7 +116,7 @@ class PersonAction extends Action
         }
     }
 
-    public function deactivatePerson(String $targetEmail):bool
+    public function deactivatePerson(string $targetEmail): bool
     {
         if ($this->getPersonRoleInstitution($targetEmail) == $this->getPersonRoleInstitution($this->myPersonRef->getEmail())) {
             return $this->deactivatePersonWithinInstitution($targetEmail);
@@ -128,7 +130,8 @@ class PersonAction extends Action
         //REQUIRED_PERMISSION=$ACTIVATE_PERSON_WITHIN_INSTITUTION=5
         if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->ACTIVATE_PERSON_WITHIN_INSTITUTION)) {
             if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
-                return $this->setRoleActiveStatus(true, $targetEmail);
+                $permission=$this->myPersonPermissions->ACTIVATE_PERSON_WITHIN_INSTITUTION;
+                return $this->setRoleActiveStatus(true, $targetEmail,2**$permission);
             } else {
                 throw new LowRoleForSuchActionException("The targeted person has a higher role level");
             }
@@ -137,17 +140,26 @@ class PersonAction extends Action
         }
     }
 
-    private function setRoleActiveStatus(bool $active, string $targetEmail): bool
+    private function setRoleActiveStatus(bool $active, string $targetEmail, int $permission): bool
     {
+
         $conn = $this->getDatabaseConnection();
+        sqlsrv_begin_transaction($conn);
         $sql = "UPDATE PersonRolesAndPermissions_view SET active=? WHERE email=?";
         $params = array($active, $targetEmail);
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
-        if ($stmt == false || sqlsrv_rows_affected($stmt) == false) {
+        $logSQL = "INSERT INTO PersonActionLogs(affecter_person_id,affected_person_id,action_date,permission_action_performed) VALUES(?,?,GETDATE(),?);";
+        $logParams = array($this->myPersonRef->getID(), $this->getIdFromPersonEmail($targetEmail),$permission);
+        $logsStmt=$this->getParameterizedStatement($logSQL,$conn,$logParams);
+        if ($stmt == false || sqlsrv_rows_affected($stmt) == false || $logsStmt==false) {
+            sqlsrv_rollback($conn);
             $this->closeConnection($conn);
             return false;
+        } else {
+            sqlsrv_commit($conn);
+            $this->closeConnection($conn);
+            return true;
         }
-        return true;
     }
 
     private function deactivatePersonWithinInstitution(string $targetEmail): bool
@@ -155,9 +167,8 @@ class PersonAction extends Action
         //REQUIRED_PERMISSION=$DEACTIVATE_PERSON_WITHIN_INSTITUTION=4
         if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->DEACTIVATE_PERSON_WITHIN_INSTITUTION)) {
             if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
-
-                // update quiries
-                return $this->setRoleActiveStatus(FALSE, $targetEmail);
+                $permission=$this->myPersonPermissions->DEACTIVATE_PERSON_WITHIN_INSTITUTION;
+                return $this->setRoleActiveStatus(FALSE, $targetEmail,2**$permission);
             } else {
                 throw new LowRoleForSuchActionException("The targeted person has a higher role level");
             }
@@ -174,7 +185,8 @@ class PersonAction extends Action
 
             if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
 
-                return $this->setRoleActiveStatus(false, $targetEmail);
+                $permission=$this->myPersonPermissions->DEACTIVATE_PERSON_OUTSIDE_INSTITUTION;
+                return $this->setRoleActiveStatus(false, $targetEmail,2**$permission);
 
             } else {
                 throw new LowRoleForSuchActionException("The targeted person has a higher role level");
@@ -191,11 +203,11 @@ class PersonAction extends Action
         //REQUIRED_PERMISSION=$ACTIVATE_PERSON_OUTSIDE_INSTITUTION=9
         if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->ACTIVATE_PERSON_OUTSIDE_INSTITUTION)) {
             if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
-                return $this->setRoleActiveStatus(true, $targetEmail);
+                $permission=$this->myPersonPermissions->ACTIVATE_PERSON_OUTSIDE_INSTITUTION;
+                return $this->setRoleActiveStatus(true, $targetEmail,2**$permission);
             } else {
                 throw new LowRoleForSuchActionException("The targeted person has a higher role level");
             }
-
         } else {
             throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
         }
@@ -212,6 +224,21 @@ class PersonAction extends Action
             return true;
         }
         return false;
+    }
+
+    private function getIdFromPersonEmail(string $targetEmail): int
+    {
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT ID FROM Person WHERE contact_email=?";
+        $params = array($targetEmail);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            $this->closeConnection($conn);
+            throw new PersonHasNoRolesException("Could not get details of the person id");
+        }
+        $id = sqlsrv_fetch_array($stmt)[0][0];
+        $this->closeConnection($conn);
+        return $id;
     }
 
     private function getRoleLevel(string $email): int
@@ -231,6 +258,7 @@ class PersonAction extends Action
 
     public function getAllPersonsHierarchy(): array //of persons nested array
     {
+        //TODO: ADD PersonActionLogs
         //REQUIRED_PERMISSION=VIEW_ALL_PERSONS_HIERARCHY=2
         if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->VIEW_ALL_PERSONS_HIERARCHY)) {
             $sql = "SELECT * FROM PersonsHierarchy_view WHERE gender=? OR gender=? GROUP BY priority_lvl ASC ";
@@ -245,6 +273,7 @@ class PersonAction extends Action
 
     private function structureBuilder($sql, $params): array //of persons nested array
     {
+        //TODO: ADD PersonActionLogs
         $conn = $this->getDatabaseConnection();
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false || !sqlsrv_has_rows($stmt)) {
@@ -300,6 +329,7 @@ class PersonAction extends Action
 
     public function getAllPersonInInstitution(int $institutionID): array //of persons
     {
+        //TODO: ADD PersonActionLogs
         //REQUIRED_PERMISSION=VIEW_ALL_PERSONS_IN_INSTITUTION= 1
         if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->VIEW_ALL_PERSONS_IN_INSTITUTION)) {
             $sql = "SELECT * FROM PersonsHierarchy_view  WHERE gender=? OR gender=? AND institution_id=? GROUP BY priority_lvl ASC";
@@ -314,6 +344,7 @@ class PersonAction extends Action
 
     private function getPersonRoleInstitution(string $targetEmail): int //the id of the institution
     {
+
         $conn = $this->getDatabaseConnection();
         $sql = "SELECT institution_id FROM PersonsHierarchy_view WHERE contact_email=?";
         $params = array($targetEmail);
