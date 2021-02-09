@@ -4,20 +4,19 @@ declare(strict_types=1);
 abstract class Validator
 {
 
-    protected String $ERROR;
-     public abstract function validate():bool;
-     public final function getError():String
+    protected bool $IS_ERROR_PRESENT=false;
+
+
+    protected array $ERRORS_LIST=array();
+     public abstract function isValid():bool;
+     public final function getERRORSLIST():array
      {
-         return $this->ERROR;
+         return $this->ERRORS_LIST;
      }
 
     public final function isErrorPresent():bool
     {
-        if(empty($this->ERROR))
-        {
-            return  false;
-        }
-        return true;
+        return $this->IS_ERROR_PRESENT;
     }
     
 

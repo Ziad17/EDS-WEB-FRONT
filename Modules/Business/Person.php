@@ -43,10 +43,8 @@ class Person
         }
         if ($builder->getGender() == "M") {
             $this->Gender = "Male";
-
         } else {
             $this->Gender = "Female";
-
         }
     }
     public static function Builder() : PersonBuilder
@@ -178,19 +176,19 @@ class Person
 
 class PersonBuilder
 {
-    private int $ID;
-    private string $Email;
-    private string $acadmicNumber;
-    private string $firstName;
-    private string $middleName;
-    private string $lastName;
-    private string $Institution;
-    private string $Gender;
-    private string $phoneNumber;
-    private string $bio;
-    private string $phd;
-    private string $city;
-    private array $roles;
+    private int $ID=0;
+    private string $Email="";
+    private string $acadmicNumber="";
+    private string $firstName="";
+    private string $middleName="";
+    private string $lastName="";
+    private string $Institution="";
+    private string $Gender="";
+    private string $phoneNumber="";
+    private string $bio="";
+    private string $phd="";
+    private string $city="";
+    private array $roles=array();
 
     /**
      * PersonBuilder constructor.

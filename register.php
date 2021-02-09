@@ -1,7 +1,7 @@
 <?php
 require_once "Modules/Validation/PersonValidator.php";
 require_once "Modules/Business/Person.php";
-
+error_reporting(E_ERROR | E_PARSE);
 //check if user coming From A Request
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -18,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ->setInstitution("")
         ->setCity("")
         ->build());
-    $personValidator->validate();
-    if ($personValidator->isErrorPresent()) {
-        $FormErrors[] = $personValidator->getError();
+    if (!$personValidator->isValid()) {
+        $FormErrors = $personValidator->getERRORSLIST();
+
     }
     if ($password == $Confirm_password) {
         if (strlen($password) < 8) {

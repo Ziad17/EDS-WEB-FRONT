@@ -12,25 +12,40 @@ class PersonValidator extends Validator
     {
         $this->personToValidate = $person;
     }
-    public function validate(): bool
+    public function isValid(): bool
     {
-        $this->ERROR = $this->validateEmail();
-        $this->ERROR = $this->validateSingleName();
-        $this->ERROR = $this->validateNumber();
-        $this->ERROR = $this->validateInstitution();
-        $this->ERROR = $this->validateAcademicNumber();
-        $this->ERROR = $this->validateGender();
+        $this->ERRORS_LIST[] = $this->validateEmail();
+        $this->ERRORS_LIST[] = $this->validateSingleName();
+     //  $this->ERRORS_LIST[] = $this->validateNumber();
+        $this->ERRORS_LIST[] = $this->validateInstitution();
+        $this->ERRORS_LIST[] = $this->validateAcademicNumber();
+        $this->ERRORS_LIST[] = $this->validateGender();
+        foreach ($this->ERRORS_LIST as $ERROR)
+        {
+            if($ERROR=="" || empty($ERROR))
+            {
+                unset($this->ERRORS_LIST[array_search($ERROR,$this->ERRORS_LIST)]);
+            }
+        }
+        array_values($this->ERRORS_LIST);
 
-        return $this->isErrorPresent();
+
+        return !$this->isErrorPresent();
+
+
     }
 
 
     public function validateEmail(): string
     {
+
         if (filter_var($this->personToValidate->getEmail(), FILTER_VALIDATE_EMAIL)) {
             //empty string represent its error free
+
             return '';
         }
+
+        $this->IS_ERROR_PRESENT=true;
         return 'Email is not properly formatted';
     }
     public function validateNumber(): string
@@ -39,9 +54,13 @@ class PersonValidator extends Validator
             if (strlen($this->personToValidate->getPhoneNumber()) == PHONE_NUMBER_LENGTH) {
                 return '';
             }
-            return 'Phone number must be '.PHONE_NUMBER_LENGTH." digits";
+            $this->IS_ERROR_PRESENT=true;
+
+            return 'Phone number must be 11 digits';
 
         }
+        $this->IS_ERROR_PRESENT=true;
+
         return 'Phone number must only be numbers';
     }
     public function validateSingleName(): string
@@ -54,6 +73,8 @@ class PersonValidator extends Validator
             //empty string represent its error free
             return '';
         }
+        $this->IS_ERROR_PRESENT=true;
+
         return 'Email is not properly formatted';
     }
     public function validateGender(): string
@@ -64,11 +85,15 @@ class PersonValidator extends Validator
     {
 
         if (filter_var($this->personToValidate->getAcadmicNumber(), FILTER_SANITIZE_NUMBER_INT)) {
-            if (strlen($this->personToValidate->getAcadmicNumber()) == PHONE_NUMBER_LENGTH) {
+            if (strlen($this->personToValidate->getAcadmicNumber()) == ACADMIC_NUMBER_LENGTH) {
                 return '';
             }
-            return 'Academic number must be '.ACADMIC_NUMBER_LENGTH." digits";
+            $this->IS_ERROR_PRESENT=true;
+
+            return 'Academic number must be 16 digits';
         }
+        $this->IS_ERROR_PRESENT=true;
+
         return 'Academic number must only be numbers';
     }
 
