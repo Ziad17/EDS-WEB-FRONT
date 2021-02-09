@@ -10,8 +10,8 @@ class FileVersion
     private String $Note;
     private String $Name;
     private String $authorEmail;
-    private String $fileContentURL;
-    private FileType $fileExtension;
+    private int $fileContentURL;
+    private String $fileExtension;
     private Int $Number;
     private DateTime $dateCreated;
     private Int $sizeInBytes;
@@ -23,13 +23,12 @@ class FileVersion
      * @param String $Note
      * @param String $Name
      * @param String $authorEmail
-     * @param String $fileContent
-     * @param String $fileExtension
+     * @param int $fileContent
      * @param Int $Number
      * @param DateTime $dateCreated
      * @param Int $Size
      */
-    public function __construct(int $ID, int $FileID, string $Note, string $Name, string $authorEmail, string $fileContent, FileType $fileExtension, int $Number, DateTime $dateCreated, int $Size)
+    public function __construct(int $ID, int $FileID, string $Note, string $Name, string $authorEmail, int $fileContent, String $fileExtension, int $Number, DateTime $dateCreated, int $Size)
     {
         $this->ID = $ID;
         $this->FileID = $FileID;
@@ -95,7 +94,7 @@ class FileVersion
     /**
      * @return String
      */
-    public function getFileExtension(): FileType
+    public function getFileExtension(): String
     {
         return $this->fileExtension;
     }

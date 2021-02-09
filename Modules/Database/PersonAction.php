@@ -226,21 +226,6 @@ class PersonAction extends Action
         return false;
     }
 
-    private function getIdFromPersonEmail(string $targetEmail): int
-    {
-        $conn = $this->getDatabaseConnection();
-        $sql = "SELECT ID FROM Person WHERE contact_email=?";
-        $params = array($targetEmail);
-        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
-        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
-            $this->closeConnection($conn);
-            throw new PersonHasNoRolesException("Could not get details of the person id");
-        }
-        $id = sqlsrv_fetch_array($stmt)[0][0];
-        $this->closeConnection($conn);
-        return $id;
-    }
-
     private function getRoleLevel(string $email): int
     {
         $conn = $this->getDatabaseConnection();
@@ -248,6 +233,7 @@ class PersonAction extends Action
         $params = array($email);
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+
             $this->closeConnection($conn);
             throw new PersonHasNoRolesException("Could not get details of the person roles");
         }

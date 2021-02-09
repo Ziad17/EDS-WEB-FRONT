@@ -6,25 +6,25 @@ class File
     private int $ID;
     private string $authorEmail;
     private DateTime $dateCreated;
-    private Folder $parentFolder;
-    private int $currentVersionID;
+    private int $parentFolderid;
+    private FileVersion $currentVersion;
     private array $fileVersions; //of file versions
 
     /**
      * Folder constructor.
      * @param String $authorEmail
      * @param DateTime $dateCreated
-     * @param Folder $parentFolder
-     * @param Int $currentVersionID
+     * @param int $parentFolder
+     * @param FileVersion $currentVersion
      * @param array $fileVersions
      * @param int $ID
      */
-    public function __construct(string $authorEmail, DateTime $dateCreated, Folder $parentFolder, int $currentVersionID, array $fileVersions, int $ID)
+    public function __construct(string $authorEmail, DateTime $dateCreated, int $parentFolder, FileVersion $currentVersion, array $fileVersions, int $ID)
     {
         $this->authorEmail = $authorEmail;
         $this->dateCreated = $dateCreated;
-        $this->parentFolder = $parentFolder;
-        $this->currentVersionID = $currentVersionID;
+        $this->parentFolderid = $parentFolder;
+        $this->currentVersion = $currentVersion;
         $this->fileVersions = $fileVersions;
         $this->ID = $ID;
     }
@@ -47,19 +47,19 @@ class File
     }
 
     /**
-     * @return Folder
+     * @return int
      */
-    public function getParentFolder(): Folder
+    public function getParentFolderid(): int
     {
-        return $this->parentFolder;
+        return $this->parentFolderid;
     }
 
     /**
-     * @return Int
+     * @return FileVersion
      */
-    public function getCurrentVersionID(): int
+    public function getCurrentVersion(): FileVersion
     {
-        return $this->currentVersionID;
+        return $this->currentVersion;
     }
 
     /**

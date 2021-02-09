@@ -33,6 +33,38 @@ abstract class Action
     }
 
 
+    protected function getIdFromPersonEmail(string $targetEmail): int
+    {
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT ID FROM Person WHERE contact_email=?";
+        $params = array($targetEmail);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            $this->closeConnection($conn);
+            throw new PersonHasNoRolesException("Could not get details of the person id");
+        }
+        $id = sqlsrv_fetch_array($stmt)[0][0];
+        $this->closeConnection($conn);
+        return $id;
+    }
+
+    protected function getEmailFromPersonId(int $id): String
+    {
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT contact_email FROM Person WHERE ID=?";
+        $params = array($id);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            $this->closeConnection($conn);
+            throw new PersonHasNoRolesException("Could not get details of the person id");
+        }
+        $email = sqlsrv_fetch_array($stmt)[0][0];
+        $this->closeConnection($conn);
+        return $email;
+    }
+
+
+
 
     protected function closeConnection(&$conn)
     {

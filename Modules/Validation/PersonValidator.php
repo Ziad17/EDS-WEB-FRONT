@@ -1,12 +1,14 @@
 <?php
 declare(strict_types=1);
 
+require_once "Validator.php";
+
 
 class PersonValidator extends Validator
 {
     private Person $personToValidate;
 
-    public function _construct(Person $person)
+    public function __construct(Person $person)
     {
         $this->personToValidate = $person;
     }
