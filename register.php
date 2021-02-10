@@ -1,34 +1,60 @@
 <?php
 require_once "Modules/Validation/PersonValidator.php";
 require_once "Modules/Business/Person.php";
+require_once "Modules/Database/MainAction.php";
+
 error_reporting(E_ERROR | E_PARSE);
 //check if user coming From A Request
+$mainAction=new MainAction();
+
+try {
+    $faculties=$mainAction->getAllInstitutions();
+    $cities=$mainAction->getAllCities();
+
+} catch (Exception $e) {
+    $FormErrors[]=$e->getMessage();
+    die($e->getMessage());
+}
+
+
+//testing
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //if No Error Send The Email [mail(To ,subject,massage Headers Parameters)]$username =$_POST['username'];
-    $username = $_POST['username'];
+    $phoneNumber=$_POST['phone'];
+    $firstName = $_POST['first_name'];
+    $middleName = $_POST['second_name'];
+    $lastName = $_POST['last_name'];
     $email = $_POST['email'];
+    $facultyID=$_POST['faculty'];
+    $inputGender=$_POST['Gender'];
+    $inputCity=$_POST['City'];
     $password = $_POST['password'];
     $Confirm_password = $_POST['Confirm_password'];
     $acd_number = $_POST['acd_number'];
-    $personValidator = new PersonValidator(Person::Builder()->setFirstName($username)
+    $personToValidate=Person::Builder()->setFirstName($firstName)
+        ->setMiddleName($middleName)
+        ->setLastName($lastName)
         ->setEmail($email)
         ->setAcadmicNumber($acd_number)
-        ->setPhoneNumber("")
-        ->setInstitution("")
-        ->setCity("")
-        ->build());
+        ->setPhoneNumber($phoneNumber)
+        ->setInstitution($facultyID)
+        ->setCity($inputCity)
+        ->setGender($inputGender)
+        ->build();
+    $personValidator = new PersonValidator($personToValidate);
     if (!$personValidator->isValid()) {
         $FormErrors = $personValidator->getERRORSLIST();
 
     }
     if ($password == $Confirm_password) {
         if (strlen($password) < 8) {
-            $FormErrors[] = 'Password Must Be <strong> 8 </strong> Chararcter';
+            $FormErrors[] = 'Password Must Be equal or greater than <strong> 8 </strong> Characters';
         }
-    }
-    else {
-        $FormErrors[] = 'Password Must Be <strong> Equal </strong> Confirm_password';
+    } else {
+        $FormErrors[] = 'Passwords Must Be <strong> Equal </strong>';
     }
 
     $headers = 'From: ' . $email . '\r\n';
@@ -38,8 +64,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = '';
         $Confirm_password = '';
         $acd_number = '';
-        $success = '<div class="alert alert-success" role="alert">We Have Recieved Your Massage </div>';
         //code for sign up
+        if(isset($personToValidate))
+        {
+            try{
+                if($mainAction->SignUp($personToValidate,$password))
+                {
+                    $success = 'Signed Up Successfully';
+                    session_start();
+                    $_SESSION['email']=$personToValidate->getEmail();
+                    $_SESSION['password']=$password;
+                    //redirect
+                }
+                else{
+                    $FormErrors[] = "Could not be registered";
+                }
+            }
+            catch (SQLStatmentException | DuplicateDataEntry $e){$FormErrors[]=$e->getMessage();}
+
+        }
+        else {
+            $FormErrors[] = "Could not validate this form";
+        }
     }
 }
 ?>
@@ -72,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php
                 $i = 1;
                 foreach ($FormErrors as $error) {
-                    echo '<strong>(' . $i . ')</strong>  ' . $error . '<br>';
+                    echo '<strong>(' . htmlspecialchars($i) . ')</strong>  ' . htmlspecialchars($error) . '<br>';
                     $i++;
                 }
 
@@ -81,12 +127,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         <?php } ?>
         <?php if (isset($success)) {
-            echo $success;
+            echo '<div class="alert alert-success" role="alert">'.htmlspecialchars($success).'</div>';
         } ?>
         <div class="form-group">
-            <input class="form-control username" type="text" name="username" placeholder="Enter Your User Name"
-                   value="<?php if (isset($username)) {
-                       echo $username;
+            <input class="form-control username" type="text" name="first_name" placeholder="First Name"
+                   value="<?php if (isset($firstName)) {
+                       echo htmlspecialchars($firstName);
+                   }; ?>" required/>
+            <i class="fa fa-user fa-fw icon"></i>
+            <div class="alert alert-danger custum-alert">
+                This input Must Be<strong> 4 </strong>chars or More
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control username" type="text" name="second_name" placeholder="Middle Name"
+                   value="<?php if (isset($middleName)) {
+                       echo htmlspecialchars($middleName);
+                   }; ?>" required/>
+            <i class="fa fa-user fa-fw icon"></i>
+            <div class="alert alert-danger custum-alert">
+                This input Must Be<strong> 4 </strong>char or More
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control username" type="text" name="last_name" placeholder="Last Name"
+                   value="<?php if (isset($lastName)) {
+                       echo htmlspecialchars($lastName);
                    }; ?>" required/>
             <i class="fa fa-user fa-fw icon"></i>
             <div class="alert alert-danger custum-alert">
@@ -97,7 +163,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="form-group">
             <input class="form-control email" type="email" name="email" placeholder="Enter Your User Email"
                    value="<?php if (isset($email)) {
-                       echo $email;
+                       echo htmlspecialchars($email);
+                   }; ?>" required/>
+            <i class="fa fa-envelope fa-fw icon"></i>
+            <div class="alert alert-danger custum-alert">
+                This input Cant not Be Empty
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input class="form-control email" type="phone" name="phone" placeholder="Enter Your User Phone Number"
+                   value="<?php if (isset($phoneNumber)) {
+                       echo htmlspecialchars($phoneNumber);
                    }; ?>" required/>
             <i class="fa fa-envelope fa-fw icon"></i>
             <div class="alert alert-danger custum-alert">
@@ -107,9 +184,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="form-group">
             <input class="form-control phone" type="password" name="password" placeholder="Enter Password"
-                   value="<?php if (isset($password)) {
-                       echo $password;
-                   }; ?>" required/>
+                   value="<?php if (isset($password))
+                       echo htmlspecialchars($password); ?>" required/>
             <i class="fas fa-key fa-fw icon"></i>
             <div class="alert alert-danger custum-alert">
                 This input Must Be <strong>11</strong> Number
@@ -119,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="form-group">
             <input class="form-control phone" type="password" name="Confirm_password" placeholder="Confirm password"
                    value="<?php if (isset($Confirm_password)) {
-                       echo $Confirm_password;
+                       echo htmlspecialchars($Confirm_password);
                    }; ?>" required/>
             <i class="fas fa-lock fa-fw icon"></i>
             <div class="alert alert-danger custum-alert">
@@ -130,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="form-group">
             <input class="form-control phone" type="number" name="acd_number" placeholder="Academic Number"
                    value="<?php if (isset($acd_number)) {
-                       echo $acd_number;
+                       echo htmlspecialchars($acd_number);
                    }; ?>" required/>
             <i class="far fa-address-card fa-fw icon"></i>
             <div class="alert alert-danger custum-alert">
@@ -142,29 +218,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group col-md-4">
                 <label for="inputCity">City:</label>
                 <select name="City" id="inputCity" class="form-control" required>
-                    <option value="" selected>Choose...</option>
-                    <option value="Cairo">Cairo</option>
-                    <option value="Alexandria">Alexandria</option>
-                    <option value="Gizeh">Gizeh</option>
-                    <option value="Shubra El-Kheima">Shubra El-Kheima</option>
+
+                    <?php
+
+                        foreach ( $cities as $city)
+                        {
+                            $city_name=ucfirst($city->getName());
+                            echo "<option value=".htmlspecialchars($city->getShortcut()).">".htmlspecialchars($city_name)."</option>";
+                        }
+
+
+                ?>
                 </select>
             </div>
             <div class="form-group col-md-4">
-                <label for="inputState">facalty:</label>
-                <select name="facalty" id="inputfacalty" class="form-control" required>
-                    <option value="" selected>Choose...</option>
-                    <option value="Science">Science</option>
-                    <option value="Medicine">Medicine</option>
-                    <option value="commerce">commerce</option>
-                    <option value="engineering">engineering</option>
+                <label for="inputState">Faculty:</label>
+                <select name="faculty" id="inputfaculty" class="form-control" required>
+                    <?php
+
+                    foreach ( $faculties as $faculty)
+                    {
+                        $faculty_name=ucfirst($faculty->getName());
+                        echo "<option value=".htmlspecialchars($faculty->getName()).">".htmlspecialchars($faculty_name)."</option>";
+                    }
+
+                    ?>
                 </select>
             </div>
             <div class="form-group col-md-4">
-                <label for="inputZip">Grnder:</label>
-                <select name="Grnder" id="inputGrnder" class="form-control" required>
-                    <option value="" selected>Choose...</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                <label for="inputZip">Gender:</label>
+                <select name="Gender" id="inputGender" class="form-control" required>
+                    <option value="F">Female</option>
+                    <option value="M">Male</option>
                 </select>
             </div>
         </div>
@@ -175,7 +260,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <br>
             <div class="text-center">
                 <a href="index.php" class="text-center"> I already have an account</a>
-                <p class="mt-3 text-muted">© <?php echo date('Y-n-j') . ' '; ?><a
+                <p class="mt-3 text-muted">© <?php echo htmlspecialchars(date('Y-n-j') . ' '); ?><a
                             href="mailto:ahmedheshamesmail@gmail.com?subject=feedback">Ahmed hesham</a></p>
             </div>
     </form>

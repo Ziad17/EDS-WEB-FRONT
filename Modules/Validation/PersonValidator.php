@@ -16,8 +16,8 @@ class PersonValidator extends Validator
     {
         $this->ERRORS_LIST[] = $this->validateEmail();
         $this->ERRORS_LIST[] = $this->validateSingleName();
-     //  $this->ERRORS_LIST[] = $this->validateNumber();
-        $this->ERRORS_LIST[] = $this->validateInstitution();
+       $this->ERRORS_LIST[] = $this->validateNumber();
+        //$this->ERRORS_LIST[] = $this->validateInstitution();
         $this->ERRORS_LIST[] = $this->validateAcademicNumber();
         $this->ERRORS_LIST[] = $this->validateGender();
         foreach ($this->ERRORS_LIST as $ERROR)
@@ -51,7 +51,7 @@ class PersonValidator extends Validator
     public function validateNumber(): string
     {
         if (filter_var($this->personToValidate->getPhoneNumber(), FILTER_SANITIZE_NUMBER_INT)) {
-            if (strlen($this->personToValidate->getPhoneNumber()) == PHONE_NUMBER_LENGTH) {
+            if (strlen($this->personToValidate->getPhoneNumber()) == 11) {
                 return '';
             }
             $this->IS_ERROR_PRESENT=true;
@@ -85,7 +85,7 @@ class PersonValidator extends Validator
     {
 
         if (filter_var($this->personToValidate->getAcadmicNumber(), FILTER_SANITIZE_NUMBER_INT)) {
-            if (strlen($this->personToValidate->getAcadmicNumber()) == ACADMIC_NUMBER_LENGTH) {
+            if (strlen($this->personToValidate->getAcadmicNumber()) == 16) {
                 return '';
             }
             $this->IS_ERROR_PRESENT=true;

@@ -1,10 +1,10 @@
 <?php
-require_once './Business/Person.php';
-require_once './Database/Action.php';
-require_once './Business/Institution.php';
-require_once './Business/City.php';
-require_once './Exceptions/SQLStatmentException.php';
-require_once './Exceptions/DuplicateDataEntry.php';
+require_once "Modules/Business/Person.php";
+require_once "Modules/Database/Action.php";
+require_once "Modules/Business/Institution.php";
+require_once "Modules/Business/City.php";
+require_once "Modules/Exceptions/SQLStatmentException.php";
+require_once "Modules/Exceptions/DuplicateDataEntry.php";
 
 
 class MainAction extends Action
@@ -57,13 +57,14 @@ class MainAction extends Action
         return $array_of_cities;
     }
 
-    public function SignUp(Person $person,String $password,String $academicNumber)
+    public function SignUp(Person $person,String $password)
     {
 
         //check if email exists
-        if($this->isUserExists($academicNumber,$person->getEmail()))
+        if($this->isUserExists($person->getAcadmicNumber(),$person->getEmail()))
         {
             throw new DuplicateDataEntry("The Email or AcademicNumber already exists");
+
         }
         /*
          * Steps
@@ -74,10 +75,9 @@ class MainAction extends Action
         $conn = $this->getDatabaseConnection();
         sqlsrv_begin_transaction($conn);
         //PersonContacts
-        $sql1="INSERT INTO PersonContacts(email,phone_number,phd_certificate) VALUES(?,?,?)";
+        $sql1="INSERT INTO PersonContacts(email,phone_number) VALUES(?,?)";
         $params1=array("{$person->getEmail()}",
-            "{$person->getPhoneNumber()}",
-            "{$person->getPhd()}");
+            "{$person->getPhoneNumber()}");
         $stmt1 = $this->getParameterizedStatement($sql1, $conn,$params1);
 
         $sql2="INSERT INTO Person(first_name,
@@ -93,7 +93,7 @@ class MainAction extends Action
             "{$person->getLastName()}",
             "{$password}",
             "{$person->getEmail()}",
-            "{$academicNumber}",
+            "{$person->getAcadmicNumber()}",
             "{$person->getGender()[0]}",//the first char of gender M or F
             "{$person->getCity()}");
         $stmt2 = $this->getParameterizedStatement($sql2, $conn,$params2);

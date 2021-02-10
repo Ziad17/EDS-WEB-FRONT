@@ -1,6 +1,6 @@
 <?php
 
-require './Exceptions/SQLStatmentException.php';
+require 'Modules/Exceptions/SQLStatmentException.php';
 abstract class Action
 {
     protected Person $myPersonRef;
@@ -27,7 +27,8 @@ abstract class Action
         $stmt=sqlsrv_query($conn,$query,$params);
         if(!$stmt)
         {
-            throw new SQLStatmentException(sqlsrv_errors());
+            $error=sqlsrv_errors()[0];
+            throw new SQLStatmentException($error['message']);
         }
         else return $stmt;
     }
