@@ -66,7 +66,7 @@ class PersonValidator extends Validator
     public function validateSingleName(): string
     {
         return '';
-        }
+    }
     public function validateInstitution(): string
     {
         if (filter_var($this->personToValidate->getEmail(), FILTER_VALIDATE_EMAIL)) {

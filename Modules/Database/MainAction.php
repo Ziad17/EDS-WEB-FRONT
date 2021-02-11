@@ -57,12 +57,50 @@ class MainAction extends Action
         return $array_of_cities;
     }
 
-    public function SignUp(Person $person,String $password)
+
+    public function signIn(string $email, string $password): bool
+    {
+        $con = $this->getDatabaseConnection();
+        $sql = "SELECT ID FROM Person WHERE Person.acadmeic_number=? OR Person.contact_email=? AND user_password=?";
+        $params = array($email, $email, $password);
+        $stmt = $this->getParameterizedStatement($sql, $con, $params);
+        if ($stmt == false) {
+            $this->closeConnection($con);
+            throw new SQLStatmentException("Could not connect");
+        }
+        if(!sqlsrv_has_rows($stmt))
+        {
+            $this->closeConnection($con);
+            return false;
+        }
+
+
+
+        $resultCount=count(sqlsrv_fetch_array($stmt));
+
+
+        if ($resultCount != 2) { //because it returns two forms for the same array Array ( [0] => 15 [ID] => 15 )
+
+
+            $this->closeConnection($con);
+
+            return false;
+
+
+        }
+        $id = (int)sqlsrv_fetch($stmt)[0];
+        session_start();
+        $_SESSION['USER_ID'] = $id;
+        $this->closeConnection($con);
+        return true;
+
+    }
+
+    public function SignUp(Person $person, string &$password)
     {
 
         //check if email exists
-        if($this->isUserExists($person->getAcadmicNumber(),$person->getEmail()))
-        {
+        if ($this->isUserExists($person->getAcadmicNumber(), $person->getEmail())) {
             throw new DuplicateDataEntry("The Email or AcademicNumber already exists");
 
         }
@@ -75,12 +113,13 @@ class MainAction extends Action
         $conn = $this->getDatabaseConnection();
         sqlsrv_begin_transaction($conn);
         //PersonContacts
-        $sql1="INSERT INTO PersonContacts(email,phone_number) VALUES(?,?)";
-        $params1=array("{$person->getEmail()}",
-            "{$person->getPhoneNumber()}");
-        $stmt1 = $this->getParameterizedStatement($sql1, $conn,$params1);
+        $sql1 = "INSERT INTO PersonContacts(email,phone_number,base_faculty) VALUES(?,?,?)";
+        $params1 = array("{$person->getEmail()}",
+            "{$person->getPhoneNumber()}",
+            "{$person->getInstitution()}");
+        $stmt1 = $this->getParameterizedStatement($sql1, $conn, $params1);
 
-        $sql2="INSERT INTO Person(first_name,
+        $sql2 = "INSERT INTO Person(first_name,
                    middle_name,
                    last_name,
                    user_password,
@@ -88,7 +127,7 @@ class MainAction extends Action
                    acadmeic_number,
                    gender,
                    city_shortcut) VALUES(?,?,?,?,?,?,?,?)";
-        $params2=array("{$person->getFirstName()}",
+        $params2 = array("{$person->getFirstName()}",
             "{$person->getMiddleName()}",
             "{$person->getLastName()}",
             "{$password}",
@@ -96,9 +135,8 @@ class MainAction extends Action
             "{$person->getAcadmicNumber()}",
             "{$person->getGender()[0]}",//the first char of gender M or F
             "{$person->getCity()}");
-        $stmt2 = $this->getParameterizedStatement($sql2, $conn,$params2);
-        if($stmt2==false || $stmt1==false)
-        {
+        $stmt2 = $this->getParameterizedStatement($sql2, $conn, $params2);
+        if ($stmt2 == false || $stmt1 == false) {
             sqlsrv_rollback($conn);
             $this->closeConnection($conn);
             throw new SQLStatmentException("Couldn't execute this statement");
@@ -106,23 +144,23 @@ class MainAction extends Action
         }
         sqlsrv_commit($conn);
         $this->closeConnection($conn);
+        session_start();
+        $_SESSION['credentials'] = array($person->getEmail(), $password);
         return true;
 
     }
 
-    private function isUserExists(string $academicNumber, string $getEmail):bool
+    public function isUserExists(string $academicNumber, string $getEmail): bool
     {
-        $conn=$this->getDatabaseConnection();
-        $sql="SELECT * FROM Person WHERE Person.acadmeic_number=? OR Person.contact_email=?";
-        $params=array("{$academicNumber}",
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT * FROM Person WHERE Person.acadmeic_number=? OR Person.contact_email=?";
+        $params = array("{$academicNumber}",
             "{$getEmail}");
-        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
-        if($stmt==false)
-        {
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false) {
             throw new SQLStatmentException("Couldn't execute this statement");
         }
-        if(sqlsrv_has_rows($stmt))
-        {
+        if (sqlsrv_has_rows($stmt)) {
             return true;
         }
         return false;

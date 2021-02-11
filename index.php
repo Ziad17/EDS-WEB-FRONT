@@ -1,5 +1,16 @@
 <?php 
-  //check if user coming From A REquset
+  //check if user coming From A Requset
+require_once "Modules/Database/MainAction.php";
+
+session_start();
+if(isset($_SESSION['email']) && isset($_SESSION['my_password']) )
+{
+    $arrayCred=$_SESSION['credentials'];
+    $password=$arrayCred[1];
+
+    $email=$arrayCred[0];
+
+}
 if ($_SERVER['REQUEST_METHOD']== 'POST') {
 
   $email =filter_var($_POST['email'],FILTER_SANITIZE_EMAIL);
@@ -31,10 +42,35 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
 
 //////////////////////////////////
   if(empty($FormErrors)){
-      $email ='';
-      $password ='';
-      $success = '<div class="alert alert-success" role="alert">We Have Recieved Your Massage </div>';
-    }
+
+      try {
+          $validEmail=$email;
+          $validPassword=$password;
+          $mainAction=new MainAction();
+          if($mainAction->isUserExists($validEmail,$validEmail))
+          {
+              if($mainAction->signIn($validEmail,$validPassword))
+              {
+
+
+                  $email = '';
+                  $password = '';
+                  $success = '<div class="alert alert-success" role="alert">Successful</div>';
+                    header("Location: Home.php");
+                    exit();
+              }
+              else{$FormErrors[]="Wrong Password";}
+
+
+          }
+          else{
+              $FormErrors[]="These credentials doesn't exist, please sign up";
+          }
+      } catch (Exception $e)
+      {
+          $FormErrors[]=$e->getMessage();
+      }
+  }
   }
  ?>
 <!DOCTYPE html>
@@ -75,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
  
       <div class="form-group">
         <input class="form-control email" type="email" name="email"   placeholder="Enter Your User Email"
-        value="<?php if (isset($email)){echo $email;  };?>"  required/>
+        value="<?php if (isset($email)){echo $email;  }?>"  required/>
         <i class="fa fa-envelope fa-fw icon"></i>
         <div class="alert alert-danger custum-alert">
           This input  Cant not Be Empty
@@ -84,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
 
       <div class="form-group">
         <input class="form-control phone" type="password" name="password"    placeholder="Enter Password"
-        value="<?php if (isset($password)){echo $password;  };?>" required/>
+        value="<?php if (isset($password)){echo $password;  }?>" required/>
         <i class="fas fa-key fa-fw icon"></i>
         <div class="alert alert-danger custum-alert">
           This input Must Be <strong>11</strong> Number 
