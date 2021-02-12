@@ -212,8 +212,8 @@
                   <p class="mb-3 text-muted">&copy; 2021 <a href="mailto:ahmedheshamesmail@gmail.com?subject=feedback">Ahmed hesham</a></p>
             </div>
           </footer>
+
           
-      
 	    </div>
       <?php 
         require_once('Include/script.php');
