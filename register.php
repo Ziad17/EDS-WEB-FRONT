@@ -51,10 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     if ($password == $Confirm_password) {
         if (strlen($password) < 8) {
-            $FormErrors[] = 'Password Must Be equal or greater than <strong> 8 </strong> Characters';
+            $FormErrors[] = 'Password Must Be equal or greater than  8  Characters';
         }
     } else {
-        $FormErrors[] = 'Passwords Must Be <strong> Equal </strong>';
+        $FormErrors[] = 'Passwords Must Be  Equal ';
     }
 
     $headers = 'From: ' . $email . '\r\n';
