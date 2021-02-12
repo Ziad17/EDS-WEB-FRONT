@@ -179,11 +179,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
 
         <div class="form-group">
-            <input class="form-control email" type="tel" name="phone" placeholder="Enter Your User Phone Number"
+            <input class="form-control email" type="tel" name="phone" placeholder="Enter Your Phone Number"
                    value="<?php if (isset($phoneNumber)) {
                        echo htmlspecialchars($phoneNumber);
-                   } ?>" required/>
-            <i class="fa fa-envelope fa-fw icon"></i>
+                   } ?>" pattern="[0-9]{11}" required/>
+            <i class="fas fa-phone-alt fa-fw icon"></i>
             <div class="alert alert-danger custum-alert">
                 This input Cant not Be Empty
             </div>
