@@ -109,18 +109,19 @@ h1, h2, h3, h4, h5,
         font-size: 14px;
         border-bottom:none;
         margin-left: -71px;
-        padding-left: 5px;
+        padding-left : 5px;
+     
       }
       #sidebar ul li > ul li:hover{
         
-        border-left: 5px solid #f8b739;
+        border-left : 5px solid #f8b739;
+        border-right: 5px solid #f8b739;
         border-radius: 5px
       }
     #sidebar ul li a {
       padding: 10px 0;
       display: block;
       color: rgba(255, 255, 255, 0.8);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
        }
       #sidebar ul li a:hover {
         color: #f8b739; }
@@ -172,10 +173,11 @@ a[data-toggle="collapse"] {
     padding-top: 10px
 }
 .navbar-light .navbar-nav .nav-link{
-  color: #f8b739
+  color: #000
 }
 .navbar-light .navbar-nav .nav-link:hover{
-  color:#000;
+  color:#f8b739;
+  
 
 }
 .navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link
@@ -203,7 +205,7 @@ a[data-toggle="collapse"] {
   opacity: 0;
   align-self: center;
   &:focus {
-    outline: none;
+  outline: none;
   }
 }
   .file-drop-area
@@ -219,6 +221,18 @@ a[data-toggle="collapse"] {
     transition: 0.2s;
     margin-bottom: 20px;
     &.is-active {
-      background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.05);
   }
+}
+.col-form-label{
+  font-weight: 500;
+  font-size: 16px;
+  text-align: left;
+}
+.form-style{
+  margin-bottom: 100px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow:inset 3px 3px 4px #ECECEC,inset -3px -3px 4px #ECECEC,1px 1px 4px gray,-1px -1px 4px gray
 }
