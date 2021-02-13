@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
 
     
       <div  style="   margin-bottom: 0rem;" class="form-group">
-      <input style="background-color: #0274b4;" class="w-100 btn btn-primary btn-block" type="submit" name="submit" value="Register">
+      <input style="background-color: #0274b4;" class="w-100 btn btn-primary btn-block" type="submit" name="submit" value="Login">
       <br>
       <div class="text-center">
                <a href="register.php" class="text-center"> I dont have an account </a>
