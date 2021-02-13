@@ -37,7 +37,7 @@
 
 		<div class="container">
 			<div class="row">
-        <?php require_once('Include/profile_contant.php'); ?>
+        <?php require_once('Include/profile_content.php'); ?>
 			</div>					 
 
           <footer class="row">
