@@ -2,7 +2,7 @@
 
 
 <div>
-  development is still in progress but to enable visual progress measurments, the main branch will deply its content on this link <a href="https://kfsdocs.azurewebsites.net/"> KfsDocs</a>
+ development is still in progress, but to enable visual progress measurements, the main branch will deploy its content on this link <a href="https://kfsdocs.azurewebsites.net/"> KfsDocs</a>
   </div>
 
 <div>
