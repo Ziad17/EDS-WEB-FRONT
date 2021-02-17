@@ -10,8 +10,8 @@
 	        <ul  class="list-unstyled components mb-5">
 	          <li <?php if ($name === 'KfsDocs') {echo 'class="active"';};?>>
               <a href="Home.php"><i class="fas fa-home"></i> Home</a>
-	          <li  <?php if ($name === 'Project') {echo 'class="active"';};?>>
-	              <a href="#"><i class="fas fa-project-diagram"></i> Project</a>
+	          <li  <?php if ($name === 'Activity') {echo 'class="active"';};?>>
+	              <a href="Activity.php"><i class="fas fa-chart-line"></i> Activity</a>
 	          </li>
 	          <li>
               <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="far fa-folder-open"></i> Faculty Folder </a>
