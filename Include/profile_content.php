@@ -1,5 +1,15 @@
 <div align="center" class="col-md-4">
-  <img style="border-radius: 50%;padding: 5px" src="img/undraw_male_avatar_323b.svg" width="100px" height="100px" alt="Profile_Img">
+  <div class="wrapper_pic"> 
+    <span class="cam"><i class="fas fa-camera"></i></span>
+    <input type="file" class="my_file">
+  </div>
+  <form class="form-style mt-5">
+    <h2> List Of Actions Available </h2>
+    <ol>
+      <li> edit info </li>
+      <li> wait to add more </li>
+    </ol>
+  </form>
 </div>
 
 
