@@ -21,7 +21,7 @@
                     <a class="nav-link <?php if ($name === 'Profile') {echo ' active"';} ?>" href="profile.php">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?php if ($name === 'Contact') {echo ' active"';} ?>" href="#">Contact</a>
+                    <a class="nav-link <?php if ($name === 'Activity') {echo ' active"';} ?>" href="Activity.php">Activity</a>
                 </li>
               </ul>
             </div>
