@@ -1,7 +1,7 @@
 <?php
 
-
-class FileFolderAction extends Action
+//TODO:ADD active file stats and see if the files should be permanently deleted or just deactivated
+class FileAction extends Action
 {
     private FilePermissions $myFilesPermissions;
 
@@ -45,7 +45,7 @@ class FileFolderAction extends Action
         }
     }
 
-    private function injectLog(int $actionPerformed,int $fileId,&$conn )
+    private function injectLog(int $actionPerformed,int $fileId,&$conn ):bool
     {
         $logSQL = "INSERT INTO FileActionLogs(person_id,file_id,action_date,file_permission_action_performed) VALUES(?,?,GETDATE(),?);";
         $logParams = array($this->myPersonRef->getID(), $fileId,$actionPerformed);
@@ -129,8 +129,7 @@ class FileFolderAction extends Action
             {
                 $file=$this->getFile($fileID);
                 $arrayOfVersions=array();
-                while($row=sqlsrv_fetch($stmt)) {
-                    $row = sqlsrv_fetch_array($stmt)[0];
+                while($row = sqlsrv_fetch_array($stmt)) {
                     $version_id = $row[0];
                     $file_id = $row[1];
                     $version_name = $row[2];
@@ -219,7 +218,7 @@ class FileFolderAction extends Action
         }
 
     }
-    
+
     public function modifyFileAddNewVersion(int $fileID,FileVersion $newFileVersion) : bool
     {
         $this->updateMyPersonFilePermissions($fileID);
@@ -230,6 +229,7 @@ class FileFolderAction extends Action
             //FIXME : change the following vars
             $fileSize=12;//get it from uploading file
             $fileHref="https://host/storage/file231"; //get it from uploading file
+            //if fileHref=null then exit
 
             $con=$this->getDatabaseConnection();
             sqlsrv_begin_transaction($con);
@@ -265,12 +265,30 @@ class FileFolderAction extends Action
         }
     }
 
-    public function revertCurrentFileVersion(int $fileID,int $previousVersionId)
+    public function revertCurrentFileVersion(int $fileID,int $previousVersionId) : bool
     {
         $this->updateMyPersonFilePermissions($fileID);
         //REQUIRED_PERMISSION=$REVERT_CURRENT_FILE_VERSION=5
         if ($this->myFilesPermissions->getPermissionsFromBitArray($this->myFilesPermissions->REVERT_CURRENT_FILE_VERSION)) {
-            //operations
+            $permission_value=2**($this->myFilesPermissions->REVERT_CURRENT_FILE_VERSION);
+            $con=$this->getDatabaseConnection();
+            sqlsrv_begin_transaction($con);
+            //TODO:add a new function checkIfFileVersionExists(int $versionID)
+            $sql="UPDATE File SET current_file_version=?  WHERE ID=?";
+            $params=array($previousVersionId,$fileID);
+            $stmt=$this->getParameterizedStatement($sql,$con,$params);
+            if($stmt==false || !sqlsrv_has_rows($stmt) || $this->injectLog($permission_value,$fileID,$con))
+            {
+                sqlsrv_rollback($con);
+                $this->closeConnection($con);
+                throw new FileNotFoundException("Could not find the data of this file");
+            }
+            else
+            {
+                sqlsrv_commit($con);
+                $this->closeConnection($con);
+                return true;
+            }
         } else {
             throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
         }
@@ -286,6 +304,7 @@ class FileFolderAction extends Action
         } else {
             throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
         }
+        return true;
     }
 
 
@@ -339,15 +358,14 @@ class FileFolderAction extends Action
 
     }
 
-    private function setFileLock($fileID,bool $lock,int $permission) : bool
-    {}
+
 
     /**
      * @return array|int[]
      */
     public function getFilePermissions(): array
     {
-        return $this->filePermissions;
+        return $this->myFilesPermissions;
     }
 
 
