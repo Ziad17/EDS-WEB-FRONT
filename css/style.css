@@ -236,3 +236,44 @@ a[data-toggle="collapse"] {
   border-radius: 10px;
   box-shadow:inset 3px 3px 4px #ECECEC,inset -3px -3px 4px #ECECEC,1px 1px 4px gray,-1px -1px 4px gray
 }
+.wrapper_pic{
+  height: 200px;
+  width : 200px;
+  position: relative;
+  border:5px solid #fff;
+  border-radius: 50%;
+  background: url('../img/undraw_male_avatar_323b.svg');
+  background-size: 100% 100%;
+  overflow: hidden;
+
+}
+.my_file{
+  position: absolute;
+  bottom: 0;
+  left: -36px;
+  outline: none;
+  color: gray
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px 120px;
+  cursor: pointer;
+  transition: 0.5s;
+  background-color: rgba(0,0,0,0.5);
+}
+.my_file::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.my_file:hover{
+    background-color: rgba(0,0,0,0.0);
+}
+.cam{
+    position: absolute;
+    left: 78px;
+    top: 125px;
+    font-size: 40px;
+    color: #fff
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  border-bottom: 2px solid #f8b739;
+  transition: 0.5s;
+}
