@@ -31,3 +31,10 @@ from sys.objects t
 where is_unique = 1 AND c.[name]='UQ__PersonCo__46E29A0E7BFC5774' //check here
 and t.is_ms_shipped <> 1
 order by schema_name(t.schema_id) + '.' + t.[name]
+
+
+
+SELECT
+    'ALTER TABLE ' + OBJECT_NAME(so.parent_obj) + ' DROP CONSTRAINT ' + so.name
+FROM sysobjects so
+WHERE so.xtype = 'UQ'
