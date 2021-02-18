@@ -24,6 +24,7 @@ class FileVersion
      * @param String $Name
      * @param String $authorEmail
      * @param int $fileContent
+     * @param String $fileExtension
      * @param Int $Number
      * @param DateTime $dateCreated
      * @param Int $Size
