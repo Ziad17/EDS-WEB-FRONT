@@ -7,6 +7,31 @@ class PersonRole
     private String $jobTitle;
     private int $priorityLevel;
     private String $jobDesc;
+    private String $institution_name;
+
+    /**
+     * @return String
+     */
+    public function getInstitutionName(): string
+    {
+        return $this->institution_name;
+    }
+
+    /**
+     * PersonRole constructor.
+     * @param String $jobTitle
+     * @param int $priorityLevel
+     * @param String $jobDesc
+     * @param String $institution_name
+     */
+    public function __construct(string $jobTitle, int $priorityLevel, string $jobDesc, string $institution_name)
+    {
+        $this->jobTitle = $jobTitle;
+        $this->priorityLevel = $priorityLevel;
+        $this->jobDesc = $jobDesc;
+        $this->institution_name = $institution_name;
+    }
+
 
     /**
      * @return String
@@ -32,18 +57,7 @@ class PersonRole
         return $this->jobDesc;
     }
 
-    /**
-     * PersonRole constructor.
-     * @param String $jobTitle
-     * @param int $priorityLevel
-     * @param String $institution
-     */
-    public function __construct(string $jobTitle, int $priorityLevel, string $institution)
-    {
-        $this->jobTitle = $jobTitle;
-        $this->priorityLevel = $priorityLevel;
-        $this->jobDesc = $institution;
-    }
+
 
 
 }

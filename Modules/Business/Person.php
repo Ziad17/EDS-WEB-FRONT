@@ -18,6 +18,8 @@ class Person
     private string $city;
     private array $roles;
     private bool $hasMoreThanOneRole;
+    private String $img_ref;
+
 
 
     public function __construct(PersonBuilder $builder)
@@ -35,6 +37,7 @@ class Person
         $this->Institution = $builder->getInstitution();
         $this->roles = $builder->getRoles();
         $this->ID = $builder->getID();
+        $this->img_ref=$builder->getImgRef();
 
         if (count($this->roles) > 1) {
             $this->hasMoreThanOneRole = true;
@@ -52,6 +55,16 @@ class Person
     {return new PersonBuilder();}
 
 
+
+
+
+    /**
+     * @return String
+     */
+    public function getImgRef(): string
+    {
+        return $this->img_ref;
+    }
     /**
      * PersonRole constructor.
      * @param array $roles
@@ -189,6 +202,15 @@ class PersonBuilder
     private string $phd="";
     private string $city="";
     private array $roles=array();
+    private String $img_ref="";
+
+    /**
+     * @return String
+     */
+    public function getImgRef(): string
+    {
+        return $this->img_ref;
+    }
 
     /**
      * PersonBuilder constructor.
@@ -229,6 +251,12 @@ class PersonBuilder
     public function setAcadmicNumber(string $acadmicNumber): PersonBuilder
     {
         $this->acadmicNumber = $acadmicNumber;
+        return $this;
+
+    }
+    public function setImgRef(string $ImgRef): PersonBuilder
+    {
+        $this->img_ref = $ImgRef;
         return $this;
 
     }

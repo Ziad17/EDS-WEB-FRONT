@@ -33,6 +33,21 @@ abstract class Action
         else return $stmt;
     }
 
+   protected function  getIntitutionNameByID($id):String
+   {
+       $conn = $this->getDatabaseConnection();
+       $sql = "SELECT institution_name FROM Institutuion_view WHERE ID=?";
+       $params = array($id);
+       $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+       if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+           $this->closeConnection($conn);
+           throw new SQLStatmentException("Could not get details of the institution");
+       }
+       $name = sqlsrv_fetch_array($stmt)[0][0];
+       $this->closeConnection($conn);
+       return $name;
+   }
+
 
     protected function getIdFromPersonEmail(string $targetEmail): int
     {
@@ -42,7 +57,7 @@ abstract class Action
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false || !sqlsrv_has_rows($stmt)) {
             $this->closeConnection($conn);
-            throw new PersonHasNoRolesException("Could not get details of the person id");
+            throw new SQLStatmentException("Could not get details of the person id");
         }
         $id = sqlsrv_fetch_array($stmt)[0][0];
         $this->closeConnection($conn);
@@ -57,12 +72,32 @@ abstract class Action
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false || !sqlsrv_has_rows($stmt)) {
             $this->closeConnection($conn);
-            throw new PersonHasNoRolesException("Could not get details of the person id");
+            throw new SQLStatmentException("Could not get details of the person id");
         }
         $email = sqlsrv_fetch_array($stmt)[0][0];
         $this->closeConnection($conn);
         return $email;
     }
+
+
+    protected function getNameFromPersonId(int $id): String
+    {
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT first_name,last_name FROM Person WHERE ID=?";
+        $params = array($id);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            $this->closeConnection($conn);
+            throw new SQLStatmentException("Could not get details of the person id");
+        }
+        $first = sqlsrv_fetch_array($stmt)[0][0];
+        $second = sqlsrv_fetch_array($stmt)[0][1];
+
+        $this->closeConnection($conn);
+        return $first." ".$second;
+    }
+
+
 
 
 
