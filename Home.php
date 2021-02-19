@@ -1,6 +1,26 @@
 <?php
   $name = 'KfsDocs';
   require_once('Include/headtag.php');
+require_once "Modules/Sessions/SessionManager.php";
+error_reporting(E_ERROR | E_PARSE);
+
+if(!SessionManager::validateSession())
+  {
+      header('Location: index.php');
+      header('Cache-Control: no-cache, must-revalidate');
+        exit();
+  }
+if($_POST['logout'])
+{
+    SessionManager::sessionLogOut();
+    header('Location: index.php');
+    header('Cache-Control: no-cache, must-revalidate');
+    exit();
+
+}
+
+
+
  ?>
   <body>
 		<div  class="wrapper d-flex align-items-stretch">

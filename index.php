@@ -1,15 +1,14 @@
 <?php 
   //check if user coming From A Requset
 require_once "Modules/Database/MainAction.php";
+require_once "Modules/Sessions/SessionManager.php";
+error_reporting(E_ERROR | E_PARSE);
 
-session_start();
-if(isset($_SESSION['email']) && isset($_SESSION['my_password']) )
+if(SessionManager::validateSession())
 {
-    $arrayCred=$_SESSION['credentials'];
-    $password=$arrayCred[1];
-
-    $email=$arrayCred[0];
-
+    header("Location: Home.php");
+    header('Cache-Control: no-cache, must-revalidate');
+    exit();
 }
 if ($_SERVER['REQUEST_METHOD']== 'POST') {
 
@@ -49,15 +48,18 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
           $mainAction=new MainAction();
           if($mainAction->isUserExists($validEmail,$validEmail))
           {
-              if($mainAction->signIn($validEmail,$validPassword))
+              $id=$mainAction->signIn($validEmail,$validPassword);
+              if($id)
               {
-
-
                   $email = '';
                   $password = '';
                   $success = '<div class="alert alert-success" role="alert">Successful</div>';
-                    header("Location: Home.php");
-                    exit();
+                  SessionManager::sessionSignIn($validEmail,$id);
+
+                  header("Location: Home.php");
+                  header('Cache-Control: no-cache, must-revalidate');
+
+                  exit();
               }
               else{$FormErrors[]="Wrong Password";}
 
@@ -66,9 +68,12 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
           else{
               $FormErrors[]="These credentials doesn't exist, please sign up";
           }
-      } catch (Exception $e)
+      } catch (Exception  $e )
       {
           $FormErrors[]=$e->getMessage();
+          header("HTTP/1.1 503 Not Found");
+exit();
+
       }
   }
   }

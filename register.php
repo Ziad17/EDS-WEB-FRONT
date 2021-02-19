@@ -2,18 +2,27 @@
 require_once "Modules/Validation/PersonValidator.php";
 require_once "Modules/Business/Person.php";
 require_once "Modules/Database/MainAction.php";
+require_once "Modules/Sessions/SessionManager.php";
 
 error_reporting(E_ERROR | E_PARSE);
 //check if user coming From A Request
 $mainAction = new MainAction();
 
+if(SessionManager::validateSession())
+{
+    header("Location: Home.php");
+    header('Cache-Control: no-cache, must-revalidate');
+    exit();
+}
 try {
     $faculties = $mainAction->getAllInstitutions();
     $cities = $mainAction->getAllCities();
+    SessionManager::sessionLogOut();
 
 } catch (Exception $e) {
     $FormErrors[] = $e->getMessage();
-    die($e->getMessage());
+        header("HTTP/1.1 503 Not Found");
+    exit(503);
 }
 
 
@@ -72,10 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 if ($mainAction->SignUp($personToValidate, $validPassword)) {
                     $success = 'Signed Up Successfully';
-                    header("Location: index.php");
+                    SessionManager::sessionSignIn($personToValidate->getEmail(),$personToValidate->getID());
+                    header('Location: index.php,Cache-Control: no-cache, must-revalidate');
                     exit();
 
-                    //redirect
                 } else {
                     $FormErrors[] = "Could not be registered";
                 }

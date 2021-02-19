@@ -58,7 +58,7 @@ class MainAction extends Action
     }
 
 
-    public function signIn(string $email, string $password): bool
+    public function signIn(string $email, string $password): int
     {
         $con = $this->getDatabaseConnection();
         $sql = "SELECT ID FROM Person WHERE Person.acadmeic_number=? OR Person.contact_email=? AND user_password=?";
@@ -74,25 +74,12 @@ class MainAction extends Action
             return false;
         }
 
+        $row=sqlsrv_fetch_object($stmt);
+       $ID= $row->ID;
 
-
-        $resultCount=count(sqlsrv_fetch_array($stmt));
-
-
-        if ($resultCount != 2) { //because it returns two forms for the same array Array ( [0] => 15 [ID] => 15 )
-
-
-            $this->closeConnection($con);
-
-            return false;
-
-
-        }
-        $id = (int)sqlsrv_fetch($stmt)[0];
-        session_start();
-        $_SESSION['USER_ID'] = $id;
         $this->closeConnection($con);
-        return true;
+        return $ID;
+
 
     }
 
@@ -144,8 +131,6 @@ class MainAction extends Action
         }
         sqlsrv_commit($conn);
         $this->closeConnection($conn);
-        session_start();
-        $_SESSION['credentials'] = array($person->getEmail(), $password);
         return true;
 
     }

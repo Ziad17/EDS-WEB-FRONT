@@ -18,7 +18,7 @@ abstract class Action
         $stmt=sqlsrv_query($conn,$query);
         if(!$stmt)
         {
-            throw new SQLStatmentException(sqlsrv_errors());
+            throw new SQLStatmentException(sqlsrv_errors()['code']);
         }
         else return $stmt;
     }

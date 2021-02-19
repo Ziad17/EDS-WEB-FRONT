@@ -18,4 +18,15 @@ while($row = sqlsrv_fetch_array($stmt)) {
     
     //...
 }
-?>
+
+if(1)
+{echo "heee";}
+
+if(strtotime(date("Y-m-d h:i:s"))>strtotime(date("Y-m-d h:i:s",mktime(1,25,0,2,19,2021))))
+{
+    echo "YES:";
+}
+echo date("Y-m-d",strtotime("+1 days"));
+    ?>
+
+

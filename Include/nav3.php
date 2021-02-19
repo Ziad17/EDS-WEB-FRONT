@@ -23,6 +23,12 @@
                 <li class="nav-item">
                     <a class="nav-link <?php if ($name === 'Activity') {echo ' active"';} ?>" href="Activity.php">Activity</a>
                 </li>
+                  <li class="nav-item">
+                      <form method="post">
+
+                      <input class="nav-link <?php if ($name === 'Activity') {echo ' active"';} ?>" type="submit" name="logout" value="logout"></input>
+                      </form>
+                  </li>
               </ul>
             </div>
           </div>
