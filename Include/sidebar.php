@@ -14,16 +14,13 @@
 	              <a href="Activity.php"><i class="fas fa-chart-line"></i> Activity</a>
 	          </li>
 	          <li>
-              <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="far fa-folder-open"></i> Faculty Folder </a>
+              <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fab fa-wpexplorer"></i> Explore </a>
               <ul class="collapse list-unstyled" id="pageSubmenu">
                 <li >
-                    <a class="drobli" href="#"><i class="fas fa-laptop-code"></i> Computer and Info</a>
+                    <a class="drobli" href="institutions.php"><i class="fas fa-university"></i> Institutions</a>
                 </li>
                 <li>
-                    <a class="drobli" href="#"><i class="fas fa-book-reader"></i>  Arts</a>
-                </li>
-                <li>
-                    <a class="drobli" href="#"><i class="fas fa-cash-register"></i> Commerce</a>
+                    <a class="drobli" href="#"><i class="fas fa-users"></i>  Employees</a>
                 </li>
               </ul>
 	          </li>
