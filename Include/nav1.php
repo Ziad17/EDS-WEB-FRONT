@@ -1,8 +1,5 @@
 
 <div>
-            <?php 
-            if ( $name == 'Activity') {
-echo ' 
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
           <!-- Button Create new section modal -->
@@ -76,11 +73,6 @@ echo '
           </div>
         </div>
         <!--End ModalCreate new Folder -->
-          </li>
-
-         ';
-            }
-          ?>
         </ul>
       </div>
 
