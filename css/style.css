@@ -302,7 +302,7 @@ a[data-toggle="collapse"] {
   margin-bottom:22px;
   padding: 5px 15px 15px 15px;
 }
-/*.dropleft .dropdown-toggle::before{
+.dropleft .dropdown-toggle::before{
   display: none;
 }
 .dropdown-menu {
@@ -310,4 +310,4 @@ a[data-toggle="collapse"] {
 }
 .dropdown-toggle::after{
   display: none;
-}*/
+}
