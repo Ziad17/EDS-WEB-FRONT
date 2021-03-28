@@ -6,7 +6,9 @@ body {
   line-height: 1.8;
   font-weight: normal;
   background: #fafafa;
-  color: gray; }
+  color: gray; 
+  overflow-x: hidden;
+}
 
 a {
   -webkit-transition: .3s all ease;
@@ -299,4 +301,13 @@ a[data-toggle="collapse"] {
 .card-body{
   margin-bottom:22px;
   padding: 5px 15px 15px 15px;
+}
+.dropleft .dropdown-toggle::before{
+  display: none;
+}
+.dropdown-menu {
+  left:-109px;
+}
+.dropdown-toggle::after{
+  display: none;
 }
