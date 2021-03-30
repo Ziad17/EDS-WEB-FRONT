@@ -56,7 +56,7 @@
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
     
-    <table id="table" border='2' class="table table-hover table-responsive-md mt-3">
+    <table id="table" border='2' class="table table-responsive mt-3">
   <thead>
     <tr>
       <th scope="col">NO</th>
@@ -281,4 +281,6 @@
 </table>
   </div>
 </div>
+<br>
+<br>
 </div>
