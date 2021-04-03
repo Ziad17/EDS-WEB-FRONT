@@ -16,11 +16,19 @@
                   <li class="breadcrumb-item"><a href="Home.php">KfsDocs</a></li>
                     <?php
                        if (isset($name)) {
-                          if ($name == 'KfsDocs') {
+                          if ($name === 'KfsDocs') {
                             echo  '<li class="breadcrumb-item">....</li>';
-                          }else{
+                          }elseif($name==="Edit-profile"){
+                            echo '<li class="breadcrumb-item"><a href="MyProfile.php">Profile</a></li>';
+                            echo  '<li class="breadcrumb-item"><a href="'.$name.'.php">' .$name.'</a></li>';
+                         }elseif($name ==="Add-New-Institution"){
+                            echo '<li class="breadcrumb-item"><a href="Add-New-Person.php">Add-New-Person</a></li>';
+                            echo  '<li class="breadcrumb-item"><a href="'.$name.'.php">' .$name.'</a></li>';
+                         }elseif($name ==="Add-New-Position"){
+                            echo '<li class="breadcrumb-item"><a href="Add-New-Person.php">Add-New-Person</a></li>';
+                            echo  '<li class="breadcrumb-item"><a href="'.$name.'.php">' .$name.'</a></li>';
+                         }else{
                           echo  '<li class="breadcrumb-item"><a href="'.$name.'.php">'.$name.'</a></li>';
-                           ;
                          } 
                        }
                    ?>
