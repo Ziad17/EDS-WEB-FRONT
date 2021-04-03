@@ -3,30 +3,40 @@
   require_once('Include/headtag.php');
  ?>
   <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
-  <body>
+  <body style="padding-right: 15px">
 		<div  class="wrapper d-flex align-items-stretch">
 
 
+     <!-- ----------------------------- start  sidebar ---------------------------------------------->
+
+        <?php require_once('Include/sidebar.php');?>
+
+      <!-- ----------------------------- End  sidebar ---------------------------------------------->
 
         <!-- Page Content  -->
 
   <div id="content" class="p-4 p-md-5">
 
 
-
     <!----------------------------------- Start nav N 2-------------- --------------------------->
 
-<nav style="border:1px solid;border-radius: 20px;padding: 10px" class="navbar navbar-light bg-light  mx-auto d-block w-25 border-dark">
-  <div align="right">
-   <button class="btn my-2 my-sm-0" type="submit"><i style="font-size: 30px" class="fas fa-lock"></i></button>
-   <button class="btn my-2 my-sm-0" type="submit"><i style="font-size: 30px" class="fab fa-telegram-plane"></i></button>
-  </div>
-</nav>
+      <?php require_once('Include/nav2.php'); ?>
+
+    <!----------------------------------- End nav N 2-------------- --------------------------->
+
+      <!----------------------------------- Start nav N 3-------------- --------------------------->
+        
+        <?php require_once('Include/nav3.php'); ?>
+
+    <!----------------------------------- End nav N 3-------------- --------------------------->
+        <!-- Page Content  -->
+
+
 
     <!----------------------------------- Content -------------- --------------------------->
 
-		<div class="container">
-			<div class="row">
+		<div class="container-fluid">
+			<div class="row mt-5">
         <?php require_once('Include/VistedProfile_content.php'); ?>
 			</div>					 
 
