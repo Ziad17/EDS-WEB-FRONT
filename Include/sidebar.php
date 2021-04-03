@@ -24,8 +24,8 @@
                 </li>
               </ul>
 	          </li>
-	          <li <?php if ($name === 'Profile') {echo 'class="active"';};?>>
-              <a href="profile.php"><i class="far fa-user"></i> Profile</a>
+	          <li <?php if ($name === 'MyProfile') {echo 'class="active"';};?>>
+              <a href="MyProfile.php"><i class="far fa-user"></i> My Profile</a>
 	          </li>
 	          <li>
               <a  href="#">
