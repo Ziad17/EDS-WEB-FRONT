@@ -26,7 +26,6 @@ class MainAction extends Action
     public function getAllInstitutions(): array //of Institutions
     {
         $conn = $this->getDatabaseConnection();
-        //FIXME: fix the typo in institutuion_view
         $stmt = $this->getSingleStatement("SELECT * FROM Institutuion_view", $conn);
         $array_of_institutions = array();
         while ($row = sqlsrv_fetch_array($stmt)) {
@@ -61,7 +60,7 @@ class MainAction extends Action
     public function signIn(string $email, string $password): int
     {
         $con = $this->getDatabaseConnection();
-        $sql = "SELECT ID FROM Person WHERE Person.acadmeic_number=? OR Person.contact_email=? AND user_password=?";
+        $sql = "SELECT ID FROM Person WHERE Person.academic_number=? OR Person.contact_email=? AND user_password=?";
         $params = array($email, $email, $password);
         $stmt = $this->getParameterizedStatement($sql, $con, $params);
         if ($stmt == false) {
@@ -83,73 +82,6 @@ class MainAction extends Action
 
     }
 
-    public function SignUp(Person $person, string &$password)
-    {
-
-        //check if email exists
-        if ($this->isUserExists($person->getAcadmicNumber(), $person->getEmail())) {
-            throw new DuplicateDataEntry("The Email or AcademicNumber already exists");
-
-        }
-        /*
-         * Steps
-         * 1-upload personContacts record
-         * 2-upload Person record
-         * */
-
-        $conn = $this->getDatabaseConnection();
-        sqlsrv_begin_transaction($conn);
-        //PersonContacts
-        $sql1 = "INSERT INTO PersonContacts(email,phone_number,base_faculty) VALUES(?,?,?)";
-        $params1 = array("{$person->getEmail()}",
-            "{$person->getPhoneNumber()}",
-            "{$person->getInstitution()}");
-        $stmt1 = $this->getParameterizedStatement($sql1, $conn, $params1);
-
-        $sql2 = "INSERT INTO Person(first_name,
-                   middle_name,
-                   last_name,
-                   user_password,
-                   contact_email,
-                   acadmeic_number,
-                   gender,
-                   city_shortcut) VALUES(?,?,?,?,?,?,?,?)";
-        $params2 = array("{$person->getFirstName()}",
-            "{$person->getMiddleName()}",
-            "{$person->getLastName()}",
-            "{$password}",
-            "{$person->getEmail()}",
-            "{$person->getAcadmicNumber()}",
-            "{$person->getGender()[0]}",//the first char of gender M or F
-            "{$person->getCity()}");
-        $stmt2 = $this->getParameterizedStatement($sql2, $conn, $params2);
-        if ($stmt2 == false || $stmt1 == false) {
-            sqlsrv_rollback($conn);
-            $this->closeConnection($conn);
-            throw new SQLStatmentException("Couldn't execute this statement");
-
-        }
-        sqlsrv_commit($conn);
-        $this->closeConnection($conn);
-        return true;
-
-    }
-
-    public function isUserExists(string $academicNumber, string $getEmail): bool
-    {
-        $conn = $this->getDatabaseConnection();
-        $sql = "SELECT * FROM Person WHERE Person.acadmeic_number=? OR Person.contact_email=?";
-        $params = array("{$academicNumber}",
-            "{$getEmail}");
-        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
-        if ($stmt == false) {
-            throw new SQLStatmentException("Couldn't execute this statement");
-        }
-        if (sqlsrv_has_rows($stmt)) {
-            return true;
-        }
-        return false;
-    }
 
 
 }

@@ -7,32 +7,30 @@ class Institution
     //TODO:APPLY GENERICS
     private Int $ID;
     private String $name;
-    private String $website;
+    private String $type;
+    private bool $active;
+    private Int $level;
+    private Institution $parent;
     private bool $insideCampus;
+    private String $fax;
+    private String $primaryPhone;
+    private String $secondaryPhone;
+    private String $email;
 
-
-    private array $emails;
-    private array $phones;
-
-    /**
-     * Institution constructor.
-     * @param Int $ID
-     * @param String $name
-     * @param String $website
-     * @param array $emails
-     * @param array $phones
-     */
-    public function __construct( string $name, string $website,bool $insideCampus, array $emails, array $phones)
+    public function __construct(InstitutionBuilder $builder)
     {
-        $this->insideCampus=$insideCampus;
-        $this->name = $name;
-        $this->website = $website;
-        $this->emails = $emails;
-        $this->phones = $phones;
+        $this->setID($builder->getID());
+        $this->setEmail($builder->getEmail());
+        $this->setActive($builder->isActive());
+        $this->setFax($builder->getFax());
+        $this->setPrimaryPhone($builder->getPrimaryPhone());
+        $this->setSecondaryPhone($builder->getSecondaryPhone());
+        $this->setLevel($builder->getLevel());
+        $this->setType($builder->getType());
+        $this->setParent($builder->getParent());
+
+
     }
-
-
-
 
     /**
      * @return Int
@@ -40,13 +38,6 @@ class Institution
     public function getID(): int
     {
         return $this->ID;
-    }
-    /**
-     * @return bool
-     */
-    public function isInsideCampus(): bool
-    {
-        return $this->insideCampus;
     }
 
     /**
@@ -60,26 +51,369 @@ class Institution
     /**
      * @return String
      */
-    public function getWebsite(): string
+    public function getType(): string
     {
-        return $this->website;
+        return $this->type;
     }
 
     /**
-     * @return array
+     * @return bool
      */
-    public function getEmails(): array
+    public function isActive(): bool
     {
-        return $this->emails;
+        return $this->active;
     }
 
     /**
-     * @return array
+     * @return Int
      */
-    public function getPhones(): array
+    public function getLevel(): int
     {
-        return $this->phones;
+        return $this->level;
     }
+
+    /**
+     * @return Institution
+     */
+    public function getParent(): Institution
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInsideCampus(): bool
+    {
+        return $this->insideCampus;
+    }
+
+    /**
+     * @return String
+     */
+    public function getFax(): string
+    {
+        return $this->fax;
+    }
+
+    /**
+     * @return String
+     */
+    public function getPrimaryPhone(): string
+    {
+        return $this->primaryPhone;
+    }
+
+    /**
+     * @return String
+     */
+    public function getSecondaryPhone(): string
+    {
+        return $this->secondaryPhone;
+    }
+
+    /**
+     * @return String
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+
+
+    /**
+     * @param Int $ID
+     */
+    private function setID(int $ID): void
+    {
+        $this->ID = $ID;
+    }
+
+    /**
+     * @param String $name
+     */
+    private function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param String $type
+     */
+    private function setType(string $type): void
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @param bool $active
+     */
+    private function setActive(bool $active): void
+    {
+        $this->active = $active;
+    }
+
+    /**
+     * @param Int $level
+     */
+    private function setLevel(int $level): void
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * @param Institution $parent
+     */
+    private function setParent(Institution $parent): void
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @param bool $insideCampus
+     */
+    private function setInsideCampus(bool $insideCampus): void
+    {
+        $this->insideCampus = $insideCampus;
+    }
+
+    /**
+     * @param String $fax
+     */
+    private function setFax(string $fax): void
+    {
+        $this->fax = $fax;
+    }
+
+    /**
+     * @param String $primaryPhone
+     */
+    private function setPrimaryPhone(string $primaryPhone): void
+    {
+        $this->primaryPhone = $primaryPhone;
+    }
+
+    /**
+     * @param String $secondaryPhone
+     */
+    private function setSecondaryPhone(string $secondaryPhone): void
+    {
+        $this->secondaryPhone = $secondaryPhone;
+    }
+
+    /**
+     * @param String $email
+     */
+    private function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+
+
+}
+class InstitutionBuilder
+{
+    private Int $ID=0;
+    private String $name="";
+    private String $type="";
+    private bool $active=false;
+    private Int $level=0;
+    private ?Institution $parent;
+    private bool $insideCampus=false;
+    private String $fax="";
+    private String $primaryPhone="";
+    private String $secondaryPhone="";
+    private String $email="";
+
+    /**
+     * @return int
+     */
+    public function getID(): int
+    {
+        return $this->ID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParent():Institution
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInsideCampus(): bool
+    {
+        return $this->insideCampus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFax(): string
+    {
+        return $this->fax;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrimaryPhone(): string
+    {
+        return $this->primaryPhone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSecondaryPhone(): string
+    {
+        return $this->secondaryPhone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+
+    /**
+     * @param int $ID
+     */
+    public function setID(int $ID): InstitutionBuilder
+    {
+        $this->ID = $ID;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): InstitutionBuilder
+    {
+        $this->name = $name;        return $this;
+
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type): InstitutionBuilder
+    {
+        $this->type = $type;        return $this;
+
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive(bool $active): InstitutionBuilder
+    {
+        $this->active = $active;        return $this;
+
+    }
+
+    /**
+     * @param int $level
+     */
+    public function setLevel(int $level): InstitutionBuilder
+    {
+        $this->level = $level;        return $this;
+
+    }
+
+    /**
+     * @param Institution $parent
+     */
+    public function setParent(Institution $parent): InstitutionBuilder
+    {
+        $this->parent = $parent;        return $this;
+
+    }
+
+    /**
+     * @param bool $insideCampus
+     */
+    public function setInsideCampus(bool $insideCampus): InstitutionBuilder
+    {
+        $this->insideCampus = $insideCampus;        return $this;
+
+    }
+
+    /**
+     * @param string $fax
+     */
+    public function setFax(string $fax): InstitutionBuilder
+    {
+        $this->fax = $fax;        return $this;
+
+    }
+
+    /**
+     * @param string $primaryPhone
+     */
+    public function setPrimaryPhone(string $primaryPhone): InstitutionBuilder
+    {
+        $this->primaryPhone = $primaryPhone;        return $this;
+
+    }
+
+    /**
+     * @param string $secondaryPhone
+     */
+    public function setSecondaryPhone(string $secondaryPhone): InstitutionBuilder
+    {
+        $this->secondaryPhone = $secondaryPhone;
+        return $this;}
+
+    /**
+     * @param string $email
+     */
+    public function setEmail(string $email): InstitutionBuilder
+    {
+        $this->email = $email;
+        return $this;
+    }
+
 
 
 }

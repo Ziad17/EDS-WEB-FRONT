@@ -28,9 +28,9 @@ class SessionManager
         {
             if(strtotime($_SESSION[self::USER_EXP_TIME_STAMP])>strtotime(date("Y-m-d h:i:s")))
             {
-             //   echo $_SESSION[self::USER_ID];
-              //  echo $_SESSION[self::USER_EMAIL];
-              //   echo $_SESSION[self::USER_EXP_TIME_STAMP];
+               echo $_SESSION[self::USER_ID];
+                echo $_SESSION[self::USER_EMAIL];
+                 echo $_SESSION[self::USER_EXP_TIME_STAMP];
 
                 return true;
 

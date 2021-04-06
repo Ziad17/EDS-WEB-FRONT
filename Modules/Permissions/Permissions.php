@@ -17,7 +17,6 @@ abstract class Permissions
     {
         return $this->permissions_bit_array[$index];
     }
-    public abstract function populatePermissionsArray(int $permissionSum);
     public  function initAllFalse()
     {
         foreach ($this->permissions_bit_array as $member)
@@ -29,6 +28,14 @@ abstract class Permissions
     public function getReversedBinaryForm(int $permissionSum) : String
     {
         return strrev(decbin($permissionSum));
+    }
+
+    public function populatePermissionsArray(int $permissionSum)
+    {
+        $this->initAllFalse();
+        $this->mapBinaryFormToArray($this->getReversedBinaryForm($permissionSum),$this->permissions_bit_array);
+
+
     }
 
     public function mapBinaryFormToArray(String $binaryForm,array &$array)

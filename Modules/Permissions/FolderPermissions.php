@@ -20,12 +20,5 @@ class FolderPermissions extends Permissions
     }
 
 
-    public function populatePermissionsArray(int $permissionSum)
-    {
-        $this->initAllFalse();
-        $this->mapBinaryFormToArray($this->getReversedBinaryForm($permissionSum),$this->permissions_bit_array);
-
-
-    }
 
 }

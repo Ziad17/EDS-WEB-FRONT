@@ -33,7 +33,7 @@ abstract class Action
         else return $stmt;
     }
 
-   protected function  getIntitutionNameByID($id):String
+   protected function  getInstitutionNameByID($id):String
    {
        $conn = $this->getDatabaseConnection();
        $sql = "SELECT institution_name FROM Institutuion_view WHERE ID=?";
@@ -48,6 +48,22 @@ abstract class Action
        return $name;
    }
 
+
+    public function isUserExists(string $academicNumber, string $getEmail): bool
+    {
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT * FROM Person WHERE Person.academic_number=? OR Person.contact_email=?";
+        $params = array("{$academicNumber}",
+            "{$getEmail}");
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false) {
+            throw new SQLStatmentException("Couldn't execute this statement");
+        }
+        if (sqlsrv_has_rows($stmt)) {
+            return true;
+        }
+        return false;
+    }
 
     protected function getIdFromPersonEmail(string $targetEmail): int
     {
