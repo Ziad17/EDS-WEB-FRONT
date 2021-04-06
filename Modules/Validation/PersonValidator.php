@@ -84,8 +84,8 @@ class PersonValidator extends Validator
     public function validateAcademicNumber(): string
     {
 
-        if (filter_var($this->personToValidate->getAcadmicNumber(), FILTER_SANITIZE_NUMBER_INT)) {
-            if (strlen($this->personToValidate->getAcadmicNumber()) == 16) {
+        if (filter_var($this->personToValidate->getAcademicNumber(), FILTER_SANITIZE_NUMBER_INT)) {
+            if (strlen($this->personToValidate->getAcademicNumber()) == 16) {
                 return '';
             }
             $this->IS_ERROR_PRESENT=true;

@@ -4,12 +4,12 @@ require_once "Modules/Database/MainAction.php";
 require_once "Modules/Sessions/SessionManager.php";
 error_reporting(E_ERROR | E_PARSE);
 
-if(SessionManager::validateSession())
+/*if(SessionManager::validateSession())
 {
     header("Location: Home.php");
     header('Cache-Control: no-cache, must-revalidate');
     exit();
-}
+}*/
 if ($_SERVER['REQUEST_METHOD']== 'POST') {
 
   $email =filter_var($_POST['email'],FILTER_SANITIZE_EMAIL);
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
     
 
       if(strlen($password) < 8 ){
-      $FormErrors[]='Password Must Be <strong> 8 </strong> Chararcter';
+      $FormErrors[]='Password Must Be <strong>At Least 8 </strong> Characters';
        }
   
 
@@ -70,9 +70,14 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
           }
       } catch (Exception  $e )
       {
+          //FIXME::handle errors on production
+
           $FormErrors[]=$e->getMessage();
-          header("HTTP/1.1 503 Not Found");
-exit();
+          $FormErrors[]=$e->getFile();
+
+          $FormErrors[]=$e->getLine();
+          /*    header("HTTP/1.1 503 Not Found");
+    exit();*/
 
       }
   }
@@ -136,10 +141,12 @@ exit();
       <div  style="   margin-bottom: 0rem;" class="form-group">
       <input style="background-color: #0274b4;" class="w-100 btn btn-primary btn-block" type="submit" name="submit" value="Login">
       <br>
-      <div class="text-center">
+     <!--
+     this reference is disabled
+     <div class="text-center">
                <a href="register.php" class="text-center"> I dont have an account </a>
-    <p class="mt-3 text-muted">© <?php echo date('Y-n-j').' '; ?><a href="mailto:ahmedheshamesmail@gmail.com?subject=feedback">Ahmed hesham</a></p>
-      </div>
+    <p class="mt-3 text-muted">© <?php /*echo date('Y-n-j').' '; */?><a href="mailto:ahmedheshamesmail@gmail.com?subject=feedback">Ahmed hesham</a></p>
+      </div>-->
     </form>
   </div>
   <!--  End   Form  -->

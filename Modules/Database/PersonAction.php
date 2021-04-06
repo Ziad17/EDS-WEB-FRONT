@@ -128,9 +128,9 @@ class PersonAction extends Action
     private function activatePersonWithinInstitution(string $targetEmail): bool
     {
         //REQUIRED_PERMISSION=$ACTIVATE_PERSON_WITHIN_INSTITUTION=5
-        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->ACTIVATE_PERSON_WITHIN_INSTITUTION)) {
+        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->CREATE_PERSON_WITHIN_INSTITUTION)) {
             if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
-                $permission=$this->myPersonPermissions->ACTIVATE_PERSON_WITHIN_INSTITUTION;
+                $permission=$this->myPersonPermissions->CREATE_PERSON_WITHIN_INSTITUTION;
                 return $this->setRoleActiveStatus(true, $targetEmail,2**$permission);
             } else {
                 throw new LowRoleForSuchActionException("The targeted person has a higher role level");
@@ -212,6 +212,56 @@ class PersonAction extends Action
             throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
         }
 
+
+    }
+
+    public function createPerson(Person $person, string &$password) :bool
+    {
+
+        //check if email exists
+        if ($this->isUserExists($person->getAcademicNumber(), $person->getEmail())) {
+            throw new DuplicateDataEntry("The Email or AcademicNumber already exists");
+        }
+        /*
+         * Steps
+         * 1-upload personContacts record
+         * 2-upload Person record
+         * */
+
+        $conn = $this->getDatabaseConnection();
+        sqlsrv_begin_transaction($conn);
+        //PersonContacts
+        $sql1 = "INSERT INTO PersonContacts(email,phone_number,base_faculty) VALUES(?,?,?)";
+        $params1 = array("{$person->getEmail()}",
+            "{$person->getPhoneNumber()}",
+            "{$person->getInstitution()}");
+        $stmt1 = $this->getParameterizedStatement($sql1, $conn, $params1);
+
+        $sql2 = "INSERT INTO Person(first_name,
+                   middle_name,
+                   last_name,
+                   user_password,
+                   contact_email,
+                   academic_number,
+                   gender,
+                   city_shortcut) VALUES(?,?,?,?,?,?,?,?)";
+        $params2 = array("{$person->getFirstName()}",
+            "{$person->getMiddleName()}",
+            "{$person->getLastName()}",
+            "{$password}",
+            "{$person->getEmail()}",
+            "{$person->getAcademicNumber()}",
+            "{$person->getGender()[0]}",//the first char of gender M or F
+            "{$person->getCity()}");
+        $stmt2 = $this->getParameterizedStatement($sql2, $conn, $params2);
+        if ($stmt2 == false || $stmt1 == false) {
+            sqlsrv_rollback($conn);
+            $this->closeConnection($conn);
+            throw new SQLStatmentException("Couldn't execute this statement");
+        }
+        sqlsrv_commit($conn);
+        $this->closeConnection($conn);
+        return true;
 
     }
 
@@ -330,7 +380,6 @@ class PersonAction extends Action
 
     private function getPersonRoleInstitution(string $targetEmail): int //the id of the institution
     {
-
         $conn = $this->getDatabaseConnection();
         $sql = "SELECT institution_id FROM PersonsHierarchy_view WHERE contact_email=?";
         $params = array($targetEmail);
@@ -342,8 +391,6 @@ class PersonAction extends Action
         $id = sqlsrv_fetch_array($stmt)[0][0];
         $this->closeConnection($conn);
         return $id;
-
-
     }
 
 

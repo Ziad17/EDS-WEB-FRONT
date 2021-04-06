@@ -31,10 +31,10 @@
 
     <!----------------------------------- Content -------------- --------------------------->
 
-		<div class="container">
-			<div class="row">
-        <?php require_once('Include/institutions_content.php'); ?>
-			</div>					 
+      <div class="container">
+          <div class="row">
+              <?php require_once('Include/institutions_content.php'); ?>
+          </div>
 
           <footer class="row">
             <div class="col-md-12 footer">

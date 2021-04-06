@@ -95,7 +95,7 @@ class SearchAction extends Action
             $contact_email=$row[5];
             $employee_title=$row[6];
 
-            $role=new PersonRole($employee_title,0,"",$this->getIntitutionNameByID($institution_id));
+            $role=new PersonRole($employee_title,0,"",$this->getInstitutionNameByID($institution_id));
             $person=Person::Builder()->setFirstName($first_name)
                 ->setMiddleName($middle_name)
                 ->setLastName($last_name)

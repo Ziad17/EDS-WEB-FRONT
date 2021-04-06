@@ -4,8 +4,12 @@ require_once "Modules/Business/Person.php";
 require_once "Modules/Database/MainAction.php";
 require_once "Modules/Sessions/SessionManager.php";
 
+
 error_reporting(E_ERROR | E_PARSE);
 //check if user coming From A Request
+//This file is deprecated///////////////////////////////////
+header("HTTP/1.1 503 Not Found");
+exit(503);
 $mainAction = new MainAction();
 
 if(SessionManager::validateSession())

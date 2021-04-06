@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$USER_HOME$/Desktop/EDS-SQL-main/SQL Queries/CONSTRAINTS.sql" dialect="TSQL" />
     <file url="file://$USER_HOME$/Desktop/EDS-SQL-main/SQL Queries/CREATION.sql" dialect="TSQL" />
+    <file url="file://$USER_HOME$/Desktop/EDS-SQL-main/SQL Queries/VIEWS.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Modules/Database/SearchAction.php" dialect="GenericSQL" />
+  </component>
+  <component name="SqlResolveMappings">
+    <file url="file://$USER_HOME$/Desktop/EDS-SQL-main/SQL Queries/CONSTRAINTS.sql" scope="{&quot;node&quot;:{  &quot;@negative&quot;:&quot;1&quot;,  &quot;group&quot;:{   &quot;@kind&quot;:&quot;root&quot;,   &quot;node&quot;:{    &quot;@negative&quot;:&quot;1&quot;   }  } }}" />
+    <file url="file://$USER_HOME$/Desktop/EDS-SQL-main/SQL Queries/CREATION.sql" scope="{&quot;node&quot;:{  &quot;@negative&quot;:&quot;1&quot;,  &quot;group&quot;:{   &quot;@kind&quot;:&quot;root&quot;,   &quot;node&quot;:{    &quot;@negative&quot;:&quot;1&quot;   }  } }}" />
   </component>
 </project>

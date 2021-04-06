@@ -6,7 +6,7 @@ class Person
     private int $ID;
 
     private string $Email;
-    private string $acadmicNumber;
+    private string $academicNumber;
     private string $firstName;
     private string $middleName;
     private string $lastName;
@@ -30,7 +30,7 @@ class Person
         $this->phd = $builder->getPhd();
         $this->bio = $builder->getBio();
         $this->Email = $builder->getEmail();
-        $this->acadmicNumber = $builder->getAcadmicNumber();
+        $this->academicNumber = $builder->getAcadmicNumber();
         $this->firstName = $builder->getFirstName();
         $this->middleName = $builder->getMiddleName();
         $this->lastName = $builder->getLastName();
@@ -114,9 +114,9 @@ class Person
     /**
      * @return String
      */
-    public function getAcadmicNumber(): string
+    public function getAcademicNumber(): string
     {
-        return $this->acadmicNumber;
+        return $this->academicNumber;
     }
 
     /**
