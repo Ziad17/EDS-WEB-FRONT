@@ -1,39 +1,53 @@
 <?php
 
+require_once "./Modules/Database/Action.php";
+require_once "./Modules/Exceptions/PermissionsCriticalFail.php";
+require_once "./Modules/Exceptions/PersonHasNoRolesException.php";
+require_once "./Modules/Permissions/InstitutionsPermissions.php";
+
 
 class InstitutionAction extends Action
 {
 
+    private string $institutionName;
     private InstitutionsPermissions $myInstitutionPermissions;
     private array $roleAndPermissionSum = array("PERMISSION_SUM" => 0);
-    private int $myInstitutionID;
     private int $institutionLevel;
     private bool $active;
-    public function __construct(Person $myPersonRef,int $myInstitution_id)
+    public function __construct(Person $myPersonRef,string $_institutionName)
     {
         parent::setConnection($this);
         try {
 
-            $this->myInstitutionID=$myInstitution_id;
+            $this->institutionName=$_institutionName;
             $this->myPersonRef = $myPersonRef;
-            $this->updateMyInstitutionPermissions();
+         //   $this->updateMyInstitutionPermissions();
             $this->myInstitutionPermissions = new InstitutionsPermissions($this->roleAndPermissionSum["PERMISSION_SUM"]);
         } catch (Exception $e) {
-            throw new PermissionsCriticalFail("Could not fetch person action permissions");
+            throw new PermissionsCriticalFail($e->getMessage());
 
         }
     }
+
+
 
     public function updateMyInstitutionPermissions()
     {
         //updates the permissions array
         $conn = $this->getDatabaseConnection();
-        $sql = "SELECT institution_level,institution_permissions_sum,active FROM PersonRolesAndPermissions_view WHERE contact_email=? AND institution_id=?";
-        $params = array($this->myPersonRef->getEmail());
+        $sql = "SELECT institution_level,institutions_permissions_sum,active FROM PersonRolesAndPermissions_view WHERE contact_email=? AND institution_name=?";
+        $params = array($this->myPersonRef->getEmail(),$this->institutionName);
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false) {
-            $this->closeConnection($conn);
-            throw new SQLStatmentException("Could not get details of the person roles");
+
+            //TODO:: REMOVE
+            throw new SQLStatmentException(sqlsrv_errors()[0]['message']);
+
+
+
+            //TODO ::UNCOMMENT
+           // $this->closeConnection($conn);
+//            throw new SQLStatmentException("Could not get details of the person roles");
         }
         if (sqlsrv_has_rows($stmt)) {
             $row = sqlsrv_fetch_object($stmt);
@@ -82,15 +96,38 @@ class InstitutionAction extends Action
 
 
     }
-    public function createInstitution(Institution $institutionToCreate,int $parent_institution_id):bool
+    public function createInstitution(Institution $institutionToCreate):bool
     {
         $con=$this->getDatabaseConnection();
         //REQUIRED_PERMISSION=$CREATE_INSTITUTION=1
         if ($this->myInstitutionPermissions->getPermissionsFromBitArray($this->myInstitutionPermissions->CREATE_INSTITUTION)) {
             $permission_value=2**($this->myInstitutionPermissions->CREATE_INSTITUTION);
 
-            $sql = "INSERT INTO Institution(Institution.level,Institution.name,Institution.type,institutions_parent_id,active) VALUES(?,?,?,?,1)";
-            $params = array($institutionToCreate->getLevel(),$institutionToCreate->getName(), $institutionToCreate->getType(),$parent_institution_id);
+            $sql = "INSERT INTO Institution(institution_name,
+                        institution_type,
+                        institution_active,
+                        institution_parent_id,
+                        institution_website,
+                        inside_campus,
+                        primary_phone,
+                        secondary_phone,
+                        fax,
+                        email
+                        ) VALUES(?,?,?,?,?,?,?,?,?,?)";
+            $params = array(
+                $institutionToCreate->getName(),
+                $institutionToCreate->getType(),
+                $institutionToCreate->isActive(),
+                $this->getInstitutionIDByName($institutionToCreate->getName()),
+                            $institutionToCreate->getWebsite(),
+                $institutionToCreate->isInsideCampus(),
+                $institutionToCreate->getPrimaryPhone(),
+                $institutionToCreate->getSecondaryPhone(),
+                $institutionToCreate->getFax(),
+                $institutionToCreate->getEmail()
+
+            );
+
             $stmt = $this->getParameterizedStatement($sql, $con, $params);
             //ID THAT IS RETURNED
             $institution_created_ID=0;
@@ -108,6 +145,72 @@ class InstitutionAction extends Action
     {
 
         return false;
+    }
+
+    public function getSingleInstitutionInfo(string $name) :Institution
+    {
+        $con=$this->getDatabaseConnection();
+        $sql = "SELECT * FROM Institution WHERE institution_name=?";
+        $params = array($name);
+        $stmt = $this->getParameterizedStatement($sql, $con, $params);
+        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            $this->closeConnection($conn);
+            throw new SQLStatmentException("Error fetching the required data");
+        }
+        else
+            {
+                $row=sqlsrv_fetch_object($stmt);
+                return Institution::Builder()
+                    ->setID($row->ID)
+                    ->setName($row->institution_name)
+                    ->setType($row->institution_type)
+                    ->setActive($row->institution_active)
+                    ->setParent($this->getInstitutionNameByID($row->institution_parent_id))
+                    ->setLevel($row->institution_level)
+                    ->setInsideCampus($row->inside_campus)
+                    ->setPrimaryPhone($row->primary_phone)
+                    ->setSecondaryPhone($row->secondary_phone)
+                    ->setFax($row->fax)
+                    ->setEmail($row->email)
+                    ->setWebsite((string)$row->institution_website)
+                    ->build();
+
+            }
+
+    }
+    public function getInstitutionNameByID(int $id): String
+    {
+        $con=$this->getDatabaseConnection();
+        $sql = "SELECT institution_name FROM Institution WHERE ID=?";
+        $params = array($id);
+        $stmt = $this->getParameterizedStatement($sql, $con, $params);
+        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            $this->closeConnection($conn);
+            throw new SQLStatmentException("Error fetching the required data");
+        }
+        else
+        {
+            $row=sqlsrv_fetch_object($stmt);
+            return (string)$row->institution_name;
+            }
+
+    }
+
+    private function getInstitutionIDByName(string $getName):int
+    {
+        $con=$this->getDatabaseConnection();
+        $sql = "SELECT ID FROM Institution WHERE institution_name =?";
+        $params = array($getName);
+        $stmt = $this->getParameterizedStatement($sql, $con, $params);
+        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            $this->closeConnection($conn);
+            throw new SQLStatmentException("Error fetching the required data");
+        }
+        else
+        {
+            $row=sqlsrv_fetch_object($stmt);
+            return (int)$row->institution_name;
+        }
     }
 
 }

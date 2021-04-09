@@ -1,5 +1,6 @@
 <?php
 
+require 'Permissions.php';
 
 class FilePermissions extends Permissions
 {

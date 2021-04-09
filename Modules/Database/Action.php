@@ -18,22 +18,27 @@ abstract class Action
         $stmt=sqlsrv_query($conn,$query);
         if(!$stmt)
         {
-            throw new SQLStatmentException(sqlsrv_errors()['code']);
-        }
-        else return $stmt;
-    }
-    protected function getParameterizedStatement(String $query,&$conn,array $params)
-    {
-        $stmt=sqlsrv_query($conn,$query,$params);
-        if(!$stmt)
-        {
             $error=sqlsrv_errors()[0];
             throw new SQLStatmentException($error['message']);
         }
         else return $stmt;
     }
+    protected function getParameterizedStatement(String $query,&$conn,array $params)
+    {
+        try {
+            return sqlsrv_query($conn, $query, $params);
 
-   protected function  getInstitutionNameByID($id):String
+        }
+        catch (Exception $e)
+        {
+            $error = sqlsrv_errors()[0];
+
+            throw new SQLStatmentException($error['code']);
+
+        }
+    }
+
+/*   protected function  getInstitutionNameByID($id):String
    {
        $conn = $this->getDatabaseConnection();
        $sql = "SELECT institution_name FROM Institutuion_view WHERE ID=?";
@@ -46,7 +51,7 @@ abstract class Action
        $name = sqlsrv_fetch_array($stmt)[0][0];
        $this->closeConnection($conn);
        return $name;
-   }
+   }*/
 
 
     public function isUserExists(string $academicNumber, string $getEmail): bool

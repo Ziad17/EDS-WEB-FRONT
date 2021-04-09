@@ -1,6 +1,24 @@
 <?php
   $name = 'Add-New-Institution';
   require_once('Include/headtag.php');
+require_once "./Modules/Sessions/SessionManager.php";
+
+
+/*
+ * STEPS ON HOW THIS PAGE WORKS
+ * (A)
+ *  1-check whether the person has the permission to add new Institution
+ * */
+
+//TODO:: REMOVE
+SessionManager::sessionSignIn('super@gmail.com',1);
+
+if(!SessionManager::validateSession())
+{
+    header("Location: index.php");
+    header('Cache-Control: no-cache, must-revalidate');
+    exit();
+}
  ?>
  <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
   <body>

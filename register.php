@@ -8,11 +8,10 @@ require_once "Modules/Sessions/SessionManager.php";
 error_reporting(E_ERROR | E_PARSE);
 //check if user coming From A Request
 //This file is deprecated///////////////////////////////////
-header("HTTP/1.1 503 Not Found");
-exit(503);
-$mainAction = new MainAction();
 
-if(SessionManager::validateSession())
+$mainAction = new MainAction();
+SessionManager::sessionLogOut();
+if(!SessionManager::validateSession())
 {
     header("Location: Home.php");
     header('Cache-Control: no-cache, must-revalidate');

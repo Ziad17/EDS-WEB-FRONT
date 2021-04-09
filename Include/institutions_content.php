@@ -1,13 +1,80 @@
+<?php
+
+
+require_once "./Modules/Validation/PersonValidator.php";
+require_once "./Modules/Business/Person.php";
+require_once "./Modules/Business/Institution.php";
+require_once "./Modules/Database/InstitutionAction.php";
+
+require_once "./Modules/Database/MainAction.php";
+require_once "./Modules/Sessions/SessionManager.php";
+
+/*
+ * STEPS ON HOW THIS PAGE WORKS
+ *
+ *
+ * (A) Fill Data
+ * 1-LOAD Institution info
+
+ *
+ *
+ *
+ * */
+
+//TODO:: uncomment
+//error_reporting(E_ERROR | E_PARSE);
+
+
+
+//TODO:: FIXME:: GET THE NAME OF THE INSTITUTION BY THE GET REQUEST
+$name="SYSTEM_GROUP";
+
+try {
+
+
+    $person=Person::Builder()->setID((int)SessionManager::USER_ID)->setEmail(SessionManager::USER_EMAIL)->build();
+    $institutionAction = new InstitutionAction($person,$name);
+     $institution=$institutionAction->getSingleInstitutionInfo($name);
+
+    // $positions=array();
+
+} catch (Exception $e) {
+    //FIXME::HANDLE ERRORS
+    echo $e->getMessage();
+    $FormErrors[] = $e->getMessage();
+    // header("HTTP/1.1 503 Not Found");
+    exit(503);
+}
+/*
+if($_SERVER['REQUEST_METHOD'=='POST'])
+{
+
+
+}*/
+
+?>
+
+
+
+
 <div  class="col-md-4">
 <div class="card" style="width: 18rem;">
   <img src="img/logo (1).png" class="card-img-top" alt="...">
   <div class="card-body">
-    <h5 class="card-title"> Institution Name</h5>
+    <h5 class="card-title">  <?php
+        if (isset($institution))
+    {
+        echo $institution->getName();
+    }?></h5>
   </div>
   <div class="card-body">
     <ul>
       <li class="cardli">
-        <a href="#" class="card-text"><i class="fas fa-globe"></i> Institution Website</a>
+        <a href="#" class="card-text"><i class="fas fa-globe"></i> <?php
+            if (isset($institution))
+            {
+                echo $institution->getWebsite();
+            }?></a>
       </li>
       <li class="cardli">
         <a href="#cardSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> 
@@ -16,8 +83,16 @@
         </a>
         <ul class="collapse list-unstyled" id="cardSubmenu">
           <li class="subli">
-            <P>01551817847</P>
-            <P>01221897385</P>
+            <P><?php
+                if (isset($institution))
+                {
+                    echo $institution->getPrimaryPhone();
+                }?></P>
+            <P><?php
+                if (isset($institution))
+                {
+                    echo $institution->getSecondaryPhone();
+                }?></P>
           </li>
         </ul>
       </li>
@@ -28,8 +103,16 @@
         </a>
         <ul class="collapse list-unstyled" id="cardSubmenu1">
           <li class="subli" >
-            <p>ahmedheshamesmail@gmail.com</p>
-            <p>ahmedheshamesmail@gmail.com</p>
+            <p><?php
+                if (isset($institution))
+                {
+                    echo $institution->getEmail();
+                }?></p>
+            <p><?php
+                if (isset($institution))
+                {
+                    echo $institution->getFax();
+                }?></p>
           </li>
         </ul>
       </li>   

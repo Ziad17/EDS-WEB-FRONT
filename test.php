@@ -1,5 +1,6 @@
 <?php
 // phpinfo();
+require_once "./Modules/Database/MainAction.php";
 
 // PHP Data Objects(PDO) Sample Code:
 
@@ -9,18 +10,22 @@ $connectionInfo = array("UID" => "ziadmohamd456", "pwd" => "01015790817aA", "Dat
 $conn =  sqlsrv_connect($serverName, $connectionInfo); 
 
 
-$query="SELECT * FROM Person";
+$query="SELECT institution_name FROM Institution";
 $stmt = sqlsrv_query($conn, $query);
 
 while($row = sqlsrv_fetch_array($stmt)) {
-    echo $row[1];
+    echo $row[0];
     echo "</br>";
     
     //...
 }
 
+$person=Institution::Builder()->setName('asdasdasd')->build();
+print ($person->getName());
+
+$ma=new MainAction();
 if(1)
-{echo "heee";}
+{print($ma->getAllAvailableRoles(2)[0]->getJobTitle());}
 
 if(strtotime(date("Y-m-d h:i:s"))>strtotime(date("Y-m-d h:i:s",mktime(1,25,0,2,19,2021))))
 {

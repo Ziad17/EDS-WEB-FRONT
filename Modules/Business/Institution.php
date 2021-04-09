@@ -10,16 +10,37 @@ class Institution
     private String $type;
     private bool $active;
     private Int $level;
-    private Institution $parent;
+    private String $parent;
     private bool $insideCampus;
     private String $fax;
     private String $primaryPhone;
     private String $secondaryPhone;
     private String $email;
+    private String $website;
+
+    /**
+     * @return String
+     */
+    public function getWebsite(): string
+    {
+        return $this->website;
+    }
+
+    /**
+     * @param String $website
+     */
+    public function setWebsite(string $website): void
+    {
+        $this->website = $website;
+    }
 
     public function __construct(InstitutionBuilder $builder)
     {
         $this->setID($builder->getID());
+        $this->setName($builder->getName());
+
+        $this->setWebsite($builder->getWebsite());
+
         $this->setEmail($builder->getEmail());
         $this->setActive($builder->isActive());
         $this->setFax($builder->getFax());
@@ -27,10 +48,15 @@ class Institution
         $this->setSecondaryPhone($builder->getSecondaryPhone());
         $this->setLevel($builder->getLevel());
         $this->setType($builder->getType());
+        //FIXME:: ERROR HERE
         $this->setParent($builder->getParent());
 
 
     }
+    public static function Builder() : InstitutionBuilder
+
+    {return new InstitutionBuilder();}
+
 
     /**
      * @return Int
@@ -75,7 +101,7 @@ class Institution
     /**
      * @return Institution
      */
-    public function getParent(): Institution
+    public function getParent(): String
     {
         return $this->parent;
     }
@@ -163,9 +189,9 @@ class Institution
     }
 
     /**
-     * @param Institution $parent
+     * @param String $parent
      */
-    private function setParent(Institution $parent): void
+    private function setParent(String $parent): void
     {
         $this->parent = $parent;
     }
@@ -220,12 +246,38 @@ class InstitutionBuilder
     private String $type="";
     private bool $active=false;
     private Int $level=0;
-    private ?Institution $parent;
+    private String $parent="";
     private bool $insideCampus=false;
     private String $fax="";
     private String $primaryPhone="";
     private String $secondaryPhone="";
     private String $email="";
+    private String $website="";
+
+    /**
+     * @return string
+     */
+    public function getWebsite(): string
+    {
+        return $this->website;
+    }
+
+    /**
+     * @param string $website
+     */
+    public function setWebsite(string $website): InstitutionBuilder
+    {
+        $this->website = $website;
+        return $this;
+    }
+
+    public function build():Institution
+
+{
+    return new Institution($this);
+}
+
+
 
     /**
      * @return int
@@ -270,7 +322,7 @@ class InstitutionBuilder
     /**
      * @return string
      */
-    public function getParent():Institution
+    public function getParent():String
     {
         return $this->parent;
     }
@@ -330,7 +382,8 @@ class InstitutionBuilder
      */
     public function setName(string $name): InstitutionBuilder
     {
-        $this->name = $name;        return $this;
+        $this->name = $name;
+        return $this;
 
     }
 
@@ -362,9 +415,9 @@ class InstitutionBuilder
     }
 
     /**
-     * @param Institution $parent
+     * @param String $parent
      */
-    public function setParent(Institution $parent): InstitutionBuilder
+    public function setParent(String $parent): InstitutionBuilder
     {
         $this->parent = $parent;        return $this;
 

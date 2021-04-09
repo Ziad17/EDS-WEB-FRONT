@@ -1,4 +1,5 @@
 <?php
+require 'Permissions.php';
 
 
 class InstitutionsPermissions extends Permissions
