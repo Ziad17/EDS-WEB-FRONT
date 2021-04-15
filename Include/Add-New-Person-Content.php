@@ -4,7 +4,10 @@
 require_once "./Modules/Validation/PersonValidator.php";
 require_once "./Modules/Business/Person.php";
 require_once "./Modules/Database/MainAction.php";
+
 require_once "./Modules/Sessions/SessionManager.php";
+require_once "./Modules/Database/PersonAction.php";
+require_once "./Modules/Business/PersonRole.php";
 
 /*
  * STEPS ON HOW THIS PAGE WORKS
@@ -33,7 +36,6 @@ $mainAction = new MainAction();
 try {
     $faculties = $mainAction->getAllInstitutions();
     $cities = $mainAction->getAllCities();
-   // $positions=array();
     $positions=$mainAction->getAllAvailableRoles((int)SessionManager::USER_ID);
 
 
@@ -44,14 +46,69 @@ try {
    // header("HTTP/1.1 503 Not Found");
     exit(503);
 }
-/*
-if($_SERVER['REQUEST_METHOD'=='POST'])
+
+
+
+
+if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 
+    try {
+        $name = $_POST['name'];
+        $acadmic_number = $_POST['acadmic_number'];
+        $email = $_POST['email'];
+        $confirm_password = $phone = $_POST['confirm_password'];
+        $password = $phone = $_POST['password'];
+        $date_hired = $_POST['date_hired'];
+        $job_title = $_POST['job_title'];
+        $institution = $_POST['institution'];
+        $job_role = $_POST['roles'];
+        $city = $_POST['city'];
+        $gender=$_POST['gender'];
+
+        $personToCreate=Person::Builder()->setEmail($email)
+            ->setFirstName($name)
+            ->setAcadmicNumber($acadmic_number)
+            ->setInstitution($institution)
+            ->setCity($city)
+            ->setGender($gender)
+            ->build();
+
+        $personValidator=new PersonValidator($personToCreate);
+        if (!$personValidator->isValid()) {
+            $FormErrors = $personValidator->getERRORSLIST();
+
+
+        }
+        else
+            {
+                if ($password == $confirm_password && strlen($password) >= 8) {
+                    $roleToAttach = new PersonRole($job_role, 0, $job_title, $mainAction->getInstitutionNameByID($institution));
+
+                    $creator = Person::Builder()->setID((int)SessionManager::getID())
+                        ->setEmail(SessionManager::getEmail())
+                        ->build();
+                    $personAction = new PersonAction($creator);
+                    $personAction->createPerson($personToCreate, $password, $date_hired, $roleToAttach);
+
+                } else {
+                    $FormErrors[] = 'Passwords Must Be Identical And Greater Than 8 Characters';
+                }
 
 
 
-}*/
+        }
+
+        }
+    catch (Exception $e)
+    {
+        //TODO:: HANDLE EXCEPTIONS
+        $FormErrors[]=$e->getMessage();
+    }
+
+
+
+}
 
 
 
@@ -70,7 +127,7 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
     </div>
     <div class="row">
       <div class="col-md-6">
-        <input type="text" class="form-control mb-3" name="Academic-Number" placeholder="Academic Number" value="" required>
+        <input type="text" class="form-control mb-3" name="acadmic_number" placeholder="Academic Number" value="" required>
       </div>
       <div class="col-md-6">
         <input type="email" class="form-control mb-3" name="email" placeholder="Email" value="" required>
@@ -83,17 +140,17 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
       </div>
       <div class="col-md-6">
         
-        <input type="password" class="form-control mb-3" name="Confirm-password" placeholder="Confirm Password" value="" required>
+        <input type="password" class="form-control mb-3" name="confirm_password" placeholder="Confirm Password" value="" required>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6">
         <label>.</label>
-        <input type="text" class="form-control mb-3" name="Job-Title" placeholder="Job Title" value="" required>
+        <input type="text" class="form-control mb-3" name="job_title" placeholder="Job Title" value="" required>
       </div>
       <div class="col-md-6">
         <label>Date-Hired</label>
-        <input type="date" class="form-control mb-3" name="Date-Hired" placeholder="Date Hired" value="" required>
+        <input type="date" class="form-control mb-3" name="date_hired" placeholder="Date Hired" value="" required>
       </div>
     </div>
     <div class="row">
@@ -130,7 +187,7 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
     <div class="row">
       <div class="col-md-6 mb-5">
         <h6>Gender</h6>
-        <select class="form-control" required>
+        <select name='gender' class="form-control" required>
           <option value="M">Male</option>
           <option value="F">Female</option>
         </select>

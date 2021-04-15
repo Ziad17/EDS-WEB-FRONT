@@ -19,16 +19,16 @@
         <table border="3" style="padding: 5px;width: 90%">
           <tbody>
             <tr>
-              <td style="padding: 15px"><input type="checkbox" name=""></td>
-              <td style="padding: 20px">Read Level A File</td>
+              <td ><input type="checkbox" name="" ></td>
+              <td >Read Level A File</td>
             </tr>
             <tr>
-              <td style="padding: 15px"><input type="checkbox" name=""></td>
-              <td style="padding: 20px">Read Level B File</td>
+              <td ><input type="checkbox" name=""></td>
+              <td >Read Level B File</td>
             </tr>
             <tr>
-              <td style="padding: 15px"><input type="checkbox" name=""></td>
-              <td style="padding: 20px">Read Level C File</td>
+              <td ><input type="checkbox" name=""></td>
+              <td >Read Level C File</td>
             </tr>
           </tbody>
         </table>

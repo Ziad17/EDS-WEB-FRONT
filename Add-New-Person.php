@@ -12,6 +12,7 @@ require_once "./Modules/Sessions/SessionManager.php";
 //TODO:: REMOVE
 SessionManager::sessionSignIn('super@gmail.com',1);
 
+
 if(!SessionManager::validateSession())
 {
     header("Location: index.php");

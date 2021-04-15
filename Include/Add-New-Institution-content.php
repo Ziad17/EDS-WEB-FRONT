@@ -6,6 +6,7 @@ require_once "./Modules/Validation/PersonValidator.php";
 require_once "./Modules/Business/Person.php";
 require_once "./Modules/Database/MainAction.php";
 require_once "./Modules/Sessions/SessionManager.php";
+require_once "./Modules/Database/InstitutionAction.php";
 
 /*
  * STEPS ON HOW THIS PAGE WORKS
@@ -41,33 +42,42 @@ try {
     exit(503);
 }
 
-if($_SERVER['REQUEST_METHOD'=='POST'])
+if($_SERVER['REQUEST_METHOD']=='POST')
 {
 
-    $name=$_POST['name'];
-    $phone_number=$_POST['phone_number'];
-    $sec_num=$_POST['sec_num'];
-    $fax=$_POST['fax'];
-    $email=$_POST['email'];
-    $website=$_POST['website'];
-    $institution_sup=$_POST['institution_sup'];
-    $institution_type=$_POST['institution_type'];
-    //TODO:: CHECK WHETHER THE SESSION IS VALID
-    $personRef=Person::Builder()->setID(SessionManager::USER_ID)->setEmail(SessionManager::USER_EMAIL)->build();
-    $institutionAction=new InstitutionAction($personRef,$institution_sup);
-    $institutionToCreate=Institution::Builder()
-        ->setName($name)
-        ->setPrimaryPhone($phone_number)
-        ->setSecondaryPhone($sec_num)
-        ->setFax($fax)
-        ->setEmail($email)
-        ->setWebsite($website)
-        ->setParent($institution_sup)
-        ->setType($institution_type)
-        ->build();
+    try {
+        $name = $_POST['name'];
+        $phone_number = $_POST['phone_number'];
+        $sec_num = $_POST['sec_num'];
+        $fax = $_POST['fax'];
+        $email = $_POST['email'];
+        $website = $_POST['website'];
+        $institution_sup = $_POST['institution_sup'];
+        $institution_type = $_POST['institution_type'];
+        //TODO:: CHECK WHETHER THE SESSION IS VALID
+        $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
+        $institutionAction = new InstitutionAction($personRef, $institution_sup);
+        $institutionToCreate = Institution::Builder()
+            ->setName($name)
+            ->setPrimaryPhone($phone_number)
+            ->setSecondaryPhone($sec_num)
+            ->setFax($fax)
+            ->setEmail($email)
+            ->setWebsite($website)
+            ->setParent($institution_sup)
+            ->setType($institution_type)
+            ->build();
 
-    $institutionAction->createInstitution($institutionToCreate);
+        $institutionAction->createInstitution($institutionToCreate);
 
+    }
+    catch (Exception $e)
+    {
+
+        //TODO:: HANDLE EXCEPTIONS
+        echo $e->getMessage();
+        $FormErrors[]=$e->getMessage();
+    }
 
 
 

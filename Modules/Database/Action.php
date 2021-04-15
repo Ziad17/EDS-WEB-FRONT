@@ -12,7 +12,27 @@ abstract class Action
     {
         return $this->myPersonRef;
     }
+    public function getInstitutionIDByName(string $getName):int
+    {
 
+        $conn=$this->getDatabaseConnection();
+        $sql = "SELECT ID FROM Institution WHERE institution_name =?";
+        $params = array($getName);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            //TODO :PRODUCTION UNCOMMENT THIS
+            //$error="Error fetching the required data";
+            $error=sqlsrv_errors()[0]['message'];
+            sqlsrv_close($conn);
+
+            throw new SQLStatmentException($error);
+        }
+        else
+        {
+            $row=sqlsrv_fetch_object($stmt);
+            return (int)$row->ID;
+        }
+    }
     protected function getSingleStatement(String $query,&$conn)
     {
         $stmt=sqlsrv_query($conn,$query);
@@ -32,8 +52,8 @@ abstract class Action
         catch (Exception $e)
         {
             $error = sqlsrv_errors()[0];
-
-            throw new SQLStatmentException($error['code']);
+echo $error['message'];
+            throw new SQLStatmentException($error['message']);
 
         }
     }
@@ -53,6 +73,23 @@ abstract class Action
        return $name;
    }*/
 
+    public  function getInstitutionNameByID(int $id): String
+    {
+        $con=$this->getDatabaseConnection();
+        $sql = "SELECT institution_name FROM Institution WHERE ID=?";
+        $params = array($id);
+        $stmt = $this->getParameterizedStatement($sql, $con, $params);
+        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            $this->closeConnection($conn);
+            throw new SQLStatmentException("Error fetching the required data");
+        }
+        else
+        {
+            $row=sqlsrv_fetch_object($stmt);
+            return (string)$row->institution_name;
+        }
+
+    }
 
     public function isUserExists(string $academicNumber, string $getEmail): bool
     {
@@ -61,10 +98,13 @@ abstract class Action
         $params = array("{$academicNumber}",
             "{$getEmail}");
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+
         if ($stmt == false) {
             throw new SQLStatmentException("Couldn't execute this statement");
         }
         if (sqlsrv_has_rows($stmt)) {
+            $row=sqlsrv_fetch_object($stmt);
+            echo $row->ID;
             return true;
         }
         return false;
@@ -125,7 +165,11 @@ abstract class Action
 
     protected function closeConnection(&$conn)
     {
-        sqlsrv_close($conn);
+
+        try {
+            sqlsrv_close($conn);
+        } catch (Exception $e) {
+        }
     }
 
      private String $SERVER_NAME;

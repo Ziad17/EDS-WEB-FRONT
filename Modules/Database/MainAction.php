@@ -119,11 +119,13 @@ class MainAction extends Action
         return $array_of_roles;
     }
 
+
+
     public function getInstitutionTypes()
     {
 
         $conn = $this->getDatabaseConnection();
-        $sql="SELECT institution_type FROM InstitutionType   ";
+        $sql="SELECT institution_type FROM InstitutionType";
         $stmt = $this->getSingleStatement($sql, $conn);
         if ($stmt == false) {
             $error=sqlsrv_errors()[0];

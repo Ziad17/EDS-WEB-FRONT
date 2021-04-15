@@ -4,6 +4,8 @@ require_once "./Modules/Database/Action.php";
 require_once "./Modules/Exceptions/PermissionsCriticalFail.php";
 require_once "./Modules/Exceptions/PersonHasNoRolesException.php";
 require_once "./Modules/Permissions/InstitutionsPermissions.php";
+require_once "./Modules/Exceptions/LogsError.php";
+require_once "./Modules/Exceptions/InsertionError.php";
 
 
 class InstitutionAction extends Action
@@ -21,7 +23,7 @@ class InstitutionAction extends Action
 
             $this->institutionName=$_institutionName;
             $this->myPersonRef = $myPersonRef;
-         //   $this->updateMyInstitutionPermissions();
+            $this->updateMyInstitutionPermissions();
             $this->myInstitutionPermissions = new InstitutionsPermissions($this->roleAndPermissionSum["PERMISSION_SUM"]);
         } catch (Exception $e) {
             throw new PermissionsCriticalFail($e->getMessage());
@@ -35,34 +37,36 @@ class InstitutionAction extends Action
     {
         //updates the permissions array
         $conn = $this->getDatabaseConnection();
-        $sql = "SELECT institution_level,institutions_permissions_sum,active FROM PersonRolesAndPermissions_view WHERE contact_email=? AND institution_name=?";
-        $params = array($this->myPersonRef->getEmail(),$this->institutionName);
+        $sql = "SELECT institution_level,institutions_permissions_sum,active FROM PersonRolesAndPermissions_view WHERE contact_email=? 
+";
+        $params = array($this->myPersonRef->getEmail());
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false) {
 
-            //TODO:: REMOVE
-            throw new SQLStatmentException(sqlsrv_errors()[0]['message']);
+            //TODO :PRODUCTION UNCOMMENT THIS
+            //$error="Could not get details of the person roles";
+            $error=sqlsrv_errors()[0]['message'];
+            $this->closeConnection($conn);
+            throw new SQLStatmentException($error);
 
 
-
-            //TODO ::UNCOMMENT
-           // $this->closeConnection($conn);
-//            throw new SQLStatmentException("Could not get details of the person roles");
         }
         if (sqlsrv_has_rows($stmt)) {
+            //FIXME: add logic if a person has more than one role
+
             $row = sqlsrv_fetch_object($stmt);
             $this->institutionLevel = $row->institution_level;
-            $this->active = $row->institution_level;
+            $this->active = $row->active;
             if ($this->active == false) //check for active status
             {
                 throw new PersonOrDeactivated("Your role has been deactivated by an admin");
             } else {
-                $this->roleAndPermissionSum["PERMISSION_SUM"] = $row->institution_permissions_sum;
+                $this->roleAndPermissionSum["PERMISSION_SUM"] = $row->institutions_permissions_sum;
                 $this->closeConnection($conn);
             }
         } else {
             $this->closeConnection($conn);
-            throw new PersonHasNoRolesException();
+            throw new PersonHasNoRolesException('asdasd');
         }
 
 
@@ -74,13 +78,12 @@ class InstitutionAction extends Action
         $logParams = array($this->myPersonRef->getID(), $InstitutionID,$actionPerformed);
         $logsStmt=$this->getParameterizedStatement($logSQL,$conn,$logParams);
         if ($logsStmt==false) {
-            sqlsrv_rollback($conn);
             $this->closeConnection($conn);
             return false;
         }
         return true;
     }
-    public function getPersonsOfInstitution():array//array of persons
+/*    public function getPersonsOfInstitution():array//array of persons
     {
         //REQUIRED_PERMISSION=$ACTIVATE_PERSON_OUTSIDE_INSTITUTION=9
         if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->ACTIVATE_PERSON_OUTSIDE_INSTITUTION)) {
@@ -95,15 +98,22 @@ class InstitutionAction extends Action
         }
 
 
-    }
+    }*/
     public function createInstitution(Institution $institutionToCreate):bool
     {
         $con=$this->getDatabaseConnection();
         //REQUIRED_PERMISSION=$CREATE_INSTITUTION=1
+        sqlsrv_begin_transaction($con);
         if ($this->myInstitutionPermissions->getPermissionsFromBitArray($this->myInstitutionPermissions->CREATE_INSTITUTION)) {
             $permission_value=2**($this->myInstitutionPermissions->CREATE_INSTITUTION);
 
-            $sql = "INSERT INTO Institution(institution_name,
+            if($this->isInstitutionExists($institutionToCreate->getName()))
+            {
+                throw new DuplicateDataEntry("Institution Already Created");
+
+            }
+
+            $sql = "SET NOCOUNT ON;INSERT INTO Institution(institution_name,
                         institution_type,
                         institution_active,
                         institution_parent_id,
@@ -113,14 +123,14 @@ class InstitutionAction extends Action
                         secondary_phone,
                         fax,
                         email
-                        ) VALUES(?,?,?,?,?,?,?,?,?,?)";
+                        ) VALUES(?,?,?,?,?,?,?,?,?,?); SELECT SCOPE_IDENTITY()";
             $params = array(
                 $institutionToCreate->getName(),
                 $institutionToCreate->getType(),
                 $institutionToCreate->isActive(),
-                $this->getInstitutionIDByName($institutionToCreate->getName()),
+                $institutionToCreate->getParent(),
                             $institutionToCreate->getWebsite(),
-                $institutionToCreate->isInsideCampus(),
+                1,
                 $institutionToCreate->getPrimaryPhone(),
                 $institutionToCreate->getSecondaryPhone(),
                 $institutionToCreate->getFax(),
@@ -129,11 +139,28 @@ class InstitutionAction extends Action
             );
 
             $stmt = $this->getParameterizedStatement($sql, $con, $params);
-            //ID THAT IS RETURNED
-            $institution_created_ID=0;
-            if ($stmt == false || !sqlsrv_has_rows($stmt) || $this->injectLog($permission_value,$institution_created_ID,$con)) {
+
+            if($stmt==false)
+            {
+                //TODO :PRODUCTION UNCOMMENT THIS
+                //$error="Could not Insert Institution";
+                $error=sqlsrv_errors()[0]['message'];
+                sqlsrv_rollback($con);
+
                 $this->closeConnection($conn);
-                throw new SQLStatmentException("Error fetching the required data");
+                throw new InsertionError($error);
+
+            }
+
+
+            //ID THAT IS RETURNED
+            $row=sqlsrv_fetch_array($stmt);
+            $institution_created_ID=(int)$row[0];
+
+            if ( $this->injectLog($permission_value,$institution_created_ID,$con)==false) {
+                sqlsrv_rollback($con);
+                $this->closeConnection($conn);
+                throw new LogsError("Could Not Insert Institution Logs");
             }
             else{return true;}
         } else {
@@ -196,21 +223,26 @@ class InstitutionAction extends Action
 
     }
 
-    private function getInstitutionIDByName(string $getName):int
+    public function isInstitutionExists(string $getName)
     {
         $con=$this->getDatabaseConnection();
-        $sql = "SELECT ID FROM Institution WHERE institution_name =?";
-        $params = array($getName);
-        $stmt = $this->getParameterizedStatement($sql, $con, $params);
-        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
-            $this->closeConnection($conn);
-            throw new SQLStatmentException("Error fetching the required data");
-        }
-        else
+        $sql="SELECT * FROM Institution WHERE Institution_name=?";
+        $params=array($getName);
+        $stmt=$this->getParameterizedStatement($sql,$con,$params);
+        if($stmt==false)
         {
-            $row=sqlsrv_fetch_object($stmt);
-            return (int)$row->institution_name;
+            $this->closeConnection($con);
+            throw new SQLStatmentException("Could not find any result");
         }
+        if(sqlsrv_has_rows($stmt))
+        {
+            $this->closeConnection($con);
+            return true;
+        }
+        $this->closeConnection($con);
+return false;
+
     }
+
 
 }

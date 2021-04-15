@@ -8,6 +8,20 @@ class SessionManager
     public const USER_ID="user_id";
     public const USER_EXP_TIME_STAMP="user_exp_time_stamp";
 
+    public static function getID():int
+    {
+        return (int)$_SESSION[self::USER_ID];
+    }
+
+    public static function getEmail():String
+    {
+        return (String)$_SESSION[self::USER_EMAIL];
+    }
+    public static function getTimeStamp()
+    {
+        return $_SESSION[self::USER_EXP_TIME_STAMP];
+    }
+
     public static function sessionSignIn(String $email,int $id)
     {
         session_start();
