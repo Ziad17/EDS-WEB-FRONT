@@ -191,8 +191,8 @@ echo $error['message'];
 
     protected function setConnection(Action $action)
     {
-        $this->connectionInfo= array("UID" => "ziadmohamd456", "pwd" => "01015790817aA", "Database" => "DMS_db", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
-        $this->SERVER_NAME="tcp:dms-kfs.database.windows.net,1433";
+        $this->connectionInfo= array("UID" => "ziadmohamd456", "pwd" => "{your_password_here}", "Database" => "DMS_db", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
+        $this->SERVER_NAME= "tcp:dms-kfs1.database.windows.net,1433";
 
     }
 
