@@ -26,13 +26,12 @@ require_once "./Modules/Sessions/SessionManager.php";
 
 
 
-//TODO:: FIXME:: GET THE NAME OF THE INSTITUTION BY THE GET REQUEST
-$name="SYSTEM_GROUP";
+
 
 try {
 
 
-    $person=Person::Builder()->setID((int)SessionManager::USER_ID)->setEmail(SessionManager::USER_EMAIL)->build();
+    $person=Person::Builder()->setID((int)SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
     $institutionAction = new InstitutionAction($person,$name);
      $institution=$institutionAction->getSingleInstitutionInfo($name);
 

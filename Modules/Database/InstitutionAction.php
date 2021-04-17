@@ -3,6 +3,9 @@
 require_once "./Modules/Database/Action.php";
 require_once "./Modules/Exceptions/PermissionsCriticalFail.php";
 require_once "./Modules/Exceptions/PersonHasNoRolesException.php";
+require_once "./Modules/Exceptions/PersonOrDeactivated.php";
+require_once "./Modules/Exceptions/NoPermissionsGrantedException.php";
+
 require_once "./Modules/Permissions/InstitutionsPermissions.php";
 require_once "./Modules/Exceptions/LogsError.php";
 require_once "./Modules/Exceptions/InsertionError.php";
@@ -11,34 +14,26 @@ require_once "./Modules/Exceptions/InsertionError.php";
 class InstitutionAction extends Action
 {
 
-    private string $institutionName;
     private InstitutionsPermissions $myInstitutionPermissions;
-    private array $roleAndPermissionSum = array("PERMISSION_SUM" => 0);
-    private int $institutionLevel;
     private bool $active;
-    public function __construct(Person $myPersonRef,string $_institutionName)
+
+    public function __construct(Person $myPersonRef )
     {
         parent::setConnection($this);
-        try {
 
-            $this->institutionName=$_institutionName;
+
             $this->myPersonRef = $myPersonRef;
-            $this->updateMyInstitutionPermissions();
-            $this->myInstitutionPermissions = new InstitutionsPermissions($this->roleAndPermissionSum["PERMISSION_SUM"]);
-        } catch (Exception $e) {
-            throw new PermissionsCriticalFail($e->getMessage());
+            $this->updateMyInstitutionPermissionsSum();
 
-        }
     }
 
 
 
-    public function updateMyInstitutionPermissions()
+    public function updateMyInstitutionPermissionsSum()
     {
         //updates the permissions array
         $conn = $this->getDatabaseConnection();
-        $sql = "SELECT institution_level,institutions_permissions_sum,active FROM PersonRolesAndPermissions_view WHERE contact_email=? 
-";
+        $sql = "SELECT institutions_permissions_sum,active FROM PersonRolesAndPermissions_view WHERE contact_email=?";
         $params = array($this->myPersonRef->getEmail());
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false) {
@@ -55,18 +50,28 @@ class InstitutionAction extends Action
             //FIXME: add logic if a person has more than one role
 
             $row = sqlsrv_fetch_object($stmt);
-            $this->institutionLevel = $row->institution_level;
             $this->active = $row->active;
             if ($this->active == false) //check for active status
             {
+                $this->closeConnection($conn);
                 throw new PersonOrDeactivated("Your role has been deactivated by an admin");
             } else {
-                $this->roleAndPermissionSum["PERMISSION_SUM"] = $row->institutions_permissions_sum;
-                $this->closeConnection($conn);
+
+                $sum=(int)$row->institutions_permissions_sum;
+
+                if($sum>0) {
+                    $this->closeConnection($conn);
+                    $this->myInstitutionPermissions = new InstitutionsPermissions($sum);
+
+                }
+                else{
+                    $this->closeConnection($conn);
+                    throw new NoPermissionsGrantedException('Role Found But No Permissions Is Granted' );
+                }
             }
         } else {
             $this->closeConnection($conn);
-            throw new PersonHasNoRolesException('asdasd');
+            throw new PersonHasNoRolesException('No Roles Found');
         }
 
 
@@ -99,12 +104,24 @@ class InstitutionAction extends Action
 
 
     }*/
+
+    public function canCreateInstitution() : bool
+    {
+        try {
+            return $this->myInstitutionPermissions->getPermissionsFromBitArray($this->myInstitutionPermissions->CREATE_INSTITUTION);
+        }
+        catch (Exception $e)
+        {
+           throw new  NoPermissionsGrantedException('Institution Creation Permissions Is Not Granted');
+        }
+    }
     public function createInstitution(Institution $institutionToCreate):bool
     {
+
         $con=$this->getDatabaseConnection();
         //REQUIRED_PERMISSION=$CREATE_INSTITUTION=1
         sqlsrv_begin_transaction($con);
-        if ($this->myInstitutionPermissions->getPermissionsFromBitArray($this->myInstitutionPermissions->CREATE_INSTITUTION)) {
+        if ($this->canCreateInstitution()) {
             $permission_value=2**($this->myInstitutionPermissions->CREATE_INSTITUTION);
 
             if($this->isInstitutionExists($institutionToCreate->getName()))
@@ -123,11 +140,11 @@ class InstitutionAction extends Action
                         secondary_phone,
                         fax,
                         email
-                        ) VALUES(?,?,?,?,?,?,?,?,?,?); SELECT SCOPE_IDENTITY()";
+                        ) VALUES(?,?,1,?,?,?,?,?,?,?); SELECT SCOPE_IDENTITY()";
             $params = array(
                 $institutionToCreate->getName(),
                 $institutionToCreate->getType(),
-                $institutionToCreate->isActive(),
+
                 $institutionToCreate->getParent(),
                             $institutionToCreate->getWebsite(),
                 1,
@@ -147,7 +164,7 @@ class InstitutionAction extends Action
                 $error=sqlsrv_errors()[0]['message'];
                 sqlsrv_rollback($con);
 
-                $this->closeConnection($conn);
+                $this->closeConnection($con);
                 throw new InsertionError($error);
 
             }
@@ -159,10 +176,14 @@ class InstitutionAction extends Action
 
             if ( $this->injectLog($permission_value,$institution_created_ID,$con)==false) {
                 sqlsrv_rollback($con);
-                $this->closeConnection($conn);
+                $this->closeConnection($con);
                 throw new LogsError("Could Not Insert Institution Logs");
             }
-            else{return true;}
+
+                sqlsrv_commit($con);
+                $this->closeConnection($con);
+                return true;
+
         } else {
             throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
         }

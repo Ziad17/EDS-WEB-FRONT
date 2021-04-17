@@ -33,11 +33,11 @@ class MainAction extends Action
 
         if($stmt!=null) {
             while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                $array_of_institutions[] = Institution::Builder()->setID((string)$row['ID'])
+                $array_of_institutions[] = Institution::Builder()->setID((int)$row['ID'])
                     ->setName((string)$row['institution_name'])
                     ->setActive((string)$row['institution_active'])
-                    ->setLevel((string)$row['institution_level'])
-                    ->setInsideCampus((string)$row['inside_campus'])
+                    ->setLevel((int)$row['institution_level'])
+                    ->setInsideCampus((bool)$row['inside_campus'])
                     ->setSecondaryPhone((string)$row['secondary_phone'])
                     ->build();
 

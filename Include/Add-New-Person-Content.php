@@ -90,6 +90,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
                         ->build();
                     $personAction = new PersonAction($creator);
                     $personAction->createPerson($personToCreate, $password, $date_hired, $roleToAttach);
+                    echo 'succss';
 
                 } else {
                     $FormErrors[] = 'Passwords Must Be Identical And Greater Than 8 Characters';
@@ -99,11 +100,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
         }
 
-        }
+
+
+    }
+
     catch (Exception $e)
     {
+
         //TODO:: HANDLE EXCEPTIONS
+
         $FormErrors[]=$e->getMessage();
+
+    }
+    if(isset($FormErrors))
+    {
+        print_r(($FormErrors));
     }
 
 

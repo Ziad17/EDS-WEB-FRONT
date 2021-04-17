@@ -4,7 +4,7 @@
 abstract class Permissions
 {
     //TODO: pull the permissions dynamically from the db
-    protected array $permissions_bit_array;
+    public array $permissions_bit_array;
 
     /**
      * @return array
@@ -17,11 +17,11 @@ abstract class Permissions
     {
         return $this->permissions_bit_array[$index];
     }
-    public  function initAllFalse()
+    public  function initAllFalse(int $COUNT)
     {
-        foreach ($this->permissions_bit_array as $member)
+        for ( $i=0;$i<$COUNT;$i++)
         {
-            $this->permissions_bit_array[$member]=false;
+            $this->permissions_bit_array[]=false;
         }
     }
 
@@ -30,9 +30,9 @@ abstract class Permissions
         return strrev(decbin($permissionSum));
     }
 
-    public function populatePermissionsArray(int $permissionSum)
+    public function populatePermissionsArray(int $permissionSum,int $COUNT)
     {
-        $this->initAllFalse();
+        $this->initAllFalse($COUNT);
         $this->mapBinaryFormToArray($this->getReversedBinaryForm($permissionSum),$this->permissions_bit_array);
 
 
@@ -43,10 +43,10 @@ abstract class Permissions
         for($i=0;$i<strlen($binaryForm);$i++)
         {
             if($binaryForm[$i]=="1")
-            $array[2**$i]="true";
+            $array[$i]=true;
             else
             {
-                $array[2**$i]="false";
+                $array[$i]=false;
             }
 
         }

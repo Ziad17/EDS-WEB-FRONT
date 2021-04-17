@@ -4,12 +4,12 @@ require_once "Modules/Database/MainAction.php";
 require_once "Modules/Sessions/SessionManager.php";
 error_reporting(E_ERROR | E_PARSE);
 
-/*if(SessionManager::validateSession())
+if(SessionManager::validateSession())
 {
     header("Location: Home.php");
     header('Cache-Control: no-cache, must-revalidate');
     exit();
-}*/
+}
 if ($_SERVER['REQUEST_METHOD']== 'POST') {
 
   $email =filter_var($_POST['email'],FILTER_SANITIZE_EMAIL);

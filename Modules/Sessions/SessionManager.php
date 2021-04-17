@@ -24,7 +24,10 @@ class SessionManager
 
     public static function sessionSignIn(String $email,int $id)
     {
-        session_start();
+        try {
+            session_start();
+        }
+        catch (Exception $e){}
         $_SESSION[self::USER_EMAIL] = $email;
         $_SESSION[self::USER_ID] = $id;
         $_SESSION[self::USER_EXP_TIME_STAMP]=date("Y-m-d h:i:s",strtotime("+1 days"));
@@ -32,25 +35,27 @@ class SessionManager
 
     public static function sessionLogOut()
     {
+        unset($_SESSION[self::USER_EMAIL]);
+        unset($_SESSION[self::USER_ID]);
+        unset($_SESSION[self::USER_EXP_TIME_STAMP]);
+
         session_destroy();
     }
 
     public static function validateSession(): bool
     {
-        session_start();
+        try {
+            session_start();
+        }
+        catch (Exception $e){}
         if(isset($_SESSION[self::USER_EMAIL]) && isset($_SESSION[self::USER_ID]) && isset($_SESSION[self::USER_EXP_TIME_STAMP]))
         {
             if(strtotime($_SESSION[self::USER_EXP_TIME_STAMP])>strtotime(date("Y-m-d h:i:s")))
             {
-               echo $_SESSION[self::USER_ID];
-                echo $_SESSION[self::USER_EMAIL];
-                 echo $_SESSION[self::USER_EXP_TIME_STAMP];
-
                 return true;
 
             }
             self::sessionLogOut();
-
             return false;
 
         }

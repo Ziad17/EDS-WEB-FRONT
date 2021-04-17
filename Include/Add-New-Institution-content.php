@@ -27,19 +27,33 @@ require_once "./Modules/Database/InstitutionAction.php";
 
 
 
-
 try {
+    $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
+    $institutionAction = new InstitutionAction($personRef);
+    if(!$institutionAction->canCreateInstitution())
+    {
+        echo "You Don't Have The Permissions Required To View This Page";
+        exit();
+
+    }
     $mainAction = new MainAction();
     $faculties = $mainAction->getAllInstitutions();
     $types=$mainAction->getInstitutionTypes();
 
 
-} catch (Exception $e) {
+}catch(NoPermissionsGrantedException $e)
+{
+    echo "You Don't Have The Permissions Required To View This Page";
+    exit();
+
+}
+
+catch (Exception $e) {
     //FIXME::HANDLE ERRORS
     echo $e->getMessage();
     $FormErrors[] = $e->getMessage();
     // header("HTTP/1.1 503 Not Found");
-    exit(503);
+    //exit(503);
 }
 
 if($_SERVER['REQUEST_METHOD']=='POST')
@@ -55,8 +69,11 @@ if($_SERVER['REQUEST_METHOD']=='POST')
         $institution_sup = $_POST['institution_sup'];
         $institution_type = $_POST['institution_type'];
         //TODO:: CHECK WHETHER THE SESSION IS VALID
+        unset($personRef);
+        unset($institutionAction);
+        unset($personRef);
         $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
-        $institutionAction = new InstitutionAction($personRef, $institution_sup);
+        $institutionAction = new InstitutionAction($personRef);
         $institutionToCreate = Institution::Builder()
             ->setName($name)
             ->setPrimaryPhone($phone_number)
@@ -68,7 +85,14 @@ if($_SERVER['REQUEST_METHOD']=='POST')
             ->setType($institution_type)
             ->build();
 
-        $institutionAction->createInstitution($institutionToCreate);
+        if($institutionAction->createInstitution($institutionToCreate))
+        {
+            echo 'success';
+            $mainAction = new MainAction();
+            $faculties = $mainAction->getAllInstitutions();
+            $types=$mainAction->getInstitutionTypes();
+        }
+
 
     }
     catch (Exception $e)

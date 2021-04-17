@@ -11,7 +11,7 @@ require_once "./Modules/Sessions/SessionManager.php";
  * */
 
 //TODO:: REMOVE
-SessionManager::sessionSignIn('super@gmail.com',1);
+//SessionManager::sessionSignIn('admin@gmail.com',2);
 
 if(!SessionManager::validateSession())
 {
@@ -19,6 +19,7 @@ if(!SessionManager::validateSession())
     header('Cache-Control: no-cache, must-revalidate');
     exit();
 }
+
  ?>
  <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
   <body>
