@@ -17,16 +17,15 @@ class InstitutionAction extends Action
     private InstitutionsPermissions $myInstitutionPermissions;
     private bool $active;
 
-    public function __construct(Person $myPersonRef )
+    public function __construct(Person $myPersonRef)
     {
         parent::setConnection($this);
 
 
-            $this->myPersonRef = $myPersonRef;
-            $this->updateMyInstitutionPermissionsSum();
+        $this->myPersonRef = $myPersonRef;
+        $this->updateMyInstitutionPermissionsSum();
 
     }
-
 
 
     public function updateMyInstitutionPermissionsSum()
@@ -40,7 +39,7 @@ class InstitutionAction extends Action
 
             //TODO :PRODUCTION UNCOMMENT THIS
             //$error="Could not get details of the person roles";
-            $error=sqlsrv_errors()[0]['message'];
+            $error = sqlsrv_errors()[0]['message'];
             $this->closeConnection($conn);
             throw new SQLStatmentException($error);
 
@@ -57,16 +56,15 @@ class InstitutionAction extends Action
                 throw new PersonOrDeactivated("Your role has been deactivated by an admin");
             } else {
 
-                $sum=(int)$row->institutions_permissions_sum;
+                $sum = (int)$row->institutions_permissions_sum;
 
-                if($sum>0) {
+                if ($sum >= 0) {
                     $this->closeConnection($conn);
                     $this->myInstitutionPermissions = new InstitutionsPermissions($sum);
 
-                }
-                else{
+                } else {
                     $this->closeConnection($conn);
-                    throw new NoPermissionsGrantedException('Role Found But No Permissions Is Granted' );
+                    throw new NoPermissionsGrantedException('Role Found But No Permissions Is Granted');
                 }
             }
         } else {
@@ -75,57 +73,85 @@ class InstitutionAction extends Action
         }
 
 
-
     }
-    private function injectLog(int $actionPerformed, int $InstitutionID, &$conn ):bool
+
+    private function injectLog(int $actionPerformed, int $InstitutionID, &$conn): bool
     {
         $logSQL = "INSERT INTO InstitutionActionLogs(person_id,institution_id,action_date,institution_permission_action_performed) VALUES(?,?,GETDATE(),?);";
-        $logParams = array($this->myPersonRef->getID(), $InstitutionID,$actionPerformed);
-        $logsStmt=$this->getParameterizedStatement($logSQL,$conn,$logParams);
-        if ($logsStmt==false) {
+        $logParams = array($this->myPersonRef->getID(), $InstitutionID, $actionPerformed);
+        $logsStmt = $this->getParameterizedStatement($logSQL, $conn, $logParams);
+        if ($logsStmt == false) {
             $this->closeConnection($conn);
             return false;
         }
         return true;
     }
-/*    public function getPersonsOfInstitution():array//array of persons
+
+
+    public function getPersonsOfInstitution(int $institutionID): array//array of persons
     {
-        //REQUIRED_PERMISSION=$ACTIVATE_PERSON_OUTSIDE_INSTITUTION=9
-        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->ACTIVATE_PERSON_OUTSIDE_INSTITUTION)) {
-            if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
-                $permission=$this->myPersonPermissions->ACTIVATE_PERSON_OUTSIDE_INSTITUTION;
-                return $this->setRoleActiveStatus(true, $targetEmail,2**$permission);
-            } else {
-                throw new LowRoleForSuchActionException("The targeted person has a higher role level");
+        if ($this->canViewPersonsOfInstitution()) {
+            $permission = 2 ** $this->myInstitutionPermissions->VIEW_PERSONS_IN_INSTITUTION;
+            $conn = $this->getDatabaseConnection();
+            $sql = "SELECT contact_email,first_name,middle_name,last_name,image_ref,optional_employee_title FROM PersonsHierarchy_view WHERE institution_id=? ORDER BY role_priority_lvl;";
+            $params = array($institutionID);
+            $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+            if ($stmt == false) {
+                //TODO :PRODUCTION UNCOMMENT THIS
+                //$error="Could not View Details";
+                $error = sqlsrv_errors()[0]['message'];
+                $this->closeConnection($conn);
+                throw new SQLStatmentException($error);
             }
+            $persons = array();
+            while ($row = sqlsrv_fetch_object($stmt)) {
+                $role = new PersonRole('', 0, (string)$row->optional_employee_title, '');
+                $personToAdd = Person::Builder()
+                    ->setFirstName($row->first_name)
+                    ->setMiddleName($row->middle_name)
+                    ->setLastName($row->last_name)
+                    ->setImgRef($row->image_ref)
+                    ->setRoles(array($role))
+                    ->setEmail($row->contact_email)
+                    ->build();
+                $persons[] = $personToAdd;
+
+            }
+            return $persons;
+
         } else {
             throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
         }
+    }
 
-
-    }*/
-
-    public function canCreateInstitution() : bool
+    public function canCreateInstitution(): bool
     {
         try {
             return $this->myInstitutionPermissions->getPermissionsFromBitArray($this->myInstitutionPermissions->CREATE_INSTITUTION);
-        }
-        catch (Exception $e)
-        {
-           throw new  NoPermissionsGrantedException('Institution Creation Permissions Is Not Granted');
+        } catch (Exception $e) {
+            throw new  NoPermissionsGrantedException('Institution Creation Permissions Is Not Granted');
         }
     }
-    public function createInstitution(Institution $institutionToCreate):bool
+
+    public function canViewPersonsOfInstitution(): bool
+    {
+        try {
+            return $this->myInstitutionPermissions->getPermissionsFromBitArray($this->myInstitutionPermissions->VIEW_PERSONS_IN_INSTITUTION);
+        } catch (Exception $e) {
+            throw new  NoPermissionsGrantedException('Institution View Permissions Is Not Granted');
+        }
+    }
+
+    public function createInstitution(Institution $institutionToCreate): bool
     {
 
-        $con=$this->getDatabaseConnection();
+        $con = $this->getDatabaseConnection();
         //REQUIRED_PERMISSION=$CREATE_INSTITUTION=1
         sqlsrv_begin_transaction($con);
         if ($this->canCreateInstitution()) {
-            $permission_value=2**($this->myInstitutionPermissions->CREATE_INSTITUTION);
+            $permission_value = 2 ** ($this->myInstitutionPermissions->CREATE_INSTITUTION);
 
-            if($this->isInstitutionExists($institutionToCreate->getName()))
-            {
+            if ($this->isInstitutionExists($institutionToCreate->getName())) {
                 throw new DuplicateDataEntry("Institution Already Created");
 
             }
@@ -146,7 +172,7 @@ class InstitutionAction extends Action
                 $institutionToCreate->getType(),
 
                 $institutionToCreate->getParent(),
-                            $institutionToCreate->getWebsite(),
+                $institutionToCreate->getWebsite(),
                 1,
                 $institutionToCreate->getPrimaryPhone(),
                 $institutionToCreate->getSecondaryPhone(),
@@ -157,11 +183,10 @@ class InstitutionAction extends Action
 
             $stmt = $this->getParameterizedStatement($sql, $con, $params);
 
-            if($stmt==false)
-            {
+            if ($stmt == false) {
                 //TODO :PRODUCTION UNCOMMENT THIS
                 //$error="Could not Insert Institution";
-                $error=sqlsrv_errors()[0]['message'];
+                $error = sqlsrv_errors()[0]['message'];
                 sqlsrv_rollback($con);
 
                 $this->closeConnection($con);
@@ -171,97 +196,96 @@ class InstitutionAction extends Action
 
 
             //ID THAT IS RETURNED
-            $row=sqlsrv_fetch_array($stmt);
-            $institution_created_ID=(int)$row[0];
+            $row = sqlsrv_fetch_array($stmt);
+            $institution_created_ID = (int)$row[0];
 
-            if ( $this->injectLog($permission_value,$institution_created_ID,$con)==false) {
+            if ($this->injectLog($permission_value, $institution_created_ID, $con) == false) {
                 sqlsrv_rollback($con);
                 $this->closeConnection($con);
                 throw new LogsError("Could Not Insert Institution Logs");
             }
 
-                sqlsrv_commit($con);
-                $this->closeConnection($con);
-                return true;
+            sqlsrv_commit($con);
+            $this->closeConnection($con);
+            return true;
 
         } else {
             throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
         }
 
     }
-    public function deleteInstitution():bool
+
+    public function deleteInstitution(): bool
     {
 
         return false;
     }
 
-    public function getSingleInstitutionInfo(string $name) :Institution
+    public function getSingleInstitutionInfo(string $name): Institution
     {
-        $con=$this->getDatabaseConnection();
+        $con = $this->getDatabaseConnection();
+        //FIXME:: PRODUCTION UNCOMMENT
+        //$sql = "SELECT * FROM Institution WHERE institution_name=? AND NOT institution_name='SYSTEM'";
+        //FIXME:: PRODUCTION REMOVE
         $sql = "SELECT * FROM Institution WHERE institution_name=?";
         $params = array($name);
         $stmt = $this->getParameterizedStatement($sql, $con, $params);
         if ($stmt == false || !sqlsrv_has_rows($stmt)) {
             $this->closeConnection($conn);
             throw new SQLStatmentException("Error fetching the required data");
-        }
-        else
-            {
-                $row=sqlsrv_fetch_object($stmt);
-                return Institution::Builder()
-                    ->setID($row->ID)
-                    ->setName($row->institution_name)
-                    ->setType($row->institution_type)
-                    ->setActive($row->institution_active)
-                    ->setParent($this->getInstitutionNameByID($row->institution_parent_id))
-                    ->setLevel($row->institution_level)
-                    ->setInsideCampus($row->inside_campus)
-                    ->setPrimaryPhone($row->primary_phone)
-                    ->setSecondaryPhone($row->secondary_phone)
-                    ->setFax($row->fax)
-                    ->setEmail($row->email)
-                    ->setWebsite((string)$row->institution_website)
-                    ->build();
+        } else {
+            $row = sqlsrv_fetch_object($stmt);
+            return Institution::Builder()
+                ->setID($row->ID)
+                ->setName($row->institution_name)
+                ->setType($row->institution_type)
+                ->setActive($row->institution_active)
+                ->setParent($this->getInstitutionNameByID($row->institution_parent_id))
+                ->setLevel($row->institution_level)
+                ->setInsideCampus($row->inside_campus)
+                ->setPrimaryPhone($row->primary_phone)
+                ->setSecondaryPhone($row->secondary_phone)
+                ->setFax($row->fax)
+                ->setEmail($row->email)
+                ->setWebsite((string)$row->institution_website)
+                ->build();
 
-            }
+        }
 
     }
-    public function getInstitutionNameByID(int $id): String
+
+    public function getInstitutionNameByID(int $id): string
     {
-        $con=$this->getDatabaseConnection();
+        $con = $this->getDatabaseConnection();
         $sql = "SELECT institution_name FROM Institution WHERE ID=?";
         $params = array($id);
         $stmt = $this->getParameterizedStatement($sql, $con, $params);
         if ($stmt == false || !sqlsrv_has_rows($stmt)) {
             $this->closeConnection($conn);
             throw new SQLStatmentException("Error fetching the required data");
-        }
-        else
-        {
-            $row=sqlsrv_fetch_object($stmt);
+        } else {
+            $row = sqlsrv_fetch_object($stmt);
             return (string)$row->institution_name;
-            }
+        }
 
     }
 
     public function isInstitutionExists(string $getName)
     {
-        $con=$this->getDatabaseConnection();
-        $sql="SELECT * FROM Institution WHERE Institution_name=?";
-        $params=array($getName);
-        $stmt=$this->getParameterizedStatement($sql,$con,$params);
-        if($stmt==false)
-        {
+        $con = $this->getDatabaseConnection();
+        $sql = "SELECT * FROM Institution WHERE Institution_name=?";
+        $params = array($getName);
+        $stmt = $this->getParameterizedStatement($sql, $con, $params);
+        if ($stmt == false) {
             $this->closeConnection($con);
             throw new SQLStatmentException("Could not find any result");
         }
-        if(sqlsrv_has_rows($stmt))
-        {
+        if (sqlsrv_has_rows($stmt)) {
             $this->closeConnection($con);
             return true;
         }
         $this->closeConnection($con);
-return false;
+        return false;
 
     }
 

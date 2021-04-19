@@ -138,7 +138,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
       </div>
       <div class="col-md-6">
         
-        <input type="Email" class="form-control mb-3" name="email" placeholder="Email or Website (Optional)" value="" required>
+        <input type="Email" class="form-control mb-3" name="email" placeholder="Email (Optional)" value="" required>
       </div>
     </div>
       <div class="row">

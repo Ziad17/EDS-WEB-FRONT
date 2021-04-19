@@ -1,7 +1,22 @@
 <?php
   $name = 'Edit-profile';
   require_once('Include/headtag.php');
- ?>
+
+
+require_once "./Modules/Sessions/SessionManager.php";
+
+
+
+if(!SessionManager::validateSession())
+{
+    header("Location: index.php");
+    header('Cache-Control: no-cache, must-revalidate');
+    exit();
+}
+
+
+
+?>
   <body>
 		<div  class="wrapper d-flex align-items-stretch">
 

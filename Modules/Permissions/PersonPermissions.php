@@ -1,6 +1,7 @@
 <?php
 
-require 'Permissions.php';
+require_once "Modules/Permissions/Permissions.php";
+
 class PersonPermissions extends Permissions
 {
 
@@ -13,6 +14,7 @@ class PersonPermissions extends Permissions
     public int $CREATE_PERSON_WITHIN_INSTITUTION=         4;
     public int $DEACTIVATE_PERSON_OUTSIDE_INSTITUTION=      5;
     public int $ACTIVATE_PERSON_OUTSIDE_INSTITUTION=        6;
+    public int $COUNT=7;
 
 
 
@@ -21,7 +23,7 @@ class PersonPermissions extends Permissions
         $this->permissions_bit_array=array(
 
         );
-        $this->populatePermissionsArray($permissionSum);
+        $this->populatePermissionsArray($permissionSum,$this->COUNT);
 
     }
 

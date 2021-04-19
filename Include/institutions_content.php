@@ -5,6 +5,7 @@ require_once "./Modules/Validation/PersonValidator.php";
 require_once "./Modules/Business/Person.php";
 require_once "./Modules/Business/Institution.php";
 require_once "./Modules/Database/InstitutionAction.php";
+require_once "./Modules/Encryption/EncryptionManager.php";
 
 require_once "./Modules/Database/MainAction.php";
 require_once "./Modules/Sessions/SessionManager.php";
@@ -24,25 +25,32 @@ require_once "./Modules/Sessions/SessionManager.php";
 //TODO:: uncomment
 //error_reporting(E_ERROR | E_PARSE);
 
+//FIXME::
+$name=$_GET['institution'];
 
-
+if(!isset($name) || trim($name)=="")
+{
+    echo 'Nothing To Show';
+    exit();
+}
 
 
 try {
 
 
     $person=Person::Builder()->setID((int)SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
-    $institutionAction = new InstitutionAction($person,$name);
+    $institutionAction = new InstitutionAction($person);
      $institution=$institutionAction->getSingleInstitutionInfo($name);
+     $id=$institutionAction->getInstitutionIDByName($name);
 
-    // $positions=array();
+
 
 } catch (Exception $e) {
     //FIXME::HANDLE ERRORS
     echo $e->getMessage();
     $FormErrors[] = $e->getMessage();
     // header("HTTP/1.1 503 Not Found");
-    exit(503);
+  //  exit(503);
 }
 /*
 if($_SERVER['REQUEST_METHOD'=='POST'])
@@ -174,195 +182,73 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
       <td>12/8/2012</td>
       <td>Ahmed</td>
     </tr>
-    <tr>
-      <th scope="row">1</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Security.docx</td>
-      <td>Word</td>
-      <td>16kb</td>
-      <td>24/9/2020</td>
-      <td>Yousef</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">1</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Security.docx</td>
-      <td>Word</td>
-      <td>16kb</td>
-      <td>24/9/2020</td>
-      <td>Yousef</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">1</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Security.docx</td>
-      <td>Word</td>
-      <td>16kb</td>
-      <td>24/9/2020</td>
-      <td>Yousef</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
+
+
   </tbody>
 </table>
 
   </div>
   <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <table id="table2" border='2' class="table table-hover table-responsive mt-3">
+
+   <!--  THE EMPLOYEES TABLE -->
+      <?php
+      if($institutionAction->canViewPersonsOfInstitution())
+      {
+          echo "<table id='table2' border='2' class='table table-hover table-responsive mt-3'>
   <thead>
     <tr>
-      <th scope="col">NO</th>
-      <th scope="col">Employee_Name</th>
-      <th scope="col">Employee_Email</th>
-      <th scope="col">Employee_Number</th>
-      <th scope="col">Employee_Birthday</th>
-      <th scope="col">Employee_Department</th>
+      <th scope='col'>Employee_Name</th>
+      <th scope='col'>Employee_Job</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Security.docx</td>
-      <td>Word</td>
-      <td>16kb</td>
-      <td>24/9/2020</td>
-      <td>Yousef</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">1</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Security.docx</td>
-      <td>Word</td>
-      <td>16kb</td>
-      <td>24/9/2020</td>
-      <td>Yousef</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">1</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Security.docx</td>
-      <td>Word</td>
-      <td>16kb</td>
-      <td>24/9/2020</td>
-      <td>Yousef</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">1</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Security.docx</td>
-      <td>Word</td>
-      <td>16kb</td>
-      <td>24/9/2020</td>
-      <td>Yousef</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>1.pdf</td>
-      <td>Pdf</td>
-      <td>1kb</td>
-      <td>12/8/2012</td>
-      <td>Ahmed</td>
-    </tr>
-  </tbody>
-</table>
+  <tbody>";
+          $perspnsArr=$institutionAction->getPersonsOfInstitution($id);
+          for($i=0;$i<count($perspnsArr);$i++)
+          {
+              echo "<tr>";
+   echo '<td>'.'<a href=Profile.php'.htmlspecialchars('?user='.EncryptionManager::Encrypt($perspnsArr[$i]->getEmail())).'>'.htmlspecialchars($perspnsArr[$i]->getFirstName()).'</a>'.'</td>';
+              echo '<td>'.htmlspecialchars($perspnsArr[$i]->getRoles()[0]->getJobDesc()).'</td>';
+
+              echo "</tr>";
+
+          }
+          echo "  </tbody>
+</table>";
+      }
+      else{echo htmlspecialchars("You Don't Have The Permissions To View The Employees Of This Institutions");}
+      ?>
   </div>
 </div>
 <br>
 <br>
 </div>
+
+
+<!--
+
+    <tr>
+      <th scope="row">1</th>
+      <td>1.pdf</td>
+      <td>Pdf</td>
+      <td>1kb</td>
+      <td>12/8/2012</td>
+      <td>Ahmed</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Security.docx</td>
+      <td>Word</td>
+      <td>16kb</td>
+      <td>24/9/2020</td>
+      <td>Yousef</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>1.pdf</td>
+      <td>Pdf</td>
+      <td>1kb</td>
+      <td>12/8/2012</td>
+      <td>Ahmed</td>
+    </tr>
+
+ x-->

@@ -10,7 +10,7 @@ require_once "./Modules/Sessions/SessionManager.php";
  * */
 
 //TODO:: REMOVE
-SessionManager::sessionSignIn('super@gmail.com',1);
+//SessionManager::sessionSignIn('admin@gmail.com',2);
 
 
 if(!SessionManager::validateSession())

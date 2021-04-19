@@ -3,22 +3,22 @@
 
 class Person
 {
-    private int $ID;
+    private ?int $ID;
 
-    private string $Email;
-    private string $academicNumber;
-    private string $firstName;
-    private string $middleName;
-    private string $lastName;
-    private string $Institution;
-    private string $Gender;
-    private string $phoneNumber;
-    private string $bio;
-    private string $phd;
-    private string $city;
-    private array $roles;
-    private bool $hasMoreThanOneRole;
-    private String $img_ref;
+    private ?string $Email;
+    private ?string $academicNumber;
+    private ?string $firstName;
+    private ?string $middleName;
+    private ?string $lastName;
+    private ?string $Institution;
+    private ?string $Gender;
+    private ?string $phoneNumber;
+    private ?string $bio;
+    private ?string $phd;
+    private ?string $city;
+    private ?array $roles;
+    private ?bool $hasMoreThanOneRole;
+    private ?String $img_ref;
 
 
 
@@ -61,7 +61,7 @@ class Person
     /**
      * @return String
      */
-    public function getImgRef(): string
+    public function getImgRef(): ?string
     {
         return $this->img_ref;
     }
@@ -73,7 +73,7 @@ class Person
     /**
      * @return array
      */
-    public function getRoles(): array
+    public function getRoles(): ?array
     {
         return $this->roles;
     }
@@ -81,7 +81,7 @@ class Person
     /**
      * @return bool
      */
-    public function isHasMoreThanOneRole(): bool
+    public function isHasMoreThanOneRole(): ?bool
     {
         return $this->hasMoreThanOneRole;
     }
@@ -89,7 +89,7 @@ class Person
     /**
      * @return string
      */
-    public function getCity(): string
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -98,7 +98,7 @@ class Person
     /**
      * @return String
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->Email;
     }
@@ -106,7 +106,7 @@ class Person
     /**
      * @return int
      */
-    public function getID(): int
+    public function getID(): ?int
     {
         return $this->ID;
     }
@@ -114,7 +114,7 @@ class Person
     /**
      * @return String
      */
-    public function getAcademicNumber(): string
+    public function getAcademicNumber(): ?string
     {
         return $this->academicNumber;
     }
@@ -122,7 +122,7 @@ class Person
     /**
      * @return String
      */
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -130,7 +130,7 @@ class Person
     /**
      * @return String
      */
-    public function getMiddleName(): string
+    public function getMiddleName(): ?string
     {
         return $this->middleName;
     }
@@ -138,7 +138,7 @@ class Person
     /**
      * @return String
      */
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -146,7 +146,7 @@ class Person
     /**
      * @return String
      */
-    public function getPhoneNumber(): string
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
@@ -155,7 +155,7 @@ class Person
     /**
      * @return String
      */
-    public function getInstitution(): string
+    public function getInstitution(): ?string
     {
         return $this->Institution;
     }
@@ -163,7 +163,7 @@ class Person
     /**
      * @return String
      */
-    public function getGender(): string
+    public function getGender(): ?string
     {
         return $this->Gender;
     }
@@ -171,7 +171,7 @@ class Person
     /**
      * @return string
      */
-    public function getBio(): string
+    public function getBio(): ?string
     {
         return $this->bio;
     }
@@ -179,7 +179,7 @@ class Person
     /**
      * @return string
      */
-    public function getPhd(): string
+    public function getPhd(): ?string
     {
         return $this->phd;
     }
@@ -189,25 +189,25 @@ class Person
 
 class PersonBuilder
 {
-    private int $ID=0;
-    private string $Email="";
-    private string $acadmicNumber="";
-    private string $firstName="";
-    private string $middleName="";
-    private string $lastName="";
-    private string $Institution="";
-    private string $Gender="";
-    private string $phoneNumber="";
-    private string $bio="";
-    private string $phd="";
-    private string $city="";
-    private array $roles=array();
-    private String $img_ref="";
+    private ?int $ID=0;
+    private ?string $Email="";
+    private ?string $acadmicNumber="";
+    private ?string $firstName="";
+    private ?string $middleName="";
+    private ?string $lastName="";
+    private ?string $Institution="";
+    private ?string $Gender="";
+    private ?string $phoneNumber="";
+    private ?string $bio="";
+    private ?string $phd="";
+    private ?string $city="";
+    private ?array $roles=array();
+    private ?String $img_ref="";
 
     /**
      * @return String
      */
-    public function getImgRef(): string
+    public function getImgRef(): ?string
     {
         return $this->img_ref;
     }
@@ -223,7 +223,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->Email;
     }
@@ -231,7 +231,7 @@ class PersonBuilder
     /**
      * @param string $Email
      */
-    public function setEmail(string $Email): PersonBuilder
+    public function setEmail(?string $Email): PersonBuilder
     {
         $this->Email = $Email;
         return $this;
@@ -240,7 +240,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getAcadmicNumber(): string
+    public function getAcadmicNumber(): ?string
     {
         return $this->acadmicNumber;
     }
@@ -248,13 +248,13 @@ class PersonBuilder
     /**
      * @param string $acadmicNumber
      */
-    public function setAcadmicNumber(string $acadmicNumber): PersonBuilder
+    public function setAcadmicNumber(?string $acadmicNumber): PersonBuilder
     {
         $this->acadmicNumber = $acadmicNumber;
         return $this;
 
     }
-    public function setImgRef(string $ImgRef): PersonBuilder
+    public function setImgRef(?string $ImgRef): PersonBuilder
     {
         $this->img_ref = $ImgRef;
         return $this;
@@ -264,7 +264,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -272,7 +272,7 @@ class PersonBuilder
     /**
      * @param string $firstName
      */
-    public function setFirstName(string $firstName): PersonBuilder
+    public function setFirstName(?string $firstName): PersonBuilder
     {
         $this->firstName = $firstName;
         return $this;
@@ -282,7 +282,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getMiddleName(): string
+    public function getMiddleName(): ?string
     {
         return $this->middleName;
     }
@@ -290,7 +290,7 @@ class PersonBuilder
     /**
      * @param string $middleName
      */
-    public function setMiddleName(string $middleName): PersonBuilder
+    public function setMiddleName(?string $middleName): PersonBuilder
     {
         $this->middleName = $middleName;
         return $this;
@@ -300,7 +300,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -308,7 +308,7 @@ class PersonBuilder
     /**
      * @return int
      */
-    public function getID(): int
+    public function getID(): ?int
     {
         return $this->ID;
     }
@@ -316,7 +316,7 @@ class PersonBuilder
     /**
      * @param int $ID
      */
-    public function setID(int $ID): PersonBuilder
+    public function setID(?int $ID): PersonBuilder
     {
         $this->ID = $ID;
         return $this;
@@ -326,7 +326,7 @@ class PersonBuilder
     /**
      * @param string $lastName
      */
-    public function setLastName(string $lastName): PersonBuilder
+    public function setLastName(?string $lastName): PersonBuilder
     {
         $this->lastName = $lastName;
         return $this;
@@ -336,7 +336,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getInstitution(): string
+    public function getInstitution(): ?string
     {
         return $this->Institution;
     }
@@ -344,7 +344,7 @@ class PersonBuilder
     /**
      * @param string $Institution
      */
-    public function setInstitution(string $Institution): PersonBuilder
+    public function setInstitution(?string $Institution): PersonBuilder
     {
         $this->Institution = $Institution;
         return $this;
@@ -354,7 +354,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getGender(): string
+    public function getGender(): ?string
     {
         return $this->Gender;
     }
@@ -362,7 +362,7 @@ class PersonBuilder
     /**
      * @param string $Gender
      */
-    public function setGender(string $Gender): PersonBuilder
+    public function setGender(?string $Gender): PersonBuilder
     {
         $this->Gender = $Gender;
         return $this;
@@ -372,7 +372,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getPhoneNumber(): string
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
@@ -380,7 +380,7 @@ class PersonBuilder
     /**
      * @param string $phoneNumber
      */
-    public function setPhoneNumber(string $phoneNumber): PersonBuilder
+    public function setPhoneNumber(?string $phoneNumber): PersonBuilder
     {
         $this->phoneNumber = $phoneNumber;
         return $this;
@@ -390,7 +390,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getBio(): string
+    public function getBio(): ?string
     {
         return $this->bio;
     }
@@ -398,7 +398,7 @@ class PersonBuilder
     /**
      * @param string $bio
      */
-    public function setBio(string $bio): PersonBuilder
+    public function setBio(?string $bio): PersonBuilder
     {
         $this->bio = $bio;
         return $this;
@@ -408,7 +408,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getPhd(): string
+    public function getPhd(): ?string
     {
         return $this->phd;
     }
@@ -416,7 +416,7 @@ class PersonBuilder
     /**
      * @param string $phd
      */
-    public function setPhd(string $phd): PersonBuilder
+    public function setPhd(?string $phd): PersonBuilder
     {
         $this->phd = $phd;
         return $this;
@@ -426,7 +426,7 @@ class PersonBuilder
     /**
      * @return string
      */
-    public function getCity(): string
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -434,7 +434,7 @@ class PersonBuilder
     /**
      * @param string $city
      */
-    public function setCity(string $city): PersonBuilder
+    public function setCity(?string $city): PersonBuilder
     {
         $this->city = $city;
         return $this;
@@ -444,7 +444,7 @@ class PersonBuilder
     /**
      * @return array
      */
-    public function getRoles(): array
+    public function getRoles(): ?array
     {
         return $this->roles;
     }
@@ -452,7 +452,7 @@ class PersonBuilder
     /**
      * @param array $roles
      */
-    public function setRoles(array $roles): PersonBuilder
+    public function setRoles(?array $roles): PersonBuilder
     {
         $this->roles = $roles;
         return $this;

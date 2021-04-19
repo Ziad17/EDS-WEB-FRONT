@@ -1,5 +1,5 @@
 <?php
-  $name = 'institutions';
+
   require_once('Include/headtag.php');
 require_once "./Modules/Sessions/SessionManager.php";
 /*
@@ -8,14 +8,22 @@ require_once "./Modules/Sessions/SessionManager.php";
  *  1-check whether the person has the permission to view this page
  * */
 
-//TODO:: REMOVE
-SessionManager::sessionSignIn('super@gmail.com',1);
 
+
+SessionManager::sessionSignIn('admin@gmail.com',2);
 if(!SessionManager::validateSession())
 {
     header("Location: index.php");
     header('Cache-Control: no-cache, must-revalidate');
     exit();
+}
+
+$name=$_GET['institution'];
+if(!isset($name) || trim($name)=="")
+{
+    header("Location: Home.php");
+    exit();
+
 }
 
 ?>

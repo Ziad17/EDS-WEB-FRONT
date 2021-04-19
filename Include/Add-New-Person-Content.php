@@ -4,6 +4,7 @@
 require_once "./Modules/Validation/PersonValidator.php";
 require_once "./Modules/Business/Person.php";
 require_once "./Modules/Database/MainAction.php";
+require_once "./Modules/Exceptions/NoPermissionsGrantedException.php";
 
 require_once "./Modules/Sessions/SessionManager.php";
 require_once "./Modules/Database/PersonAction.php";
@@ -24,27 +25,44 @@ require_once "./Modules/Business/PersonRole.php";
  * */
 
 
+
 //TODO:: uncomment
 //error_reporting(E_ERROR | E_PARSE);
 
 
 
-$mainAction = new MainAction();
 
 
 
 try {
+    $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
+    $Action = new PersonAction($personRef);
+    if(!$Action->canCreatePerson())
+    {
+        echo "You Don't Have The Permissions Required To View This Page";
+        exit();
+
+    }
+    $mainAction = new MainAction();
+
     $faculties = $mainAction->getAllInstitutions();
     $cities = $mainAction->getAllCities();
     $positions=$mainAction->getAllAvailableRoles((int)SessionManager::USER_ID);
 
 
-} catch (Exception $e) {
+} catch(NoPermissionsGrantedException $e)
+{
+    echo "You Don't Have The Permissions Required To View This Page";
+    exit();
+
+}
+
+catch (Exception $e) {
     //FIXME::HANDLE ERRORS
     echo $e->getMessage();
     $FormErrors[] = $e->getMessage();
-   // header("HTTP/1.1 503 Not Found");
-    exit(503);
+    // header("HTTP/1.1 503 Not Found");
+    //exit(503);
 }
 
 
@@ -84,6 +102,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
             {
                 if ($password == $confirm_password && strlen($password) >= 8) {
                     $roleToAttach = new PersonRole($job_role, 0, $job_title, $mainAction->getInstitutionNameByID($institution));
+
 
                     $creator = Person::Builder()->setID((int)SessionManager::getID())
                         ->setEmail(SessionManager::getEmail())

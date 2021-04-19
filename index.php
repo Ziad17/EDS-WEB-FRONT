@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
   {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
      {
-       $FormErrors[]='Email Address Is Considered <strong> Invalid </strong>';
+       $FormErrors[]='Email Address Is Considered <stro ng> Invalid </strong>';
      }
   }else
   {

@@ -5,23 +5,40 @@ declare(strict_types=1);
 class Institution
 {
     //TODO:APPLY GENERICS
-    private Int $ID;
-    private String $name;
-    private String $type;
-    private bool $active;
-    private Int $level;
-    private String $parent;
-    private bool $insideCampus;
-    private String $fax;
-    private String $primaryPhone;
-    private String $secondaryPhone;
-    private String $email;
-    private String $website;
+    private ?Int $ID;
+    private ?String $name;
+    private ?String $type;
+    private ?bool $active;
+    private ?Int $level;
+    private ?String $parent;
+    private ?bool $insideCampus;
+    private ?String $fax;
+    private ?String $primaryPhone;
+    private ?String $secondaryPhone;
+    private ?String $email;
+    private ?String $website;
 
+    private ?string $institution_img;
+
+    /**
+     * @return string
+     */
+    public function getInstitutionImg(): ?string
+    {
+        return $this->institution_img;
+    }
+
+    /**
+     * @param string $institution_img
+     */
+    public function setInstitutionImg(?string $institution_img): void
+    {
+        $this->institution_img = $institution_img;
+    }
     /**
      * @return String
      */
-    public function getWebsite(): string
+    public function getWebsite(): ?string
     {
         return $this->website;
     }
@@ -29,7 +46,7 @@ class Institution
     /**
      * @param String $website
      */
-    public function setWebsite(string $website): void
+    public function setWebsite(?string $website): void
     {
         $this->website = $website;
     }
@@ -48,6 +65,7 @@ class Institution
         $this->setSecondaryPhone($builder->getSecondaryPhone());
         $this->setLevel($builder->getLevel());
         $this->setType($builder->getType());
+        $this->setInstitutionImg($builder->getInstitutionImg());
         //FIXME:: ERROR HERE
         $this->setParent($builder->getParent());
 
@@ -61,7 +79,7 @@ class Institution
     /**
      * @return Int
      */
-    public function getID(): int
+    public function getID(): ?int
     {
         return $this->ID;
     }
@@ -69,7 +87,7 @@ class Institution
     /**
      * @return String
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -77,7 +95,7 @@ class Institution
     /**
      * @return String
      */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -85,7 +103,7 @@ class Institution
     /**
      * @return bool
      */
-    public function isActive(): bool
+    public function isActive(): ?bool
     {
         return $this->active;
     }
@@ -93,7 +111,7 @@ class Institution
     /**
      * @return Int
      */
-    public function getLevel(): int
+    public function getLevel(): ?int
     {
         return $this->level;
     }
@@ -101,7 +119,7 @@ class Institution
     /**
      * @return Institution
      */
-    public function getParent(): String
+    public function getParent(): ?String
     {
         return $this->parent;
     }
@@ -109,7 +127,7 @@ class Institution
     /**
      * @return bool
      */
-    public function isInsideCampus(): bool
+    public function isInsideCampus(): ?bool
     {
         return $this->insideCampus;
     }
@@ -117,7 +135,7 @@ class Institution
     /**
      * @return String
      */
-    public function getFax(): string
+    public function getFax(): ?string
     {
         return $this->fax;
     }
@@ -125,7 +143,7 @@ class Institution
     /**
      * @return String
      */
-    public function getPrimaryPhone(): string
+    public function getPrimaryPhone(): ?string
     {
         return $this->primaryPhone;
     }
@@ -133,7 +151,7 @@ class Institution
     /**
      * @return String
      */
-    public function getSecondaryPhone(): string
+    public function getSecondaryPhone(): ?string
     {
         return $this->secondaryPhone;
     }
@@ -141,7 +159,7 @@ class Institution
     /**
      * @return String
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -151,7 +169,7 @@ class Institution
     /**
      * @param Int $ID
      */
-    private function setID(int $ID): void
+    private function setID(?int $ID): void
     {
         $this->ID = $ID;
     }
@@ -159,7 +177,7 @@ class Institution
     /**
      * @param String $name
      */
-    private function setName(string $name): void
+    private function setName(?string $name): void
     {
         $this->name = $name;
     }
@@ -167,7 +185,7 @@ class Institution
     /**
      * @param String $type
      */
-    private function setType(string $type): void
+    private function setType(?string $type): void
     {
         $this->type = $type;
     }
@@ -175,7 +193,7 @@ class Institution
     /**
      * @param bool $active
      */
-    private function setActive(bool $active): void
+    private function setActive(?bool $active): void
     {
         $this->active = $active;
     }
@@ -183,7 +201,7 @@ class Institution
     /**
      * @param Int $level
      */
-    private function setLevel(int $level): void
+    private function setLevel(?int $level): void
     {
         $this->level = $level;
     }
@@ -191,7 +209,7 @@ class Institution
     /**
      * @param String $parent
      */
-    private function setParent(String $parent): void
+    private function setParent(?String $parent): void
     {
         $this->parent = $parent;
     }
@@ -199,7 +217,7 @@ class Institution
     /**
      * @param bool $insideCampus
      */
-    private function setInsideCampus(bool $insideCampus): void
+    private function setInsideCampus(?bool $insideCampus): void
     {
         $this->insideCampus = $insideCampus;
     }
@@ -207,7 +225,7 @@ class Institution
     /**
      * @param String $fax
      */
-    private function setFax(string $fax): void
+    private function setFax(?string $fax): void
     {
         $this->fax = $fax;
     }
@@ -215,7 +233,7 @@ class Institution
     /**
      * @param String $primaryPhone
      */
-    private function setPrimaryPhone(string $primaryPhone): void
+    private function setPrimaryPhone(?string $primaryPhone): void
     {
         $this->primaryPhone = $primaryPhone;
     }
@@ -223,7 +241,7 @@ class Institution
     /**
      * @param String $secondaryPhone
      */
-    private function setSecondaryPhone(string $secondaryPhone): void
+    private function setSecondaryPhone(?string $secondaryPhone): void
     {
         $this->secondaryPhone = $secondaryPhone;
     }
@@ -231,7 +249,7 @@ class Institution
     /**
      * @param String $email
      */
-    private function setEmail(string $email): void
+    private function setEmail(?string $email): void
     {
         $this->email = $email;
     }
@@ -241,23 +259,41 @@ class Institution
 }
 class InstitutionBuilder
 {
-    private Int $ID=0;
-    private String $name="";
-    private String $type="";
-    private bool $active=false;
-    private Int $level=0;
-    private String $parent="";
-    private bool $insideCampus=false;
-    private String $fax="";
-    private String $primaryPhone="";
-    private String $secondaryPhone="";
+    private ?Int $ID=0;
+    private ?String $name="";
+    private ?String $type="";
+    private ?bool $active=false;
+    private ?Int $level=0;
+    private ?String $parent="";
+    private ?bool $insideCampus=false;
+    private ?String $fax="";
+    private ?String $primaryPhone="";
+    private ?String $secondaryPhone="";
     private String $email="";
-    private String $website="";
+    private ?string $website="";
+    private ?string $institution_img="";
+
+    /**
+     * @return string|null
+     */
+    public function getInstitutionImg(): ?string
+    {
+        return $this->institution_img;
+    }
+
+    /**
+     * @param string|null $institution_img
+     */
+    public function setInstitutionImg(?string $institution_img): InstitutionBuilder
+    {
+        $this->institution_img = $institution_img;
+        return $this;
+    }
 
     /**
      * @return string
      */
-    public function getWebsite(): string
+    public function getWebsite(): ?string
     {
         return $this->website;
     }
@@ -265,7 +301,7 @@ class InstitutionBuilder
     /**
      * @param string $website
      */
-    public function setWebsite(string $website): InstitutionBuilder
+    public function setWebsite(?string $website): InstitutionBuilder
     {
         $this->website = $website;
         return $this;
@@ -282,7 +318,7 @@ class InstitutionBuilder
     /**
      * @return int
      */
-    public function getID(): int
+    public function getID(): ?int
     {
         return $this->ID;
     }
@@ -290,7 +326,7 @@ class InstitutionBuilder
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -298,7 +334,7 @@ class InstitutionBuilder
     /**
      * @return string
      */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -306,7 +342,7 @@ class InstitutionBuilder
     /**
      * @return bool
      */
-    public function isActive(): bool
+    public function isActive(): ?bool
     {
         return $this->active;
     }
@@ -314,7 +350,7 @@ class InstitutionBuilder
     /**
      * @return int
      */
-    public function getLevel(): int
+    public function getLevel(): ?int
     {
         return $this->level;
     }
@@ -322,7 +358,7 @@ class InstitutionBuilder
     /**
      * @return string
      */
-    public function getParent():String
+    public function getParent():?String
     {
         return $this->parent;
     }
@@ -330,7 +366,7 @@ class InstitutionBuilder
     /**
      * @return bool
      */
-    public function isInsideCampus(): bool
+    public function isInsideCampus(): ?bool
     {
         return $this->insideCampus;
     }
@@ -338,7 +374,7 @@ class InstitutionBuilder
     /**
      * @return string
      */
-    public function getFax(): string
+    public function getFax(): ?string
     {
         return $this->fax;
     }
@@ -346,7 +382,7 @@ class InstitutionBuilder
     /**
      * @return string
      */
-    public function getPrimaryPhone(): string
+    public function getPrimaryPhone(): ?string
     {
         return $this->primaryPhone;
     }
@@ -354,7 +390,7 @@ class InstitutionBuilder
     /**
      * @return string
      */
-    public function getSecondaryPhone(): string
+    public function getSecondaryPhone(): ?string
     {
         return $this->secondaryPhone;
     }
@@ -362,7 +398,7 @@ class InstitutionBuilder
     /**
      * @return string
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -371,7 +407,7 @@ class InstitutionBuilder
     /**
      * @param int $ID
      */
-    public function setID(int $ID): InstitutionBuilder
+    public function setID(?int $ID): InstitutionBuilder
     {
         $this->ID = $ID;
         return $this;
@@ -380,7 +416,7 @@ class InstitutionBuilder
     /**
      * @param string $name
      */
-    public function setName(string $name): InstitutionBuilder
+    public function setName(?string $name): InstitutionBuilder
     {
         $this->name = $name;
         return $this;
@@ -390,7 +426,7 @@ class InstitutionBuilder
     /**
      * @param string $type
      */
-    public function setType(string $type): InstitutionBuilder
+    public function setType(?string $type): InstitutionBuilder
     {
         $this->type = $type;        return $this;
 
@@ -399,7 +435,7 @@ class InstitutionBuilder
     /**
      * @param bool $active
      */
-    public function setActive(bool $active): InstitutionBuilder
+    public function setActive(?bool $active): InstitutionBuilder
     {
         $this->active = $active;        return $this;
 
@@ -408,7 +444,7 @@ class InstitutionBuilder
     /**
      * @param int $level
      */
-    public function setLevel(int $level): InstitutionBuilder
+    public function setLevel(?int $level): InstitutionBuilder
     {
         $this->level = $level;        return $this;
 
@@ -417,7 +453,7 @@ class InstitutionBuilder
     /**
      * @param String $parent
      */
-    public function setParent(String $parent): InstitutionBuilder
+    public function setParent(?String $parent): InstitutionBuilder
     {
         $this->parent = $parent;        return $this;
 
@@ -426,7 +462,7 @@ class InstitutionBuilder
     /**
      * @param bool $insideCampus
      */
-    public function setInsideCampus(bool $insideCampus): InstitutionBuilder
+    public function setInsideCampus(?bool $insideCampus): InstitutionBuilder
     {
         $this->insideCampus = $insideCampus;        return $this;
 
@@ -435,7 +471,7 @@ class InstitutionBuilder
     /**
      * @param string $fax
      */
-    public function setFax(string $fax): InstitutionBuilder
+    public function setFax(?string $fax): InstitutionBuilder
     {
         $this->fax = $fax;        return $this;
 
@@ -444,7 +480,7 @@ class InstitutionBuilder
     /**
      * @param string $primaryPhone
      */
-    public function setPrimaryPhone(string $primaryPhone): InstitutionBuilder
+    public function setPrimaryPhone(?string $primaryPhone): InstitutionBuilder
     {
         $this->primaryPhone = $primaryPhone;        return $this;
 
@@ -453,7 +489,7 @@ class InstitutionBuilder
     /**
      * @param string $secondaryPhone
      */
-    public function setSecondaryPhone(string $secondaryPhone): InstitutionBuilder
+    public function setSecondaryPhone(?string $secondaryPhone): InstitutionBuilder
     {
         $this->secondaryPhone = $secondaryPhone;
         return $this;}
@@ -461,7 +497,7 @@ class InstitutionBuilder
     /**
      * @param string $email
      */
-    public function setEmail(string $email): InstitutionBuilder
+    public function setEmail(?string $email): InstitutionBuilder
     {
         $this->email = $email;
         return $this;

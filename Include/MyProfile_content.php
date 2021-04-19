@@ -1,3 +1,35 @@
+<?php
+
+
+require_once "./Modules/Validation/PersonValidator.php";
+require_once "./Modules/Business/Person.php";
+require_once "./Modules/Sessions/SessionManager.php";
+require_once "./Modules/Database/PersonAction.php";
+
+
+
+
+
+try {
+    $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
+    $Action = new PersonAction($personRef);
+
+
+    //fill Info
+    $detailedPersonRef=$Action->getMyDetails();
+
+
+
+}
+
+catch (Exception $e) {
+    //FIXME::HANDLE ERRORS
+    echo $e->getMessage();
+    $FormErrors[] = $e->getMessage();
+    // header("HTTP/1.1 503 Not Found");
+    //exit(503);
+}
+?>
 <div class="col-md-3">
 	<div class="card-group">
 		<div class="card" style="padding: 20px;border-top: 3px  solid #f8b739;border-bottom: 3px  solid #f8b739 ">
@@ -8,13 +40,34 @@
 			    color: #343a40;
 			    font-size: 20px;
 			"  href="Edit-profile.php"><i class="fas fa-user-edit"></i></a>
-			<img style="border-radius: 50%;padding: 5px" src="img/undraw_female_avatar_w3jk (1).svg" width="100px" height="100px" class="card-img-top" alt="...">
+			<img style="border-radius: 50%;padding: 5px" src=<?php  if(isset($detailedPersonRef))
+            {
+
+            echo htmlspecialchars($detailedPersonRef->getImgRef());
+            }?> width="100px" height="100px" class="card-img-top" alt="...">
 			<div class="card-body">
-				<h5 class="card-title">User Name</h5>
+				<h5 class="card-title"><?php  if(isset($detailedPersonRef))
+                    {
+
+                        echo htmlspecialchars(trim($detailedPersonRef->getFirstName()." ".$detailedPersonRef->getMiddleName()." ".$detailedPersonRef->getLastName()));
+                    }?></h5>
 				
-					<p class="card-text"> JobRoleName</p>
-					<p class="card-text"> instituionName</p>
-					<p class="card-text"> HiredDate</p>
+					<p class="card-text"><?php  if(isset($detailedPersonRef))
+					{
+					    $roles= $detailedPersonRef->getRoles();
+					    echo htmlspecialchars($roles[0]->getJobDesc());
+					}?>
+                    </p>
+					<p class="card-text"><?php  if(isset($detailedPersonRef))
+                        {
+                            $roles= $detailedPersonRef->getRoles();
+                            echo htmlspecialchars($roles[0]->getInstitutionName());
+                        }?></p>
+					<p class="card-text"> <?php  if(isset($detailedPersonRef))
+                        {
+
+                            echo htmlspecialchars($detailedPersonRef->getEmail());
+                        }?></p>
 				</pre>
 				<br>
 				<br>

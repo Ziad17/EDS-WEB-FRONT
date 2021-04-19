@@ -1,6 +1,40 @@
 <?php
-  $name = 'VistedProfile';
+  $name = 'User Profile';
   require_once('Include/headtag.php');
+require_once "./Modules/Encryption/EncryptionManager.php";
+require_once "./Modules/Sessions/SessionManager.php";
+require_once "./Modules/Business/Person.php";
+
+require_once "./Modules/Database/MainAction.php";
+
+if(!SessionManager::validateSession())
+{
+    header("Location: index.php");
+    header('Cache-Control: no-cache, must-revalidate');
+    exit();
+}
+if(isset($_GET['user']))
+{
+try {
+    $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
+
+    $mainAction = new MainAction();
+    $email = EncryptionManager::Decrypt($_GET['user']);
+    if ($email == $personRef->getEmail()) {
+
+        header('Location: MyProfile.php');
+    }
+}
+catch (Exception $e){
+    echo $e->getMessage();
+}
+}
+else{
+    header("HTTP/1.1 503 Not Found");
+    exit(503);
+}
+
+
  ?>
   <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
   <body style="padding-right: 15px">
@@ -37,7 +71,27 @@
 
 		<div class="container-fluid">
 			<div class="row mt-5">
-        <?php require_once('Include/VistedProfile_content.php'); ?>
+
+        <?php
+        if(isset($_GET['user']))
+        {
+
+            $mainAction=new MainAction();
+            $email=EncryptionManager::Decrypt($_GET['user']);
+
+            if($mainAction->isUserExists($email))
+            {
+                require_once('Include/VistedProfile_content.php');
+
+            }
+            else{echo "Not Found";}
+
+        }
+        else{
+            header("HTTP/1.1 503 Not Found");
+            exit(503);
+        }
+        ?>
 			</div>					 
 
           <footer class="row">

@@ -91,12 +91,11 @@ echo $error['message'];
 
     }
 
-    public function isUserExists(string $academicNumber, string $getEmail): bool
+    public function isUserExists(string $academicNumberOrEmail): bool
     {
         $conn = $this->getDatabaseConnection();
         $sql = "SELECT * FROM Person WHERE Person.academic_number=? OR Person.contact_email=?";
-        $params = array("{$academicNumber}",
-            "{$getEmail}");
+        $params = array($academicNumberOrEmail,$academicNumberOrEmail);
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
 
         if ($stmt == false) {
@@ -104,7 +103,6 @@ echo $error['message'];
         }
         if (sqlsrv_has_rows($stmt)) {
             $row=sqlsrv_fetch_object($stmt);
-            echo $row->ID;
             return true;
         }
         return false;

@@ -1,7 +1,18 @@
 <?php
   $name = 'MyProfile';
   require_once('Include/headtag.php');
- ?>
+require_once "./Modules/Sessions/SessionManager.php";
+
+
+
+if(!SessionManager::validateSession())
+{
+    header("Location: index.php");
+    header('Cache-Control: no-cache, must-revalidate');
+    exit();
+}
+
+?>
   <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
   <body style="padding-right: 15px">
 		<div  class="wrapper d-flex align-items-stretch">

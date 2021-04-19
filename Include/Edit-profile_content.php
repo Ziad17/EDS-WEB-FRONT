@@ -1,3 +1,43 @@
+<?php
+
+
+require_once "./Modules/Validation/PersonValidator.php";
+require_once "./Modules/Business/Person.php";
+require_once "./Modules/Sessions/SessionManager.php";
+require_once "./Modules/Database/PersonAction.php";
+
+
+
+
+
+try {
+    $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
+    $Action = new PersonAction($personRef);
+
+
+    //fill Info
+    $detailedPersonRef=$Action->getMyDetails();
+    //TODO::populate the data
+
+
+
+}
+
+catch (Exception $e) {
+    //FIXME::HANDLE ERRORS
+    echo $e->getMessage();
+    $FormErrors[] = $e->getMessage();
+    // header("HTTP/1.1 503 Not Found");
+    //exit(503);
+}
+?>
+
+
+
+
+
+
+
 <div align="center" class="col-md-4">
   <div class="wrapper_pic"> 
     <span class="cam"><i class="fas fa-camera"></i></span>

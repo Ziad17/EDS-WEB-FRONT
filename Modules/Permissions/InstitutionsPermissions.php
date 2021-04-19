@@ -1,5 +1,6 @@
 <?php
-require 'Permissions.php';
+require_once "Modules/Permissions/Permissions.php";
+
 
 
 

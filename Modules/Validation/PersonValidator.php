@@ -16,7 +16,7 @@ class PersonValidator extends Validator
     {
         $this->ERRORS_LIST[] = $this->validateEmail();
         $this->ERRORS_LIST[] = $this->validateSingleName();
-       $this->ERRORS_LIST[] = $this->validateNumber();
+      // $this->ERRORS_LIST[] = $this->validateNumber();
         //$this->ERRORS_LIST[] = $this->validateInstitution();
         $this->ERRORS_LIST[] = $this->validateAcademicNumber();
         $this->ERRORS_LIST[] = $this->validateGender();

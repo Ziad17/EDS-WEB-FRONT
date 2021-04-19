@@ -35,6 +35,8 @@ class SessionManager
 
     public static function sessionLogOut()
     {
+        session_start();
+
         unset($_SESSION[self::USER_EMAIL]);
         unset($_SESSION[self::USER_ID]);
         unset($_SESSION[self::USER_EXP_TIME_STAMP]);
