@@ -1,6 +1,7 @@
 <?php
   $name = 'Add-New-Person';
-  require_once('Include/headtag.php');
+require_once "./Include/headtag.php";
+
 require_once "./Modules/Sessions/SessionManager.php";
 
 /*
@@ -28,7 +29,7 @@ if(!SessionManager::validateSession())
 
       <!-- ----------------------------- start  sidebar ---------------------------------------------->
 
-        <?php require_once('Include/sidebar.php');?>
+        <?php require_once './Include/sidebar.php';?>
 
       <!-- ----------------------------- End  sidebar ---------------------------------------------->
 
@@ -37,7 +38,7 @@ if(!SessionManager::validateSession())
   <div id="content" class="p-4 p-md-3">
       <!----------------------------------- Start nav N 3-------------- --------------------------->
         
-        <?php require_once('Include/nav3.php'); ?>
+        <?php require_once('./Include/nav3.php'); ?>
 
     <!----------------------------------- End nav N 3-------------- --------------------------->
 
@@ -47,7 +48,7 @@ if(!SessionManager::validateSession())
 			<div class="row m-auto d-block">
         <?php
         try {
-            require_once('Include/Add-New-Person-Content.php');
+            require_once('./Include/Add-New-Person-Content.php');
         }
         catch ( Exception $exception){echo $exception->getMessage(); }?>
 			</div>
@@ -61,7 +62,7 @@ if(!SessionManager::validateSession())
 
 	    </div>
       <?php 
-        require_once('Include/script.php');
+        require_once('./Include/script.php');
       ?>
       <script src="js/jquery.dataTables.js"></script>
     <script type = "text/javascript">
