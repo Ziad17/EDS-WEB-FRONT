@@ -2,6 +2,8 @@
   //check if user coming From A Requset
 require_once "Modules/Database/MainAction.php";
 require_once "Modules/Sessions/SessionManager.php";
+error_reporting(E_ERROR | E_PARSE);
+
 php_info();
 echo 'hey';
 if(SessionManager::validateSession())
