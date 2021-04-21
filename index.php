@@ -4,7 +4,6 @@ require_once "Modules/Database/MainAction.php";
 require_once "Modules/Sessions/SessionManager.php";
 error_reporting(E_ERROR | E_PARSE);
 
-php_info();
 if(SessionManager::validateSession())
 {
     header("Location: Home.php");
