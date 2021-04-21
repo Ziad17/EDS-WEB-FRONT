@@ -5,7 +5,6 @@ require_once "Modules/Sessions/SessionManager.php";
 error_reporting(E_ERROR | E_PARSE);
 
 php_info();
-echo 'hey';
 if(SessionManager::validateSession())
 {
     header("Location: Home.php");
