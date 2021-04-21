@@ -323,7 +323,7 @@ class PersonAction extends Action
 
             }
             $this->closeConnection($conn);
-            return true;+
+            return true;
         } else {
             $this->closeConnection($conn);
             return false;

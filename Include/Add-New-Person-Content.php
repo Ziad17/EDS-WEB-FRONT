@@ -207,7 +207,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
                 $title=$_position->getJobTitle();
-                echo "<option value=" . htmlspecialchars($title) . ">" . htmlspecialchars($title) . "</option>";
+
+                $role_name=$_position->getRoleName();
+                echo "<option value=" . htmlspecialchars($role_name) . ">" . htmlspecialchars($title) . "</option>";
             }
 
             ?>

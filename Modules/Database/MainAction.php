@@ -99,7 +99,7 @@ class MainAction extends Action
     {
         $conn = $this->getDatabaseConnection();
         //FIXME::make the roles < prioritylevel
-        $sql="SELECT role_name FROM Roles   ";
+        $sql="SELECT role_name,role_front_name FROM Roles   ";
         $params=array($priorit_lvl);
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false) {
@@ -110,8 +110,9 @@ class MainAction extends Action
         }
         else {
             $array_of_roles = array();
-            while ($row = sqlsrv_fetch_array($stmt)) {
-                $array_of_roles[] = new PersonRole($row[0],0,'','');
+            while ($row = sqlsrv_fetch_object($stmt)) {
+                $array_of_roles[] =  PersonRole::Builder()->setRoleName($row->role_name)
+                ->setJobTitle($row->role_front_name)->build();
 
             }
         }
