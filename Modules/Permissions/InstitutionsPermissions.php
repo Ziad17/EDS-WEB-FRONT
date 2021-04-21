@@ -12,7 +12,7 @@ class InstitutionsPermissions extends Permissions
     public int $CREATE_INSTITUTION = 1; //2**1=2
     public int $DELETE_INSTITUTION = 2; //2**2=4
     public int $CREATE_INSTITUTION_TYPE = 3;
-    public int $EDIT_INSTITUTION_TYPE = 4;
+    public int $EDIT_INSTITUTION = 4;
     public int $CREATE_ROLE = 5;
     public int $EDIT_ROLE = 6;
 

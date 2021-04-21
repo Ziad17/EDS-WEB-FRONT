@@ -14,7 +14,6 @@ require_once "Modules/Exceptions/CannotCreateHigherEmployeeException.php";
 require_once "Modules/Exceptions/DataNotFound.php";
 
 
-
 class PersonAction extends Action
 {
     private PersonPermissions $myPersonPermissions;
@@ -28,8 +27,8 @@ class PersonAction extends Action
     public function __construct(Person $myPersonRef)
     {
         parent::setConnection($this);
-            $this->myPersonRef = $myPersonRef;
-            $this->updateMyPersonsPermissionsSum();
+        $this->myPersonRef = $myPersonRef;
+        $this->updateMyPersonsPermissionsSum();
 
     }
 
@@ -43,12 +42,11 @@ class PersonAction extends Action
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false) {
 
-            //TODO :PRODUCTION UNCOMMENT THIS
+            //removeOnProduction
             //$error="Could not get details of the person roles";
-            $error=sqlsrv_errors()[0]['message'];
+            $error = sqlsrv_errors()[0]['message'];
             $this->closeConnection($conn);
             throw new SQLStatmentException($error);
-
 
 
         }
@@ -59,7 +57,7 @@ class PersonAction extends Action
             if ($active == false) //check for active status
             {
                 throw new PersonOrDeactivated("Your role has been deactivated by an admin");
-            }  else {
+            } else {
 
                 $sum = (int)$row->persons_permissions_sum;
 
@@ -72,120 +70,130 @@ class PersonAction extends Action
                     throw new NoPermissionsGrantedException('Role Found But No Permissions Is Granted');
                 }
             }
-        }
-        else {
+        } else {
             $this->closeConnection($conn);
             throw new PersonHasNoRolesException('No Roles Found');
         }
     }
 
-/*    public function getPersonData(string $email): Person
-    {
+    /*    public function getPersonData(string $email): Person
+        {
 
-        //TODO: ADD PersonActionLogs
-        //REQUIRED_PERMISSION=VIEW_PERSON_PROFILE=0
-        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->VIEW_PERSON_PROFILE)) {
-            $conn = $this->getDatabaseConnection();
-            $sql = "SELECT * FROM Person_view WHERE contact_email=?";
-            $params = array($email);
-            $stmt = $this->getParameterizedStatement($sql, $conn, $params);
-            if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+            //TODO: ADD PersonActionLogs
+            //REQUIRED_PERMISSION=VIEW_PERSON_PROFILE=0
+            if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->VIEW_PERSON_PROFILE)) {
+                $conn = $this->getDatabaseConnection();
+                $sql = "SELECT * FROM Person_view WHERE contact_email=?";
+                $params = array($email);
+                $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+                if ($stmt == false || !sqlsrv_has_rows($stmt)) {
+                    $this->closeConnection($conn);
+                    throw new SQLStatmentException("Error fetching the required data");
+                }
+                $rows = sqlsrv_fetch_array($stmt);
+                $fName = $rows[0][0];
+                $mName = $rows[0][1];
+                $lName = $rows[0][2];
+                $_email = $rows[0][3];
+                $gender = $rows[0][4];
+                $city = $rows[0][5];
+                $phone_number = $rows[0][6];
+                $phd = $rows[0][7];
+                $bio = $rows[0][8];
+
                 $this->closeConnection($conn);
-                throw new SQLStatmentException("Error fetching the required data");
-            }
-            $rows = sqlsrv_fetch_array($stmt);
-            $fName = $rows[0][0];
-            $mName = $rows[0][1];
-            $lName = $rows[0][2];
-            $_email = $rows[0][3];
-            $gender = $rows[0][4];
-            $city = $rows[0][5];
-            $phone_number = $rows[0][6];
-            $phd = $rows[0][7];
-            $bio = $rows[0][8];
+                return Person::Builder()->setFirstName($fName)
+                    ->setMiddleName($mName)
+                    ->setLastName($lName)
+                    ->setEmail($_email)
+                    ->setGender($gender)
+                    ->setCity($city)
+                    ->setPhoneNumber($phone_number)
+                    ->setPhd($phd)
+                    ->setBio($bio)
+                    ->build();
 
-            $this->closeConnection($conn);
-            return Person::Builder()->setFirstName($fName)
-                ->setMiddleName($mName)
-                ->setLastName($lName)
-                ->setEmail($_email)
-                ->setGender($gender)
-                ->setCity($city)
-                ->setPhoneNumber($phone_number)
-                ->setPhd($phd)
-                ->setBio($bio)
-                ->build();
-
-        } else {
-            throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
-        }
-    }
-
-    public function getPersonFiles(string $email): array //of files
-    {
-
-        return array();
-    }
-
-    public function activatePerson(string $targetEmail): bool
-    {
-        if ($this->getPersonRoleInstitution($targetEmail) == $this->getPersonRoleInstitution($this->myPersonRef->getEmail())) {
-            return $this->activatePersonWithinInstitution($targetEmail);
-        } else {
-            return $this->activatePersonOutsideInstitution($targetEmail);
-        }
-    }
-
-    public function deactivatePerson(string $targetEmail): bool
-    {
-        if ($this->getPersonRoleInstitution($targetEmail) == $this->getPersonRoleInstitution($this->myPersonRef->getEmail())) {
-            return $this->deactivatePersonWithinInstitution($targetEmail);
-        } else {
-            return $this->deactivatePersonOutsideInstitution($targetEmail);
-        }
-    }
-
-    private function activatePersonWithinInstitution(string $targetEmail): bool
-    {
-        //REQUIRED_PERMISSION=$ACTIVATE_PERSON_WITHIN_INSTITUTION=5
-        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->CREATE_PERSON_WITHIN_INSTITUTION)) {
-            if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
-                $permission = $this->myPersonPermissions->CREATE_PERSON_WITHIN_INSTITUTION;
-                return $this->setRoleActiveStatus(true, $targetEmail, 2 ** $permission);
             } else {
-                throw new LowRoleForSuchActionException("The targeted person has a higher role level");
+                throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
             }
-        } else {
-            throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
         }
-    }*/
 
- /*   private function setRoleActiveStatus(bool $active, string $targetEmail, int $permission): bool
+        public function getPersonFiles(string $email): array //of files
+        {
+
+            return array();
+        }
+
+        public function activatePerson(string $targetEmail): bool
+        {
+            if ($this->getPersonRoleInstitution($targetEmail) == $this->getPersonRoleInstitution($this->myPersonRef->getEmail())) {
+                return $this->activatePersonWithinInstitution($targetEmail);
+            } else {
+                return $this->activatePersonOutsideInstitution($targetEmail);
+            }
+        }
+
+        public function deactivatePerson(string $targetEmail): bool
+        {
+            if ($this->getPersonRoleInstitution($targetEmail) == $this->getPersonRoleInstitution($this->myPersonRef->getEmail())) {
+                return $this->deactivatePersonWithinInstitution($targetEmail);
+            } else {
+                return $this->deactivatePersonOutsideInstitution($targetEmail);
+            }
+        }
+
+        private function activatePersonWithinInstitution(string $targetEmail): bool
+        {
+            //REQUIRED_PERMISSION=$ACTIVATE_PERSON_WITHIN_INSTITUTION=5
+            if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->CREATE_PERSON_WITHIN_INSTITUTION)) {
+                if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
+                    $permission = $this->myPersonPermissions->CREATE_PERSON_WITHIN_INSTITUTION;
+                    return $this->setRoleActiveStatus(true, $targetEmail, 2 ** $permission);
+                } else {
+                    throw new LowRoleForSuchActionException("The targeted person has a higher role level");
+                }
+            } else {
+                throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
+            }
+        }*/
+
+    /*   private function setRoleActiveStatus(bool $active, string $targetEmail, int $permission): bool
+       {
+
+           $conn = $this->getDatabaseConnection();
+           sqlsrv_begin_transaction($conn);
+           $sql = "UPDATE PersonRolesAndPermissions_view SET active=? WHERE email=?";
+           $params = array($active, $targetEmail);
+           $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+           $logSQL = "INSERT INTO PersonActionLogs(affecter_person_id,affected_person_id,action_date,permission_action_performed) VALUES(?,?,GETDATE(),?);";
+           $logParams = array($this->myPersonRef->getID(), $this->getIdFromPersonEmail($targetEmail), $permission);
+           $logsStmt = $this->getParameterizedStatement($logSQL, $conn, $logParams);
+           if ($stmt == false || sqlsrv_rows_affected($stmt) == false || $logsStmt == false) {
+               sqlsrv_rollback($conn);
+               $this->closeConnection($conn);
+               return false;
+           } else {
+               sqlsrv_commit($conn);
+               $this->closeConnection($conn);
+               return true;
+           }
+       }*/
+    public function canDeactivatePerson(): bool
+    {
+        try {
+            return $this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->DEACTIVATE_PERSON_WITHIN_INSTITUTION);
+        } catch (Exception $e) {
+            throw new  NoPermissionsGrantedException('Person Deactivation Permissions Is Not Granted');
+        }
+    }
+
+    private function deactivatePersonWithinInstitution(string $targetEmail): bool
     {
 
-        $conn = $this->getDatabaseConnection();
-        sqlsrv_begin_transaction($conn);
-        $sql = "UPDATE PersonRolesAndPermissions_view SET active=? WHERE email=?";
-        $params = array($active, $targetEmail);
-        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
-        $logSQL = "INSERT INTO PersonActionLogs(affecter_person_id,affected_person_id,action_date,permission_action_performed) VALUES(?,?,GETDATE(),?);";
-        $logParams = array($this->myPersonRef->getID(), $this->getIdFromPersonEmail($targetEmail), $permission);
-        $logsStmt = $this->getParameterizedStatement($logSQL, $conn, $logParams);
-        if ($stmt == false || sqlsrv_rows_affected($stmt) == false || $logsStmt == false) {
-            sqlsrv_rollback($conn);
-            $this->closeConnection($conn);
-            return false;
-        } else {
-            sqlsrv_commit($conn);
-            $this->closeConnection($conn);
-            return true;
-        }
-    }*/
-
-    /*private function deactivatePersonWithinInstitution(string $targetEmail): bool
-    {
-        //REQUIRED_PERMISSION=$DEACTIVATE_PERSON_WITHIN_INSTITUTION=4
-        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->DEACTIVATE_PERSON_WITHIN_INSTITUTION)) {
+        //FIXME:: THIS LOGIC IN UNSTABLE AND NEEDS TO BE REVIEWED
+        if ($this->canDeactivatePerson() && $this->isEmployeeOfInstitution($this->getBaseFacultyOfPerson($targetEmail))) {
+            $myRole = $this->getRolesOfPerson($this->myPersonRef->getEmail())[0];
+            $personRole = $this->getRolesOfPerson($this->myPersonRef->getEmail())[0];
             if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
                 $permission = $this->myPersonPermissions->DEACTIVATE_PERSON_WITHIN_INSTITUTION;
                 return $this->setRoleActiveStatus(FALSE, $targetEmail, 2 ** $permission);
@@ -198,42 +206,6 @@ class PersonAction extends Action
         }
     }
 
-    private function deactivatePersonOutsideInstitution(string $targetEmail): bool
-    {
-        //REQUIRED_PERMISSION=$DEACTIVATE_PERSON_OUTSIDE_INSTITUTION=8
-        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->DEACTIVATE_PERSON_OUTSIDE_INSTITUTION)) {
-
-            if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
-
-                $permission = $this->myPersonPermissions->DEACTIVATE_PERSON_OUTSIDE_INSTITUTION;
-                return $this->setRoleActiveStatus(false, $targetEmail, 2 ** $permission);
-
-            } else {
-                throw new LowRoleForSuchActionException("The targeted person has a higher role level");
-            }
-
-        } else {
-            throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
-        }
-
-    }
-
-    private function activatePersonOutsideInstitution(string $targetEmail): bool
-    {
-        //REQUIRED_PERMISSION=$ACTIVATE_PERSON_OUTSIDE_INSTITUTION=9
-        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->ACTIVATE_PERSON_OUTSIDE_INSTITUTION)) {
-            if ($this->compareRoleLevel($this->myPersonRef->getEmail(), $targetEmail)) {
-                $permission = $this->myPersonPermissions->ACTIVATE_PERSON_OUTSIDE_INSTITUTION;
-                return $this->setRoleActiveStatus(true, $targetEmail, 2 ** $permission);
-            } else {
-                throw new LowRoleForSuchActionException("The targeted person has a higher role level");
-            }
-        } else {
-            throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
-        }
-
-
-    }*/
 
     public function canCreatePerson(): bool
     {
@@ -244,54 +216,137 @@ class PersonAction extends Action
         }
     }
 
-    public function hasMoreThanOneRole()
+    public function getRoleCountOfAPerson(string $email): int
     {
-        //FIXME::CODE TO CHECK IF THE USER HAS MORE THAN ONE ROLE
-
-    }
-    public function getMyRoles(int $id):array
-    {
-        $conn=$this->getDatabaseConnection();
-        $sql="SELECT role_name,	role_front_name,role_priority_lvl,institution_name FROM [dbo].[PersonRolesAndPermissions_view] WHERE active=1 AND person_id=?";
-        $params=array($id);
-        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
-        if($stmt==false)
-        {
-
-            //TODO :PRODUCTION UNCOMMENT THIS
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT COUNT(ID) FROM Employees WHERE person_id=?";
+        $params = array($this->getIdFromPersonEmail($email));
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false) {
+            //removeOnProduction
             //$error="Could not get the roles of this person";
-            $error=sqlsrv_errors()[0]['message'];
+            $error = sqlsrv_errors()[0]['message'];
             $this->closeConnection($conn);
             throw new PersonHasNoRolesException($error);
 
         }
-        $roles=array();
-        while ($row=sqlsrv_fetch_object($stmt))
-        {
-            $roles[]=new PersonRole((string)$row->role_name,(int)$row->role_priority_lvl,(string)$row->role_front_name,(string)$row->institution_name);
+        $row = sqlsrv_fetch_array($stmt)[0];
+        $count = (int)$row[0];
+        echo "TOTAL COUNT OF ROLES=" . $count;
+        $this->closeConnection($conn);
+        return $count;
+
+    }
+
+    public function getMyRoles(int $id): array
+    {
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT role_name,	role_front_name,role_priority_lvl,institution_name FROM [dbo].[PersonRolesAndPermissions_view] WHERE active=1 AND person_id=?";
+        $params = array($id);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false) {
+
+            //removeOnProduction
+            //$error="Could not get the roles of this person";
+            $error = sqlsrv_errors()[0]['message'];
+            $this->closeConnection($conn);
+            throw new PersonHasNoRolesException($error);
+
+        }
+        $roles = array();
+        while ($row = sqlsrv_fetch_object($stmt)) {
+            $roles[] = PersonRole::Builder()
+                ->setPriorityLevel((int)$row->role_priority_lvl)
+                ->setInstitutionName((string)$row->institution_name)
+                ->setJobTitle((string)$row->role_front_name)
+                ->setRoleName((string)$row->role_name)
+                ->build();
+
         }
         return $roles;
+    }
+
+    public function editMyInfo(Person $newRef): bool
+    {
+
+        //TODO::CHECK IF THE IMAGE IS UPDATED OR NOT
+        //TODO::Complete the logic depending on whether the user can change their names,emails,academicNumbers
+        $conn = $this->getDatabaseConnection();
+        sqlsrv_begin_transaction($conn);
+        $contactsSql = "UPDATE PersonContacts SET phone_number=?,phd_certificate=?,image_ref=?,bio=? WHERE email=?;";
+        $contactsParams = array($newRef->getPhoneNumber(), $newRef->getPhd(), $newRef->getImgRef(), $newRef->getBio(), $newRef->getEmail());
+        $contactsStmt = $this->getParameterizedStatement($contactsSql, $conn, $contactsParams);
+        if ($contactsStmt == false) {
+            //removeOnProduction
+            //$error="Could not Update PersonContact Info";
+            $error = sqlsrv_errors()[0]['message'];
+            sqlsrv_rollback($conn);
+            $this->closeConnection($conn);
+            throw new InsertionError($error);
+        }
+        //TODO CHECK IF OTHER INFO IN THE PERSON TABLE CAN BE CHANGED
+        sqlsrv_commit($conn);
+        $this->closeConnection($conn);
+
+        return true;
 
 
     }
-    public function getPersonPublicInfo(string $email):Person
+
+    //CRITICAL :: MAKE THE PASSWORDS ENCRYPTED UPON PRODUCTION
+    public function updateMyPassword(string $email, string $oldPassword, string $newPassword): bool
     {
-        $conn=$this->getDatabaseConnection();
-        $sql="SELECT * FROM PersonsHierarchy_view WHERE contact_email=?;";
-        $params=array($email);
-        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
-        if($stmt==false)
-        {
-            $error=sqlsrv_errors()[0]['message'];
+        $conn = $this->getDatabaseConnection();
+        $sql1 = "SELECT user_password FROM Person WHERE contact_email=? AND ID=?";
+        $params1 = array($email, $this->myPersonRef->getID());
+        $stmt1 = $this->getParameterizedStatement($sql1, $conn, $params1);
+        if ($stmt1 == false) {
+            //removeOnProduction
+            //$error="Could not get the password of this person";
+            $error = sqlsrv_errors()[0]['message'];
+            $this->closeConnection($conn);
+            throw new DataNotFound($error);
+        }
+        $row1 = sqlsrv_fetch_object($stmt1);
+        $actualPassword = $row1->user_password;
+        if ($oldPassword == $actualPassword) {
+            $sql2 = "UPDATE Person SET user_password=? WHERE contact_email=? AND ID=?";
+            $params2 = array($newPassword, $email, $this->myPersonRef->getID());
+            $stmt2 = $this->getParameterizedStatement($sql2, $conn, $params2);
+            if ($stmt2 == false) {
+
+                //removeOnProduction
+                //$error="Could not update the password of this person";
+                $error = sqlsrv_errors()[0]['message'];
+                $this->closeConnection($conn);
+                throw new InsertionError($error);
+
+            }
+            $this->closeConnection($conn);
+            return true;+
+        } else {
+            $this->closeConnection($conn);
+            return false;
+        }
+
+    }
+
+    public function getPersonPublicInfo(string $email): Person
+    {
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT * FROM PersonsHierarchy_view WHERE contact_email=?;";
+        $params = array($email);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false) {
+            $error = sqlsrv_errors()[0]['message'];
             $this->closeConnection($conn);
             throw new SQLStatmentException($error);
         }
-        if(!sqlsrv_has_rows($stmt))
-        {
+        if (!sqlsrv_has_rows($stmt)) {
             $this->closeConnection($conn);
             throw new DataNotFound("Info Not Found");
         }
-        $row=sqlsrv_fetch_object($stmt);
+        $row = sqlsrv_fetch_object($stmt);
         return Person::Builder()
             ->setFirstName($row->first_name)
             ->setMiddleName($row->middle_name)
@@ -309,24 +364,22 @@ class PersonAction extends Action
 
     }
 
-    public function getMyDetails():Person
+    public function getMyDetails(): Person
     {
-        $conn=$this->getDatabaseConnection();
-        $sql="SELECT * FROM PersonsHierarchy_view WHERE ID=?;";
-        $params=array($this->myPersonRef->getID());
-        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
-        if($stmt==false)
-        {
-            $error=sqlsrv_errors()[0]['message'];
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT * FROM PersonsHierarchy_view WHERE ID=?;";
+        $params = array($this->myPersonRef->getID());
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false) {
+            $error = sqlsrv_errors()[0]['message'];
             $this->closeConnection($conn);
             throw new SQLStatmentException($error);
         }
-        if(!sqlsrv_has_rows($stmt))
-        {
+        if (!sqlsrv_has_rows($stmt)) {
             $this->closeConnection($conn);
             throw new DataNotFound("Info Not Found");
         }
-        $row=sqlsrv_fetch_object($stmt);
+        $row = sqlsrv_fetch_object($stmt);
         return Person::Builder()
             ->setID($this->myPersonRef->getID())
             ->setFirstName($row->first_name)
@@ -346,7 +399,7 @@ class PersonAction extends Action
 
     }
 
-    public function createPerson(Person $person, string &$password, String $date, PersonRole $role): bool
+    public function createPerson(Person $person, string &$password, string $date, PersonRole $role): bool
     {
 
         /*
@@ -360,28 +413,28 @@ class PersonAction extends Action
                   * */
 
 
-        if($this->hasMoreThanOneRole())
-        {
-            //FIXME::ADD CODE HERE TO MAKE THE USER SELECT THE ROLE TO PERFORM THE ACTION
-        }
-        else
-            {
-                $myRole=$this->getMyRoles($this->myPersonRef->getID())[0];
-            }
+        $myRole = $this->getMyRoles($this->myPersonRef->getID())[0];
+
+        /*
+                if ($this->getRoleCountOfAPerson($this->myPersonRef->getEmail())==1) {
+                    //FIXME::ADD CODE HERE TO MAKE THE USER SELECT THE ROLE TO PERFORM THE ACTION
+                } else {
+                    $myRole = $this->getMyRoles($this->myPersonRef->getID())[0];
+                }
+        */
 
 
-    if (!$this->compareRoleLevel($myRole->getJobTitle(), $role->getJobTitle()))
-        {
+        if (!$this->compareRoleLevel($myRole->getRoleName(), $role->getRoleName())) {
             throw new CannotCreateHigherEmployeeException("User Cannot Create Higher Roles");
 
         }
-        if ($this->canCreatePerson()&& $this->isEmployeeOfInstitution($role->getInstitutionName()) ) {
+        if ($this->canCreatePerson() && $this->isEmployeeOfInstitution($role->getInstitutionName())) {
 
             $permission_value = 2 ** ($this->myPersonPermissions->CREATE_PERSON_WITHIN_INSTITUTION);
             $conn = $this->getDatabaseConnection();
             sqlsrv_begin_transaction($conn);
             //check if email exists
-            if ($this->isUserExists( $person->getEmail())) {
+            if ($this->isUserExists($person->getEmail())) {
                 $this->closeConnection($conn);
 
                 throw new DuplicateDataEntry("The Email or AcademicNumber already exists");
@@ -395,15 +448,13 @@ class PersonAction extends Action
                 "{$this->getInstitutionNameByID((int)$person->getInstitution())}");
             $stmt1 = $this->getParameterizedStatement($sql1, $conn, $params1);
 
-            if($stmt1==false)
-            {
-                //TODO :PRODUCTION UNCOMMENT THIS
+            if ($stmt1 == false) {
+                //removeOnProduction
                 //$error="Could not Insert PersonContacts";
-                $error=sqlsrv_errors()[0]['message'];
+                $error = sqlsrv_errors()[0]['message'];
                 sqlsrv_rollback($conn);
                 $this->closeConnection($conn);
                 throw new InsertionError($error);
-
 
 
             }
@@ -428,8 +479,7 @@ class PersonAction extends Action
 
             $stmt2 = $this->getParameterizedStatement($sql2, $conn, $params2);
 
-            if($stmt2==false)
-            {
+            if ($stmt2 == false) {
                 sqlsrv_rollback($conn);
                 $this->closeConnection($conn);
                 throw new InsertionError("Could not Insert Person");
@@ -438,8 +488,8 @@ class PersonAction extends Action
 
 
             //required info
-            $row=sqlsrv_fetch_array($stmt2);
-            $createdID=(int)$row[0];
+            $row = sqlsrv_fetch_array($stmt2);
+            $createdID = (int)$row[0];
 
 
             $sql3 = "INSERT INTO Employees(person_id,
@@ -449,13 +499,12 @@ class PersonAction extends Action
                       employee_job_desc,
                       active) VALUES (?,?,?,?,?,1)";
             $params3 = array($createdID,
-                $role->getJobTitle(),
+                $role->getRoleName(),
                 $this->getInstitutionIDByName($role->getInstitutionName()),
                 $date,
                 $role->getJobDesc());
             $stmt3 = $this->getParameterizedStatement($sql3, $conn, $params3);
-            if($stmt3==false)
-            {
+            if ($stmt3 == false) {
                 sqlsrv_rollback($conn);
                 $this->closeConnection($conn);
                 throw new InsertionError("Could not Insert Employee");
@@ -463,17 +512,14 @@ class PersonAction extends Action
             }
 
 
-
-            if ( $this->injectLog($permission_value, $this->myPersonRef->getID(),$createdID, $conn)==false) {
-               sqlsrv_rollback($conn);
-                //TODO :PRODUCTION UNCOMMENT THIS
+            if ($this->injectLog($permission_value, $this->myPersonRef->getID(), $createdID, $conn) == false) {
+                sqlsrv_rollback($conn);
+                //removeOnProduction
                 //$error="Couldn't execute this statement";
-                $error=(string)sqlsrv_errors()[0]['message'];
+                $error = (string)sqlsrv_errors()[0]['message'];
                 $this->closeConnection($conn);
                 throw new SQLStatmentException($error);
-            }
-
-             else {
+            } else {
                 sqlsrv_commit($conn);
                 $this->closeConnection($conn);
                 return true;
@@ -485,6 +531,7 @@ class PersonAction extends Action
         }
 
     }
+
     private function injectLog(int $actionPerformed, int $creatorId, int $personId, &$conn): bool
     {
         $logSQL = "INSERT INTO PersonActionLogs(conductor_person_id,affected_person_id,action_date,permission_action_performed) VALUES(?,?,GETDATE(),?);";
@@ -520,101 +567,108 @@ class PersonAction extends Action
             $this->closeConnection($conn);
             throw new PersonHasNoRolesException("Could not get details of the person roles");
         }
-        $row=sqlsrv_fetch_object($stmt);
+        $row = sqlsrv_fetch_object($stmt);
 
-        $personRole=new PersonRole($row->role_name,$row->role_priority_lvl,'','');
+        $personRole = PersonRole::Builder()->setPriorityLevel((int)$row->role_priority_lvl)
+            ->setInstitutionName((string)$row->institution_name)
+            ->setJobTitle((string)$row->role_front_name)
+            ->setRoleName((string)$row->role_name)
+            ->build();
+
         $this->closeConnection($conn);
         return $personRole;
     }
 
 
-/*
-    public function getAllPersonsHierarchy(): array //of persons nested array
-    {
-        //TODO: ADD PersonActionLogs
-        //REQUIRED_PERMISSION=VIEW_ALL_PERSONS_HIERARCHY=2
-        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->VIEW_ALL_PERSONS_HIERARCHY)) {
-            $sql = "SELECT * FROM PersonsHierarchy_view WHERE gender=? OR gender=? GROUP BY priority_lvl ASC ";
-            $params = array('M', 'F');
-            return $this->structureBuilder($sql, $params);
+    /*
+        public function getAllPersonsHierarchy(): array //of persons nested array
+        {
+            //TODO: ADD PersonActionLogs
+            //REQUIRED_PERMISSION=VIEW_ALL_PERSONS_HIERARCHY=2
+            if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->VIEW_ALL_PERSONS_HIERARCHY)) {
+                $sql = "SELECT * FROM PersonsHierarchy_view WHERE gender=? OR gender=? GROUP BY priority_lvl ASC ";
+                $params = array('M', 'F');
+                return $this->structureBuilder($sql, $params);
 
-        } else {
-            throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
+            } else {
+                throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
+            }
+
         }
 
-    }
 
-    private function structureBuilder($sql, $params): array //of persons nested array
-    {
-        //TODO: ADD PersonActionLogs
-        $conn = $this->getDatabaseConnection();
-        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
-        if ($stmt == false || !sqlsrv_has_rows($stmt)) {
-            $this->closeConnection($conn);
-            throw new SQLStatmentException("Error fetching the required data");
-        }
-        $hierarchyArray = array();
-        $singleArray = array();
-        $current_priority = 1;
-        while ($row = sqlsrv_fetch($stmt)) {
-            $fName = $row[0];
-            $mName = $row[1];
-            $lName = $row[2];
-            $_email = $row[3];
-            $gender = $row[4];
-            $city = $row[5];
-            $phone_number = $row[6];
-            $phd = $row[7];
-            $bio = $row[8];
-            $empTitle = $row[9];
-            $priority_lvl = $row[10];
-            $job_description = $row[11];
-            if ($priority_lvl < $current_priority) {
+
+
+        private function structureBuilder($sql, $params): array //of persons nested array
+        {
+            //TODO: ADD PersonActionLogs
+            $conn = $this->getDatabaseConnection();
+            $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+            if ($stmt == false || !sqlsrv_has_rows($stmt)) {
                 $this->closeConnection($conn);
-                throw new SQLStatmentException("Bad arrangement of data");
+                throw new SQLStatmentException("Error fetching the required data");
             }
-            $personRole = new PersonRole($empTitle, $priority_lvl, $job_description);
-            $person = Person::Builder()
-                ->setFirstName($fName)
-                ->setMiddleName($mName)
-                ->setLastName($lName)
-                ->setEmail($_email)
-                ->setGender($gender)
-                ->setCity($city)
-                ->setPhd($phd)
-                ->setBio($bio)
-                ->setRoles(array($personRole))
-                ->build();
-            if ($priority_lvl == $current_priority) {
-                $singleArray[] = $person;
-            } else if ($priority_lvl > $current_priority) {
-                $hierarchyArray[] = $singleArray;
-                $current_priority = $priority_lvl;
-                $singleArray = array();
-                $singleArray[] = $person;
+            $hierarchyArray = array();
+            $singleArray = array();
+            $current_priority = 1;
+            while ($row = sqlsrv_fetch($stmt)) {
+                $fName = $row[0];
+                $mName = $row[1];
+                $lName = $row[2];
+                $_email = $row[3];
+                $gender = $row[4];
+                $city = $row[5];
+                $phone_number = $row[6];
+                $phd = $row[7];
+                $bio = $row[8];
+                $empTitle = $row[9];
+                $priority_lvl = $row[10];
+                $job_description = $row[11];
+                if ($priority_lvl < $current_priority) {
+                    $this->closeConnection($conn);
+                    throw new SQLStatmentException("Bad arrangement of data");
+                }
+                $personRole = new PersonRole($empTitle, $priority_lvl, $job_description);
+                $person = Person::Builder()
+                    ->setFirstName($fName)
+                    ->setMiddleName($mName)
+                    ->setLastName($lName)
+                    ->setEmail($_email)
+                    ->setGender($gender)
+                    ->setCity($city)
+                    ->setPhd($phd)
+                    ->setBio($bio)
+                    ->setRoles(array($personRole))
+                    ->build();
+                if ($priority_lvl == $current_priority) {
+                    $singleArray[] = $person;
+                } else if ($priority_lvl > $current_priority) {
+                    $hierarchyArray[] = $singleArray;
+                    $current_priority = $priority_lvl;
+                    $singleArray = array();
+                    $singleArray[] = $person;
+                }
             }
-        }
-        $this->closeConnection($conn);
-        return $hierarchyArray;
+            $this->closeConnection($conn);
+            return $hierarchyArray;
 
 
-    }
-
-    public function getAllPersonInInstitution(int $institutionID): array //of persons
-    {
-        //TODO: ADD PersonActionLogs
-        //REQUIRED_PERMISSION=VIEW_ALL_PERSONS_IN_INSTITUTION= 1
-        if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->VIEW_ALL_PERSONS_IN_INSTITUTION)) {
-            $sql = "SELECT * FROM PersonsHierarchy_view  WHERE gender=? OR gender=? AND institution_id=? GROUP BY priority_lvl ASC";
-            $params = array('M', 'F', $institutionID);
-            return $this->structureBuilder($sql, $params);
-
-        } else {
-            throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
         }
 
-    }*/
+        public function getAllPersonInInstitution(int $institutionID): array //of persons
+        {
+            //TODO: ADD PersonActionLogs
+            //REQUIRED_PERMISSION=VIEW_ALL_PERSONS_IN_INSTITUTION= 1
+            if ($this->myPersonPermissions->getPermissionsFromBitArray($this->myPersonPermissions->VIEW_ALL_PERSONS_IN_INSTITUTION)) {
+                $sql = "SELECT * FROM PersonsHierarchy_view  WHERE gender=? OR gender=? AND institution_id=? GROUP BY priority_lvl ASC";
+                $params = array('M', 'F', $institutionID);
+                return $this->structureBuilder($sql, $params);
 
+            } else {
+                throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
+            }
+
+        }*/
 
 
     private function getPersonRoleInstitution(string $targetEmail): int //the id of the institution
@@ -632,55 +686,27 @@ class PersonAction extends Action
         return $id;
     }
 
-    private function isEmployeeOfInstitution(string $getInstitutionName)
-    {
-
-        $conn = $this->getDatabaseConnection();
-        $sql = "SELECT person_id FROM Employees WHERE person_id=? AND institution_id=? AND active=1";
-        $params = array($this->myPersonRef->getID(),$this->getInstitutionIDByName($getInstitutionName));
-        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
-        if ($stmt == false ) {
-            $this->closeConnection($conn);
-            return false;
-        }
-        if(!sqlsrv_has_rows($stmt))
-        {
-            throw new PersonOrDeactivated("Your are not a part of this institution");
-
-        }
-        $id = sqlsrv_fetch_array($stmt)[0];
-
-        $this->closeConnection($conn);
-        if($id==$this->myPersonRef->getID())
-        {
-            return true;
-        }
-        else{return false;}
-
-    }
 
     //TODO::REFACTORING either leave these methods here or move them in the search module
     //normal search action
 
     //1-search for people with name,email or academic number
-    public function searchForPeopleByNameOrEmail(string $emailOrName)
+    public function searchForPeopleByNameOrEmail(string $emailOrName): array
     {
         $stripped = str_replace(' ', '', $emailOrName);
-        $conn=$this->getDatabaseConnection();
-        $sql="SELECT image_ref,first_name,middle_name,last_name FROM Person_view WHERE CONCAT(first_name,middle_name,last_name) LIKE ? OR contact_email=?;";
-        $sign="%";
-        $params=array($sign.$stripped.$sign,$stripped);
-        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
-        if($stmt==false)
-        {
-            $error=sqlsrv_errors()[0]['message'];
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT image_ref,first_name,middle_name,last_name FROM Person_view WHERE CONCAT(first_name,middle_name,last_name) LIKE ? OR contact_email=?;";
+        $sign = "%";
+        $params = array($sign . $stripped . $sign, $stripped);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false) {
+            $error = sqlsrv_errors()[0]['message'];
             $this->closeConnection($conn);
             throw  new SQLStatmentException($error);
         }
-        $personsArr=array();
-        while ($row=sqlsrv_fetch_object($stmt))
-        {
-            $personsArr[]=Person::Builder()
+        $personsArr = array();
+        while ($row = sqlsrv_fetch_object($stmt)) {
+            $personsArr[] = Person::Builder()
                 ->setFirstName($row->first_name)
                 ->setMiddleName($row->middle_name)
                 ->setLastName($row->last_name)
@@ -690,22 +716,21 @@ class PersonAction extends Action
         return $personsArr;
 
     }
-    public function searchForPeopleByAcademicOrPhone(string $phoneOrAcaNumber) :array
+
+    public function searchForPeopleByAcademicOrPhone(string $phoneOrAcaNumber): array
     {
-        $conn=$this->getDatabaseConnection();
-        $sql="SELECT image_ref,first_name,middle_name,last_name FROM Person_view WHERE phone_number=? OR academic_number=?;";
-        $params=array($phoneOrAcaNumber,$phoneOrAcaNumber);
-        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
-        if($stmt==false)
-        {
-            $error=sqlsrv_errors()[0]['message'];
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT image_ref,first_name,middle_name,last_name FROM Person_view WHERE phone_number=? OR academic_number=?;";
+        $params = array($phoneOrAcaNumber, $phoneOrAcaNumber);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false) {
+            $error = sqlsrv_errors()[0]['message'];
             $this->closeConnection($conn);
             throw  new SQLStatmentException($error);
         }
-        $personsArr=array();
-        while ($row=sqlsrv_fetch_object($stmt))
-        {
-            $personsArr[]=Person::Builder()
+        $personsArr = array();
+        while ($row = sqlsrv_fetch_object($stmt)) {
+            $personsArr[] = Person::Builder()
                 ->setFirstName($row->first_name)
                 ->setMiddleName($row->middle_name)
                 ->setLastName($row->last_name)
@@ -719,28 +744,26 @@ class PersonAction extends Action
     public function searchInstitutionsByName(string $name): array //of Institutions
     {
         $conn = $this->getDatabaseConnection();
-        $sql="SELECT * FROM Institution WHERE institution_name=?";
-        $params=array($name);
-        $stmt = $this->getParameterizedStatement($sql, $conn,$params);
+        $sql = "SELECT * FROM Institution WHERE institution_name=?";
+        $params = array($name);
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         $array_of_institutions = array();
-        if($stmt==false)
-        {
-            $error=sqlsrv_errors()[0]['message'];
+        if ($stmt == false) {
+            $error = sqlsrv_errors()[0]['message'];
             $this->closeConnection($conn);
             throw  new SQLStatmentException($error);
         }
-            while ($row = sqlsrv_fetch_object($stmt)) {
-                $array_of_institutions[] = Institution::Builder()->setID((int)$row['ID'])
-                    ->setName((string)$row->institution_name)
-                    ->setWebsite((string)$row->institution_website)
-                    ->setInstitutionImg((string)$row->institution_img)
-                    ->build();
-            }
-            $this->closeConnection($conn);
-            return $array_of_institutions;
+        while ($row = sqlsrv_fetch_object($stmt)) {
+            $array_of_institutions[] = Institution::Builder()->setID((int)$row['ID'])
+                ->setName((string)$row->institution_name)
+                ->setWebsite((string)$row->institution_website)
+                ->setInstitutionImg((string)$row->institution_img)
+                ->build();
+        }
+        $this->closeConnection($conn);
+        return $array_of_institutions;
 
     }
-
 
 
 }

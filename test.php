@@ -1,6 +1,7 @@
 <?php
 // phpinfo();
 require_once "./Modules/Database/PersonAction.php";
+require_once "./Modules/Database/FileAction.php";
 
 require_once "./Modules/Database/MainAction.php";
 require_once "./Modules/Permissions/InstitutionsPermissions.php";
@@ -9,11 +10,25 @@ require_once "./Modules/Sessions/SessionManager.php";
 require_once "./Modules/Encryption/EncryptionManager.php";
 SessionManager::sessionSignIn('admin@gmail.com',2);
 
+require_once "./Modules/File Managment/FileRepoHandler.php";
+
+/*$person = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
+$action = new FileAction($person);
+$name="hello.txt";
+
+$handler= new FileRepoHandler($action);
+$content=stream_get_contents($handler->getFile($name));
+echo htmlspecialchars($content);
 
 
+$content = fopen("index.php", "r");
 
-
-
+$name="hello.txt";
+if($handler->createFile($name,$content))
+{
+    echo 'yes';
+}
+else{echo 'no';}*/
 
 
 

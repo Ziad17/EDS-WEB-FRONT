@@ -44,6 +44,10 @@ try {
      $id=$institutionAction->getInstitutionIDByName($name);
 
 
+    $bool1=$institutionAction->canEditInstitutionInfo();
+    $bool2=$institutionAction->isEmployeeOfInstitution($name);
+    $canEdit=$bool1 && $bool2;
+
 
 } catch (Exception $e) {
     //FIXME::HANDLE ERRORS
@@ -66,7 +70,25 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
 
 <div  class="col-md-4">
 <div class="card" style="width: 18rem;">
-  <img src="img/logo (1).png" class="card-img-top" alt="...">
+    <?php
+    if ($canEdit)
+    {
+        echo     '<a style="
+			    position: absolute;
+			    left: 85%;
+			    top: 0px;
+			    color: #343a40;
+			    font-size: 20px;
+			"  href="Add-New-Institution.php"><i class="fas fa-user-edit"></i></a>';
+
+    }
+    ?>
+  <img src=' <?php
+  if (isset($institution) &&  $institution->getInstitutionImg()!=null)
+  {
+      echo $institution->getInstitutionImg();
+  }
+  else{echo 'img/logo (1).png';}?> 'class="card-img-top" alt="...">
   <div class="card-body">
     <h5 class="card-title">  <?php
         if (isset($institution))
@@ -134,12 +156,13 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
 
 <div align="center" class="col-md-8">
 <ul class="nav nav-tabs m-auto" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Employees</a>
+    </li>
   <li class="nav-item" role="presentation">
     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Folder</a>
   </li>
-  <li class="nav-item" role="presentation">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Employees</a>
-  </li>
+
 
 
 </ul>
@@ -207,7 +230,7 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
           {
               echo "<tr>";
    echo '<td>'.'<a href=Profile.php'.htmlspecialchars('?user='.EncryptionManager::Encrypt($perspnsArr[$i]->getEmail())).'>'.htmlspecialchars($perspnsArr[$i]->getFirstName()).'</a>'.'</td>';
-              echo '<td>'.htmlspecialchars($perspnsArr[$i]->getRoles()[0]->getJobDesc()).'</td>';
+              echo '<td>'.htmlspecialchars($perspnsArr[$i]->getRoles()[0]->getJobTitle()).'</td>';
 
               echo "</tr>";
 

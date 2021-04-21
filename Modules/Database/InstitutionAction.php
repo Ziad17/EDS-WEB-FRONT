@@ -93,7 +93,7 @@ class InstitutionAction extends Action
         if ($this->canViewPersonsOfInstitution()) {
             $permission = 2 ** $this->myInstitutionPermissions->VIEW_PERSONS_IN_INSTITUTION;
             $conn = $this->getDatabaseConnection();
-            $sql = "SELECT contact_email,first_name,middle_name,last_name,image_ref,optional_employee_title FROM PersonsHierarchy_view WHERE institution_id=? ORDER BY role_priority_lvl;";
+            $sql = "SELECT contact_email,first_name,middle_name,last_name,image_ref,role_front_name FROM PersonsHierarchy_view WHERE institution_id=? ORDER BY role_priority_lvl;";
             $params = array($institutionID);
             $stmt = $this->getParameterizedStatement($sql, $conn, $params);
             if ($stmt == false) {
@@ -105,7 +105,7 @@ class InstitutionAction extends Action
             }
             $persons = array();
             while ($row = sqlsrv_fetch_object($stmt)) {
-                $role = new PersonRole('', 0, (string)$row->optional_employee_title, '');
+                $role = new PersonRole((string)$row->role_front_name, 0, '', '');
                 $personToAdd = Person::Builder()
                     ->setFirstName($row->first_name)
                     ->setMiddleName($row->middle_name)
@@ -140,7 +140,14 @@ class InstitutionAction extends Action
         } catch (Exception $e) {
             throw new  NoPermissionsGrantedException('Institution View Permissions Is Not Granted');
         }
+    }   public function canEditInstitutionInfo(): bool
+{
+    try {
+        return $this->myInstitutionPermissions->getPermissionsFromBitArray($this->myInstitutionPermissions->EDIT_INSTITUTION);
+    } catch (Exception $e) {
+        throw new  NoPermissionsGrantedException('Institution Edit Permissions Is Not Granted');
     }
+}
 
     public function createInstitution(Institution $institutionToCreate): bool
     {

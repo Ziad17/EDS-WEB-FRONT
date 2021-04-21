@@ -11,6 +11,7 @@ require_once "./Modules/Database/PersonAction.php";
 
 
 try {
+
     $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
     $Action = new PersonAction($personRef);
 
@@ -40,11 +41,12 @@ catch (Exception $e) {
 			    color: #343a40;
 			    font-size: 20px;
 			"  href="Edit-profile.php"><i class="fas fa-user-edit"></i></a>
-			<img style="border-radius: 50%;padding: 5px" src=<?php  if(isset($detailedPersonRef))
+			<img style="border-radius: 50%;padding: 5px" src=<?php  if(isset($detailedPersonRef) ||trim($detailedPersonRef->getImgRef())=="" || $detailedPersonRef->getImgRef()==null)
             {
 
             echo htmlspecialchars($detailedPersonRef->getImgRef());
-            }?> width="100px" height="100px" class="card-img-top" alt="...">
+            }
+            else{echo '../img/undraw_male_avatar_323b.svg';}?> width="100px" height="100px" class="card-img-top" alt="...">
 			<div class="card-body">
 				<h5 class="card-title"><?php  if(isset($detailedPersonRef))
                     {

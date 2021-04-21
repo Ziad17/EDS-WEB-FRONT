@@ -58,20 +58,6 @@ echo $error['message'];
         }
     }
 
-/*   protected function  getInstitutionNameByID($id):String
-   {
-       $conn = $this->getDatabaseConnection();
-       $sql = "SELECT institution_name FROM Institutuion_view WHERE ID=?";
-       $params = array($id);
-       $stmt = $this->getParameterizedStatement($sql, $conn, $params);
-       if ($stmt == false || !sqlsrv_has_rows($stmt)) {
-           $this->closeConnection($conn);
-           throw new SQLStatmentException("Could not get details of the institution");
-       }
-       $name = sqlsrv_fetch_array($stmt)[0][0];
-       $this->closeConnection($conn);
-       return $name;
-   }*/
 
     public  function getInstitutionNameByID(int $id): String
     {
@@ -122,7 +108,78 @@ echo $error['message'];
         $this->closeConnection($conn);
         return $id;
     }
+    public function getBaseFacultyOfPerson(string $personEmail):Institution
+    {
+        $conn=$this->getDatabaseConnection();
+        $sql="SELECT base_faculty FROM PersonContacts WHERE email=?";
+        $params=array($personEmail);
+        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
+        if($stmt==false || !sqlsrv_has_rows($stmt))
+        {
+            $error=sqlsrv_errors()[0]['message'];
+            $this->closeConnection($conn);
+            throw new SQLStatmentException($error);
+        }
+        $row=sqlsrv_fetch_object($stmt);
+        return Institution::Builder()->setName($row->base_faculty)->build();
 
+    }
+
+    public function getRolesOfPerson(string $personEmail):array
+    {
+        $conn=$this->getDatabaseConnection();
+        $sql="SELECT role_name,	role_front_name,role_priority_lvl,institution_name FROM [dbo].[PersonRolesAndPermissions_view] WHERE active=1 AND contact_email=?";
+        $params=array($personEmail);
+        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
+        if($stmt==false)
+        {
+
+            //TODO :PRODUCTION UNCOMMENT THIS
+            //$error="Could not get the roles of this person";
+            $error=sqlsrv_errors()[0]['message'];
+            $this->closeConnection($conn);
+            throw new PersonHasNoRolesException($error);
+
+        }
+        $roles=array();
+        while ($row=sqlsrv_fetch_object($stmt))
+        {
+            $roles[]= PersonRole::Builder()->setPriorityLevel((int)$row->role_priority_lvl)
+            ->setInstitutionName((string)$row->institution_name)
+            ->setJobTitle((string)$row->role_front_name)
+            ->setRoleName((string)$row->role_name)
+            ->build();
+                 }
+        return $roles;
+
+    }
+
+    public function isEmployeeOfInstitution(string $getInstitutionName) : bool
+    {
+
+        $conn = $this->getDatabaseConnection();
+        $sql = "SELECT person_id FROM Employees WHERE person_id=? AND institution_id=? AND active=1";
+        $params = array($this->myPersonRef->getID(),$this->getInstitutionIDByName($getInstitutionName));
+        $stmt = $this->getParameterizedStatement($sql, $conn, $params);
+        if ($stmt == false ) {
+            $this->closeConnection($conn);
+            return false;
+        }
+        if(!sqlsrv_has_rows($stmt))
+        {
+            throw new PersonOrDeactivated("Your are not a part of this institution");
+
+        }
+        $id = sqlsrv_fetch_array($stmt)[0];
+
+        $this->closeConnection($conn);
+        if($id==$this->myPersonRef->getID())
+        {
+            return true;
+        }
+        else{return false;}
+
+    }
     protected function getEmailFromPersonId(int $id): String
     {
         $conn = $this->getDatabaseConnection();
