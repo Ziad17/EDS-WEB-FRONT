@@ -11,6 +11,8 @@ class FileRepoHandler
     private string $connectionString;
     private FileAction $fileAction;
     private BlobRestProxy $blobClient;
+    private string $GENERAL_CONTAINER='general';
+    private  string $IMAGES_CONTAINER='images';
 
     /**
      * FileRepoHandler constructor.
@@ -51,7 +53,7 @@ class FileRepoHandler
     {
         try {
             //$versionName=$fileMetaData->getName() . random_bytes(RANDOM_BYTES_LENGTH).'.' . $fileMetaData->getFileExtension();
-            $this->blobClient->createBlockBlob('general',
+            $this->blobClient->createBlockBlob($this->GENERAL_CONTAINER,
                $name,
                 $content);
         }
@@ -59,6 +61,21 @@ class FileRepoHandler
         {throw new FileHandlerException($e->getMessage());}
         return true;
     }
+
+
+    public  function createImage(string $name,  $content) : bool
+    {
+        try {
+            //$versionName=$fileMetaData->getName() . random_bytes(RANDOM_BYTES_LENGTH).'.' . $fileMetaData->getFileExtension();
+            $this->blobClient->createBlockBlob($this->IMAGES_CONTAINER,
+                $name,
+                $content);
+        }
+        catch (Exception $e)
+        {throw new FileHandlerException($e->getMessage());}
+        return true;
+    }
+
 
     //FIXME:: REMOVE(ONLY FOR TEST PURPOSES)
 
@@ -74,6 +91,23 @@ class FileRepoHandler
 
     }
 
+
+    public function getImagePrivateURI($imgName) : string
+    {
+        try {
+            $content= $this->blobClient->getBlob($this->IMAGES_CONTAINER,
+                $imgName) ;
+             $data=stream_get_contents($content->getContentStream());
+            $im = imagecreatefromstring($data);
+
+            ob_start();
+            imagepng($im);
+            $png = ob_get_clean();
+             return "data:image/png;base64," . base64_encode($png);
+        }
+        catch (Exception $e)
+        {throw new FileHandlerException($e->getMessage());}
+    }
 
     //FIXME:: UNCOMMENT
     /*  public function getFile(FileVersion $fileMetaData)

@@ -1,8 +1,9 @@
 <?php
 
-
+error_reporting(0);
 class SessionManager
 {
+
 
     public const USER_EMAIL="user_email";
     public const USER_ID="user_id";

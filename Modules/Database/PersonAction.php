@@ -266,6 +266,24 @@ class PersonAction extends Action
         return $roles;
     }
 
+    public function updateMyPhoto(string $photoNameOrUrl)
+    {
+        $conn=$this->getDatabaseConnection();
+        $sql='UPDATE PersonContacts SET image_ref=? WHERE email=?';
+        $params=array($photoNameOrUrl,$this->myPersonRef->getEmail());
+        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
+        if ($stmt == false) {
+
+            //removeOnProduction
+            //$error="Could not update the photo of this person";
+            $error = sqlsrv_errors()[0]['message'];
+            $this->closeConnection($conn);
+            throw new InsertionError($error);
+        }
+        $this->closeConnection($conn);
+        return true;
+    }
+
     public function editMyInfo(Person $newRef): bool
     {
 
@@ -294,8 +312,12 @@ class PersonAction extends Action
     }
 
     //CRITICAL :: MAKE THE PASSWORDS ENCRYPTED UPON PRODUCTION
-    public function updateMyPassword(string $email, string $oldPassword, string $newPassword): bool
+    public function updateMyPassword(string $email, string $oldPassword, string $newPassword): string
     {
+
+        if(strlen($newPassword) < 8 ){
+            return 'Password Must Be At Least 8 Characters long';
+        }
         $conn = $this->getDatabaseConnection();
         $sql1 = "SELECT user_password FROM Person WHERE contact_email=? AND ID=?";
         $params1 = array($email, $this->myPersonRef->getID());
@@ -323,10 +345,10 @@ class PersonAction extends Action
 
             }
             $this->closeConnection($conn);
-            return true;
+            return '';
         } else {
             $this->closeConnection($conn);
-            return false;
+            return 'Wrong Old Password';
         }
 
     }

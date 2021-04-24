@@ -105,7 +105,7 @@ class InstitutionAction extends Action
             }
             $persons = array();
             while ($row = sqlsrv_fetch_object($stmt)) {
-                $role = new PersonRole((string)$row->role_front_name, 0, '', '');
+                $role =  PersonRole::Builder()->setJobTitle($row->role_front_name);
                 $personToAdd = Person::Builder()
                     ->setFirstName($row->first_name)
                     ->setMiddleName($row->middle_name)

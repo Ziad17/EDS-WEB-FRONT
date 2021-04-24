@@ -5,7 +5,8 @@ require_once "./Modules/Validation/PersonValidator.php";
 require_once "./Modules/Business/Person.php";
 require_once "./Modules/Sessions/SessionManager.php";
 require_once "./Modules/Database/PersonAction.php";
-
+require_once "./Modules/File Managment/FileRepoHandler.php";
+require_once "./Modules/Database/FileAction.php";
 
 
 
@@ -15,10 +16,12 @@ try {
     $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
     $Action = new PersonAction($personRef);
 
-
+    $fileAction = new FileAction($personRef);
+    $handler = new FileRepoHandler($fileAction);
     //fill Info
     $detailedPersonRef=$Action->getMyDetails();
 
+    $image=$detailedPersonRef->getImgRef();
 
 
 }
@@ -41,10 +44,10 @@ catch (Exception $e) {
 			    color: #343a40;
 			    font-size: 20px;
 			"  href="Edit-profile.php"><i class="fas fa-user-edit"></i></a>
-			<img style="border-radius: 50%;padding: 5px" src=<?php  if(isset($detailedPersonRef) ||trim($detailedPersonRef->getImgRef())=="" || $detailedPersonRef->getImgRef()==null)
+			<img style="border-radius: 50%;padding: 5px" src=<?php  if(isset($image) )
             {
 
-            echo htmlspecialchars($detailedPersonRef->getImgRef());
+                echo $handler->getImagePrivateURI($image);
             }
             else{echo '../img/undraw_male_avatar_323b.svg';}?> width="100px" height="100px" class="card-img-top" alt="...">
 			<div class="card-body">
