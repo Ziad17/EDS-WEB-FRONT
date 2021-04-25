@@ -1,6 +1,7 @@
 <?php
 
-require_once "Modules/Permissions/Permissions.php";
+require_once PERMISSIONS_BASE_PATH."/Permissions.php";
+
 
 class PersonPermissions extends Permissions
 {

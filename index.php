@@ -1,7 +1,8 @@
 <?php 
   //check if user coming From A Requset
-require_once "Modules/Database/MainAction.php";
-require_once "Modules/Sessions/SessionManager.php";
+require_once 'Paths.php';
+require_once DATABASE_BASE_PATH."/MainAction.php";
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
 error_reporting(E_ERROR | E_PARSE);
 
 if(SessionManager::validateSession())

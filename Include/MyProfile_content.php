@@ -1,16 +1,16 @@
 <?php
+require_once '../Paths.php';
+
+require_once VALIDATION_BASE_PATH."/PersonValidator.php";
+require_once BUSINESS_BASE_PATH."/Person.php";
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
+require_once DATABASE_BASE_PATH."/PersonAction.php";
+require_once FILE_MANAGEMENT_BASE_PATH."/FileRepoHandler.php";
+require_once DATABASE_BASE_PATH."/FileAction.php";
 
 
-require_once "./Modules/Validation/PersonValidator.php";
-require_once "./Modules/Business/Person.php";
-require_once "./Modules/Sessions/SessionManager.php";
-require_once "./Modules/Database/PersonAction.php";
-require_once "./Modules/File Managment/FileRepoHandler.php";
-require_once "./Modules/Database/FileAction.php";
 
-
-
-
+error_reporting(E_ALL);
 try {
 
     $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
@@ -43,7 +43,7 @@ catch (Exception $e) {
 			    top: 0px;
 			    color: #343a40;
 			    font-size: 20px;
-			"  href="Edit-profile.php"><i class="fas fa-user-edit"></i></a>
+			"  href="../Employees/EditProfile.php"><i class="fas fa-user-edit"></i></a>
 			<img style="border-radius: 50%;padding: 5px" src=<?php  if(isset($image) )
             {
 

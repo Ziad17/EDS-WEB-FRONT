@@ -1,6 +1,7 @@
 <?php
 
-require_once "Validator.php";
+require_once VALIDATION_BASE_PATH."/Validator.php";
+
 
 class ImageValidator extends Validator
 {

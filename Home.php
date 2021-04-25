@@ -1,7 +1,8 @@
 <?php
   $name = 'KfsDocs';
-  require_once('Include/headtag.php');
-require_once "Modules/Sessions/SessionManager.php";
+  require_once 'Paths.php';
+  require_once(INCLUDE_BASE_PATH.'/headtag.php');
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
 error_reporting(E_ERROR | E_PARSE);
 
 if(!SessionManager::validateSession())
@@ -27,7 +28,7 @@ if($_POST['logout'])
 
       <!-- ----------------------------- start  sidebar ---------------------------------------------->
 
-        <?php require_once('Include/sidebar.php');?>
+        <?php require_once(INCLUDE_BASE_PATH.'/sidebar.php');?>
 
       <!-- ----------------------------- End  sidebar ---------------------------------------------->
 
@@ -37,19 +38,19 @@ if($_POST['logout'])
 
     <!-- ----------------------------- start  nav N 1 ---------------------------------------------->
 
-      <?php require_once('Include/nav1.php'); ?>
+      <?php require_once(INCLUDE_BASE_PATH.'/nav1.php'); ?>
 
     <!----------------------------------- End nav N 1-------------- --------------------------->
 
     <!----------------------------------- Start nav N 2-------------- --------------------------->
 
-      <?php require_once('Include/nav2.php'); ?>
+      <?php require_once(INCLUDE_BASE_PATH.'/nav2.php'); ?>
 
     <!----------------------------------- End nav N 2-------------- --------------------------->
 
       <!----------------------------------- Start nav N 3-------------- --------------------------->
         
-        <?php require_once('Include/nav3.php'); ?>
+        <?php require_once(INCLUDE_BASE_PATH.'/nav3.php'); ?>
 
     <!----------------------------------- End nav N 3-------------- --------------------------->
 
@@ -57,7 +58,7 @@ if($_POST['logout'])
 
 		<div class="container">
 			<div class="row">
-        <?php require_once('Include/content.php'); ?>
+        <?php require_once(INCLUDE_BASE_PATH.'/content.php'); ?>
 			</div>					 
 
           <footer class="row">
@@ -69,7 +70,7 @@ if($_POST['logout'])
 
 	    </div>
       <?php 
-        require_once('Include/script.php');
+        require_once(INCLUDE_BASE_PATH.'/script.php');
       ?>
       </div>
 		</div>

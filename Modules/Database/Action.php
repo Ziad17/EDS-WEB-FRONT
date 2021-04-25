@@ -1,6 +1,6 @@
 <?php
-
-require 'Modules/Exceptions/SQLStatmentException.php';
+require_once './../Paths.php';
+require_once EXCEPTIONS_BASE_PATH.'/SQLStatmentException.php';
 abstract class Action
 {
     protected Person $myPersonRef;

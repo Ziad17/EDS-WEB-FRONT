@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
 
-require_once "Validator.php";
+require_once VALIDATION_BASE_PATH."/Validator.php";
+
 
 
 class PersonValidator extends Validator

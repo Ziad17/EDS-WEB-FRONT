@@ -1,17 +1,18 @@
 <?php
-require_once "Modules/Database/Action.php";
-require_once "Modules/Permissions/PersonPermissions.php";
-require_once "Modules/Business/Person.php";
-require_once "Modules/Business/PersonRole.php";
+require_once DATABASE_BASE_PATH."/Action.php";
+require_once PERMISSIONS_BASE_PATH."/PersonPermissions.php";
+require_once BUSINESS_BASE_PATH."/Person.php";
+require_once BUSINESS_BASE_PATH."/PersonRole.php";
 
-require_once "Modules/Exceptions/SQLStatmentException.php";
-require_once "Modules/Exceptions/PermissionsCriticalFail.php";
-require_once "Modules/Exceptions/PersonHasNoRolesException.php";
-require_once "Modules/Exceptions/PersonOrDeactivated.php";
-require_once "Modules/Exceptions/NoPermissionsGrantedException.php";
-require_once "Modules/Exceptions/InsertionError.php";
-require_once "Modules/Exceptions/CannotCreateHigherEmployeeException.php";
-require_once "Modules/Exceptions/DataNotFound.php";
+require_once './../Paths.php';
+require_once EXCEPTIONS_BASE_PATH."/SQLStatmentException.php";
+require_once EXCEPTIONS_BASE_PATH."/PermissionsCriticalFail.php";
+require_once EXCEPTIONS_BASE_PATH."/PersonHasNoRolesException.php";
+require_once EXCEPTIONS_BASE_PATH."/PersonOrDeactivated.php";
+require_once EXCEPTIONS_BASE_PATH."/NoPermissionsGrantedException.php";
+require_once EXCEPTIONS_BASE_PATH."/InsertionError.php";
+require_once EXCEPTIONS_BASE_PATH."/CannotCreateHigherEmployeeException.php";
+require_once EXCEPTIONS_BASE_PATH."/DataNotFound.php";
 
 
 class PersonAction extends Action

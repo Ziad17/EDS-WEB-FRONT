@@ -1,16 +1,13 @@
 
 <?php
+require_once '../Paths.php';
+require_once DATABASE_BASE_PATH."/PersonAction.php";
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
+require_once BUSINESS_BASE_PATH."/Person.php";
+require_once FILE_MANAGEMENT_BASE_PATH."/FileRepoHandler.php";
+require_once DATABASE_BASE_PATH."/FileAction.php";
 
-require_once "./Modules/Database/PersonAction.php";
-require_once "./Modules/Sessions/SessionManager.php";
-require_once "./Modules/Business/Person.php";
-require_once "./Modules/File Managment/FileRepoHandler.php";
-require_once "./Modules/Database/FileAction.php";
-function signOut(){
-    header("Location: index.php");
-    header('Cache-Control: no-cache, must-revalidate');
-    exit();
-}
+error_reporting(0);
 
 
 
@@ -19,7 +16,7 @@ try
 
     if(!SessionManager::validateSession())
     {
-        signOut();
+       signOut();
     }
     $personRef = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
     $Action = new PersonAction($personRef);
@@ -115,9 +112,9 @@ if($_SERVER['REQUEST_METHOD']=='POST')
           </div>
 	        <ul  class="list-unstyled components mb-5">
 	          <li <?php if ($name === 'KfsDocs') {echo 'class="active"';};?>>
-              <a href="Home.php"><i class="fas fa-home"></i> Home</a>
+              <a href="../Home.php"><i class="fas fa-home"></i> Home</a>
 	          <li  <?php if ($name === 'Activity') {echo 'class="active"';};?>>
-	              <a href="Activity.php"><i class="fas fa-chart-line"></i> Activity</a>
+	              <a href=""><i class="fas fa-chart-line"></i> Activity</a>
 	          </li>
 	          <li>
               <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fab fa-wpexplorer"></i> Institutions </a>
@@ -129,7 +126,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
                       {
                           for($i=0;$i<count($myRoles);$i++)
                           {
-                                  echo '<a class="drobli" href="institutions.php?institution='.htmlspecialchars($myRoles[$i]->getInstitutionName()).'"><i class="fas fa-university"></i>'.htmlspecialchars($myRoles[$i]->getInstitutionName()).'</a>';
+                                  echo '<a class="drobli" href="../Institutions/View.php?institution='.htmlspecialchars($myRoles[$i]->getInstitutionName()).'"><i class="fas fa-university"></i>'.htmlspecialchars($myRoles[$i]->getInstitutionName()).'</a>';
                           }
                       }
                       else{
@@ -147,7 +144,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
 	          </li>
 
 	          <li <?php if ($name === 'MyProfile') {echo 'class="active"';};?>>
-              <a href="MyProfile.php"><i class="far fa-user"></i> My Profile</a>
+              <a href="../Employees/MyProfile.php"><i class="far fa-user"></i> My Profile</a>
 	          </li>
 	          <li>
               <a  href="#">

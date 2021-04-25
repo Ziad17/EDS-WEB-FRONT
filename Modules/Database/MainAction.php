@@ -1,12 +1,12 @@
 <?php
-require_once "Modules/Business/Person.php";
-require_once "Modules/Business/PersonRole.php";
-
-require_once "Modules/Database/Action.php";
-require_once "Modules/Business/Institution.php";
-require_once "Modules/Business/City.php";
-require_once "Modules/Exceptions/SQLStatmentException.php";
-require_once "Modules/Exceptions/DuplicateDataEntry.php";
+require_once BUSINESS_BASE_PATH."/Person.php";
+require_once BUSINESS_BASE_PATH."/PersonRole.php";
+require_once './../Paths.php';
+require_once DATABASE_BASE_PATH."/Action.php";
+require_once BUSINESS_BASE_PATH."/Institution.php";
+require_once BUSINESS_BASE_PATH."/City.php";
+require_once EXCEPTIONS_BASE_PATH."/SQLStatmentException.php";
+require_once EXCEPTIONS_BASE_PATH."/DuplicateDataEntry.php";
 
 
 class MainAction extends Action

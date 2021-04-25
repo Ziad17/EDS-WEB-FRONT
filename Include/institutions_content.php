@@ -1,14 +1,14 @@
 <?php
 
+require_once './../Paths.php';
+require_once VALIDATION_BASE_PATH."/PersonValidator.php";
+require_once BUSINESS_BASE_PATH."/Person.php";
+require_once BUSINESS_BASE_PATH."/Institution.php";
+require_once DATABASE_BASE_PATH."/InstitutionAction.php";
+require_once ENCRYPTION_BASE_PATH."/EncryptionManager.php";
 
-require_once "./Modules/Validation/PersonValidator.php";
-require_once "./Modules/Business/Person.php";
-require_once "./Modules/Business/Institution.php";
-require_once "./Modules/Database/InstitutionAction.php";
-require_once "./Modules/Encryption/EncryptionManager.php";
-
-require_once "./Modules/Database/MainAction.php";
-require_once "./Modules/Sessions/SessionManager.php";
+require_once DATABASE_BASE_PATH."/MainAction.php";
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
 
 /*
  * STEPS ON HOW THIS PAGE WORKS
@@ -79,7 +79,7 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
 			    top: 0px;
 			    color: #343a40;
 			    font-size: 20px;
-			"  href="Add-New-Institution.php"><i class="fas fa-user-edit"></i></a>';
+			"  href="Add.php"><i class="fas fa-user-edit"></i></a>';
 
     }
     ?>
@@ -229,7 +229,7 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
           for($i=0;$i<count($perspnsArr);$i++)
           {
               echo "<tr>";
-   echo '<td>'.'<a href=Profile.php'.htmlspecialchars('?user='.EncryptionManager::Encrypt($perspnsArr[$i]->getEmail())).'>'.htmlspecialchars($perspnsArr[$i]->getFirstName()).'</a>'.'</td>';
+   echo '<td>'.'<a href="../Employees/Profile.php'. htmlspecialchars('?user='.EncryptionManager::Encrypt($perspnsArr[$i]->getEmail())).'">'.htmlspecialchars($perspnsArr[$i]->getFirstName()).'</a>'.'</td>';
               echo '<td>'.htmlspecialchars($perspnsArr[$i]->getRoles()[0]->getJobTitle()).'</td>';
 
               echo "</tr>";

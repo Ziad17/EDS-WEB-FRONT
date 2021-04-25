@@ -1,11 +1,12 @@
 <?php
   $name = 'User Profile';
-  require_once('Include/headtag.php');
-require_once "./Modules/Encryption/EncryptionManager.php";
-require_once "./Modules/Sessions/SessionManager.php";
-require_once "./Modules/Business/Person.php";
+  require_once '../Paths.php';
+  require_once(INCLUDE_BASE_PATH.'/headtag.php');
+require_once ENCRYPTION_BASE_PATH."/EncryptionManager.php";
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
+require_once BUSINESS_BASE_PATH."/Person.php";
 
-require_once "./Modules/Database/MainAction.php";
+require_once DATABASE_BASE_PATH."/MainAction.php";
 
 if(!SessionManager::validateSession())
 {
@@ -36,14 +37,14 @@ else{
 
 
  ?>
-  <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
+  <link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.css">
   <body style="padding-right: 15px">
 		<div  class="wrapper d-flex align-items-stretch">
 
 
      <!-- ----------------------------- start  sidebar ---------------------------------------------->
 
-        <?php require_once('Include/sidebar.php');?>
+        <?php require_once(INCLUDE_BASE_PATH.'/sidebar.php');?>
 
       <!-- ----------------------------- End  sidebar ---------------------------------------------->
 
@@ -54,13 +55,13 @@ else{
 
     <!----------------------------------- Start nav N 2-------------- --------------------------->
 
-      <?php require_once('Include/nav2.php'); ?>
+      <?php require_once(INCLUDE_BASE_PATH.'/nav2.php'); ?>
 
     <!----------------------------------- End nav N 2-------------- --------------------------->
 
       <!----------------------------------- Start nav N 3-------------- --------------------------->
         
-        <?php require_once('Include/nav3.php'); ?>
+        <?php require_once(INCLUDE_BASE_PATH.'/nav3.php'); ?>
 
     <!----------------------------------- End nav N 3-------------- --------------------------->
         <!-- Page Content  -->
@@ -81,7 +82,7 @@ else{
 
             if($mainAction->isUserExists($email))
             {
-                require_once('Include/VistedProfile_content.php');
+                require_once(INCLUDE_BASE_PATH.'/VistedProfile_content.php');
 
             }
             else{echo "Not Found";}
@@ -103,9 +104,9 @@ else{
 
 	    </div>
       <?php 
-        require_once('Include/script.php');
+        require_once(INCLUDE_BASE_PATH.'/script.php');
       ?>
-       <script src="js/jquery.dataTables.js"></script>
+       <script src="../js/jquery.dataTables.js"></script>
     <script type = "text/javascript">
     $(document).ready(function(){
       $('#table').DataTable();

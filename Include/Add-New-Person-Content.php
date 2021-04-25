@@ -1,14 +1,14 @@
 <?php
 
+require_once VALIDATION_BASE_PATH."/PersonValidator.php";
 
-require_once "./Modules/Validation/PersonValidator.php";
-require_once "./Modules/Business/Person.php";
-require_once "./Modules/Database/MainAction.php";
-require_once "./Modules/Exceptions/NoPermissionsGrantedException.php";
+require_once BUSINESS_BASE_PATH."/Person.php";
+require_once DATABASE_BASE_PATH."/MainAction.php";
+require_once EXCEPTIONS_BASE_PATH."/NoPermissionsGrantedException.php";
 
-require_once "./Modules/Sessions/SessionManager.php";
-require_once "./Modules/Database/PersonAction.php";
-require_once "./Modules/Business/PersonRole.php";
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
+require_once DATABASE_BASE_PATH."/PersonAction.php";
+require_once BUSINESS_BASE_PATH."/PersonRole.php";
 
 /*
  * STEPS ON HOW THIS PAGE WORKS

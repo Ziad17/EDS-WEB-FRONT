@@ -115,21 +115,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register form</title>
     <!-- logo  -->
-    <link rel="icon" type="image/png" href="img/favicon.png"/>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="css/all.min.css"/>
-    <link rel="stylesheet" type="text/css" href="css/register.css"/>
+    <link rel="icon" type="image/png" href="../img/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/all.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/register.css"/>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,700;0,900;1,900&display=swap">
     <!-- Animate css -->
-    <link rel="stylesheet" type="text/css" href="css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/animate.min.css">
 </head>
-<body style="background-image: url(img/bg.jfif);">
+<body style="background-image: url(../img/bg.jfif);">
 <!--  Start Form  -->
 <div class="container">
     <form class="main contact-form card card-outline card-primary" method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
-        <img class="mb-4 animate__animated animate__zoomIn img" src="img/logo (1).png" alt="" width="200" height="80">
+        <img class="mb-4 animate__animated animate__zoomIn img" src="../img/logo%20(1).png" alt="" width="200" height="80">
         <?php if (!empty($FormErrors)) { ?>
             <div class="alert alert-danger " role="alert"><span type="button" class="close" data-dismiss="alert"
                                                                 aria-label="Close"><span
@@ -279,17 +279,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                    name="submit" value="Register">
             <br>
             <div class="text-center">
-                <a href="index.php" class="text-center"> I already have an account</a>
+                <a href="../index.php" class="text-center"> I already have an account</a>
                 <p class="mt-3 text-muted">© <?php echo htmlspecialchars(date('Y-n-j') . ' '); ?><a
                             href="mailto:ahmedheshamesmail@gmail.com?subject=feedback">Ahmed hesham</a></p>
             </div>
     </form>
 </div>
 <!--  End   Form  -->
-<script src="js/jQuery.js"></script>
-<script src="js/popper.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/all.min.js"></script>
+<script src="../js/jQuery.js"></script>
+<script src="../js/popper.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/all.min.js"></script>
 <!--  <script src="js/custmeError.js"></script> -->
 </body>
 </html>

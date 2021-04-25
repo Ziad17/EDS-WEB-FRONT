@@ -1,6 +1,6 @@
 <?php
 // phpinfo();
-require_once "./Modules/Database/PersonAction.php";
+/*require_once "./Modules/Database/PersonAction.php";
 require_once "./Modules/Database/FileAction.php";
 require_once "./Modules/Validation/ImageValidator.php";
 
@@ -10,9 +10,9 @@ require_once "./Modules/Database/InstitutionAction.php";
 require_once "./Modules/Sessions/SessionManager.php";
 require_once "./Modules/Encryption/EncryptionManager.php";
 SessionManager::sessionSignIn('admin@gmail.com', 2);
-require_once "./Modules/File Managment/FileRepoHandler.php";
+require_once "./Modules/FileManagement/FileRepoHandler.php";*/
 
-
+/*
 $person = Person::Builder()->setID(SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
 $action = new FileAction($person);
 $name = "test1.jpg";
@@ -46,10 +46,11 @@ if (isset($_POST["submit"])) {
     } else {
         echo 'its not an image';
     }
-}
+}*/
 //header('Content-Type: image/png');
 //imagepng($im);
 
+echo __DIR__;
 /*
 
 

@@ -1,6 +1,7 @@
 <?php
-require_once "vendor/autoload.php";
-require_once "./Modules/Exceptions/FileHandlerException.php";
+require_once './../Paths.php';
+require_once VENDOR_BASE_PATH."/autoload.php";
+require_once EXCEPTIONS_BASE_PATH."/FileHandlerException.php";
 
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use MicrosoftAzure\Storage\Common\ServiceException;

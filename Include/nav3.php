@@ -23,10 +23,10 @@
                             echo '<li class="breadcrumb-item"><a href="MyProfile.php">Profile</a></li>';
                             echo  '<li class="breadcrumb-item"><a href="'.$name.'.php">' .$name.'</a></li>';
                          }elseif($name ==="Add-New-Institution"){
-                            echo '<li class="breadcrumb-item"><a href="Add-New-Person.php">Add-New-Person</a></li>';
+                            echo '<li class="breadcrumb-item"><a href="Add.php">Add-New-Person</a></li>';
                             echo  '<li class="breadcrumb-item"><a href="'.$name.'.php">' .$name.'</a></li>';
                          }elseif($name ==="Add-New-Position"){
-                            echo '<li class="breadcrumb-item"><a href="Add-New-Person.php">Add-New-Person</a></li>';
+                            echo '<li class="breadcrumb-item"><a href="Add.php">Add-New-Person</a></li>';
                             echo  '<li class="breadcrumb-item"><a href="'.$name.'.php">' .$name.'</a></li>';
                          }else{
                           echo  '<li class="breadcrumb-item"><a href="'.$name.'.php">'.$name.'</a></li>';

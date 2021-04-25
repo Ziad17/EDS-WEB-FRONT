@@ -2,7 +2,7 @@
   $name = 'Activity';
   require_once('Include/headtag.php');
  ?>
- <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
+ <link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.css">
   <body>
 		<div  class="wrapper d-flex align-items-stretch">
 
@@ -47,7 +47,7 @@
       <?php 
         require_once('Include/script.php');
       ?>
-      <script src="js/jquery.dataTables.js"></script>
+      <script src="../js/jquery.dataTables.js"></script>
     <script type = "text/javascript">
     $(document).ready(function(){
       $('#table').DataTable();

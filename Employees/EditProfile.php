@@ -1,17 +1,13 @@
 <?php
-  $name = 'Add-New-Institution';
-  require_once('Include/headtag.php');
-require_once "./Modules/Sessions/SessionManager.php";
+  $name = 'Edit-profile';
+require_once '/Paths.php';
+
+require_once(INCLUDE_BASE_PATH.'/headtag.php');
 
 
-/*
- * STEPS ON HOW THIS PAGE WORKS
- * (A)
- *  1-check whether the person has the permission to add new Institution
- * */
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
 
-//TODO:: REMOVE
-//SessionManager::sessionSignIn('admin@gmail.com',2);
+error_reporting(E_ALL);
 
 if(!SessionManager::validateSession())
 {
@@ -20,31 +16,41 @@ if(!SessionManager::validateSession())
     exit();
 }
 
- ?>
- <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
+
+
+?>
   <body>
 		<div  class="wrapper d-flex align-items-stretch">
 
       <!-- ----------------------------- start  sidebar ---------------------------------------------->
 
-        <?php require_once('Include/sidebar.php');?>
+        <?php require_once(INCLUDE_BASE_PATH.'/sidebar.php');?>
 
       <!-- ----------------------------- End  sidebar ---------------------------------------------->
 
         <!-- Page Content  -->
 
-  <div id="content" class="p-4 p-md-3">
+  <div id="content" class="p-4 p-md-5">
+
+
+
+    <!----------------------------------- Start nav N 2-------------- --------------------------->
+
+      <?php require_once(INCLUDE_BASE_PATH.'/nav2.php'); ?>
+
+    <!----------------------------------- End nav N 2-------------- --------------------------->
+
       <!----------------------------------- Start nav N 3-------------- --------------------------->
         
-        <?php require_once('Include/nav3.php'); ?>
+        <?php require_once(INCLUDE_BASE_PATH.'/nav3.php'); ?>
 
     <!----------------------------------- End nav N 3-------------- --------------------------->
 
     <!----------------------------------- Content -------------- --------------------------->
 
 		<div class="container">
-			<div class="row m-auto d-block">
-        <?php require_once('Include/Add-New-Institution-content.php'); ?>
+			<div class="row">
+        <?php require_once(INCLUDE_BASE_PATH.'/Edit-profile_content.php'); ?>
 			</div>					 
 
           <footer class="row">
@@ -56,15 +62,8 @@ if(!SessionManager::validateSession())
 
 	    </div>
       <?php 
-        require_once('Include/script.php');
+        require_once(INCLUDE_BASE_PATH.'/script.php');
       ?>
-      <script src="js/jquery.dataTables.js"></script>
-    <script type = "text/javascript">
-    $(document).ready(function(){
-      $('#table').DataTable();
-      $('#table2').DataTable();
-    });
-  </script>
       </div>
 		</div>
   </body>

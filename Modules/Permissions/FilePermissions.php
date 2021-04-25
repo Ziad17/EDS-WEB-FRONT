@@ -1,6 +1,7 @@
 <?php
 
-require 'Permissions.php';
+require_once PERMISSIONS_BASE_PATH."/Permissions.php";
+
 
 class FilePermissions extends Permissions
 {

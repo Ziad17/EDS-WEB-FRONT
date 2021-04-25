@@ -1,5 +1,5 @@
 <?php
-require_once "Modules/Permissions/Permissions.php";
+require_once PERMISSIONS_BASE_PATH."/Permissions.php";
 
 
 

@@ -1,14 +1,14 @@
 <?php
 
-require_once "./Modules/Database/Action.php";
-require_once "./Modules/Exceptions/PermissionsCriticalFail.php";
-require_once "./Modules/Exceptions/PersonHasNoRolesException.php";
-require_once "./Modules/Exceptions/PersonOrDeactivated.php";
-require_once "./Modules/Exceptions/NoPermissionsGrantedException.php";
+require_once DATABASE_BASE_PATH."/Action.php";
+require_once EXCEPTIONS_BASE_PATH."/PermissionsCriticalFail.php";
+require_once EXCEPTIONS_BASE_PATH."/PersonHasNoRolesException.php";
+require_once EXCEPTIONS_BASE_PATH."/PersonOrDeactivated.php";
+require_once EXCEPTIONS_BASE_PATH."/NoPermissionsGrantedException.php";
 
-require_once "./Modules/Permissions/InstitutionsPermissions.php";
-require_once "./Modules/Exceptions/LogsError.php";
-require_once "./Modules/Exceptions/InsertionError.php";
+require_once PERMISSIONS_BASE_PATH."/InstitutionsPermissions.php";
+require_once EXCEPTIONS_BASE_PATH."/LogsError.php";
+require_once EXCEPTIONS_BASE_PATH."/InsertionError.php";
 
 
 class InstitutionAction extends Action

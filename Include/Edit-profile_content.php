@@ -1,12 +1,12 @@
 <?php
 
 
-require_once "./Modules/Validation/PersonValidator.php";
-require_once "./Modules/Business/Person.php";
-require_once "./Modules/Sessions/SessionManager.php";
-require_once "./Modules/Database/PersonAction.php";
-require_once "./Modules/File Managment/FileRepoHandler.php";
-require_once "./Modules/Database/FileAction.php";
+require_once VALIDATION_BASE_PATH."/PersonValidator.php";
+require_once BUSINESS_BASE_PATH."/Person.php";
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
+require_once DATABASE_BASE_PATH."/PersonAction.php";
+require_once FILE_MANAGEMENT_BASE_PATH."/FileRepoHandler.php";
+require_once DATABASE_BASE_PATH."/FileAction.php";
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -271,7 +271,7 @@ if($_SERVER['REQUEST_METHOD']=='POST') {
 
   <div class="form-group row">
     <div class="col-sm-12">
-      <button type="submit" name="save_info"  value='save_info'class=" col-sm-12 btn btn-primary ">Save</button>
+      <button type="submit" name="save_info"  value='save_info' class=" col-sm-12 btn btn-primary ">Save</button>
     </div>
   </div>
 </form>
