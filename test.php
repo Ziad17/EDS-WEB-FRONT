@@ -1,4 +1,24 @@
 <?php
+require_once 'Paths.php';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // phpinfo();
 /*require_once "./Modules/Database/PersonAction.php";
 require_once "./Modules/Database/FileAction.php";
@@ -50,7 +70,6 @@ if (isset($_POST["submit"])) {
 //header('Content-Type: image/png');
 //imagepng($im);
 
-echo __DIR__;
 /*
 
 
@@ -109,7 +128,7 @@ while($i<count($arr))
     $i++;
 
 }*/
-?>
+/**/?><!--
 
 <!DOCTYPE html>
 <html>
@@ -122,11 +141,11 @@ while($i<count($arr))
 </form>
 
 <img src=' <?php
-if (isset($img) )
+/*if (isset($img) )
 {
     echo $img;
 }
-else{echo 'img/logo (1).png';}?> 'class="card-img-top" alt="...">
+else{echo 'img/logo (1).png';}*/?> 'class="card-img-top" alt="...">
 </body>
-</html>
+</html>-->
 

@@ -279,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                    name="submit" value="Register">
             <br>
             <div class="text-center">
-                <a href="../index.php" class="text-center"> I already have an account</a>
+                <a href="../General/index.php" class="text-center"> I already have an account</a>
                 <p class="mt-3 text-muted">© <?php echo htmlspecialchars(date('Y-n-j') . ' '); ?><a
                             href="mailto:ahmedheshamesmail@gmail.com?subject=feedback">Ahmed hesham</a></p>
             </div>

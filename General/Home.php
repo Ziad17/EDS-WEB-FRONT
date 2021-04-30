@@ -1,8 +1,6 @@
 <?php
-  $name = 'MyProfile';
-
-
-require_once '../Paths.php';
+  $name = 'KfsDocs';
+  require_once '../Paths.php';
 
 require_once '../Include/headtag.php';
 require_once '../Modules/Database/MainAction.php';
@@ -36,52 +34,60 @@ require_once '../Modules/Business/'."Institution.php";
 require_once '../Modules/Business/'."Person.php";
 require_once '../Modules/Business/'."PersonRole.php";
 require_once '../Modules/Business/'."City.php";
+
 error_reporting(E_ALL);
+
 if(!SessionManager::validateSession())
+  {
+      header('Location: index.php');
+      header('Cache-Control: no-cache, must-revalidate');
+        exit();
+  }
+if($_POST['logout'])
 {
-    header("Location: index.php");
-    header('Cache-Control: no-cache, must-revalidate');
-    exit();
-    
+    signOut();
+
 }
 
-?>
-  <link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.css">
-  <body style="padding-right: 15px">
-		<div  class="wrapper d-flex align-items-stretch">
 
+
+ ?>
+  <body>
+		<div  class="wrapper d-flex align-items-stretch">
 
       <!-- ----------------------------- start  sidebar ---------------------------------------------->
 
-            <?php require_once( '../Include/sidebar.php');?>
+        <?php require_once( '../Include/sidebar.php');?>
 
-
-            <!-- ----------------------------- End  sidebar ---------------------------------------------->
+      <!-- ----------------------------- End  sidebar ---------------------------------------------->
 
         <!-- Page Content  -->
 
   <div id="content" class="p-4 p-md-5">
 
+    <!-- ----------------------------- start  nav N 1 ---------------------------------------------->
+
+      <?php require_once( '../Include/nav1.php'); ?>
+
+    <!----------------------------------- End nav N 1-------------- --------------------------->
 
     <!----------------------------------- Start nav N 2-------------- --------------------------->
 
       <?php require_once( '../Include/nav2.php'); ?>
+
     <!----------------------------------- End nav N 2-------------- --------------------------->
 
       <!----------------------------------- Start nav N 3-------------- --------------------------->
-
-      <?php require_once('../Include/nav3.php'); ?>
+        
+        <?php require_once('../Include/nav3.php'); ?>
 
     <!----------------------------------- End nav N 3-------------- --------------------------->
-        <!-- Page Content  -->
-
-
 
     <!----------------------------------- Content -------------- --------------------------->
 
-		<div class="container-fluid">
-			<div class="row mt-5">
-        <?php require_once('../Include/MyProfile_content.php'); ?>
+		<div class="container">
+			<div class="row">
+        <?php require_once('../Include/content.php'); ?>
 			</div>					 
 
           <footer class="row">
@@ -93,16 +99,8 @@ if(!SessionManager::validateSession())
 
 	    </div>
       <?php 
-        require_once(INCLUDE_BASE_PATH.'/script.php');
+        require_once( '../Include/script.php');
       ?>
-       <script src="../js/jquery.dataTables.js"></script>
-    <script type = "text/javascript">
-    $(document).ready(function(){
-      $('#table').DataTable();
-      $('#table2').DataTable();
-      $('#table3').DataTable();
-    });
-  </script>
       </div>
 		</div>
   </body>

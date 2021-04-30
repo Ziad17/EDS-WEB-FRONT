@@ -5,6 +5,7 @@ class EncryptionManager
 {
 
     //TODO::Store These Values in the environment of the server
+
     private static string $METHOD='AES-256-CTR';
     private static string $IV='5789463210364851';
     private static string $KEY='JustARandomKey';

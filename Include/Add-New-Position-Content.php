@@ -22,14 +22,8 @@
               <td ><input type="checkbox" name="" ></td>
               <td >Read Level A File</td>
             </tr>
-            <tr>
-              <td ><input type="checkbox" name=""></td>
-              <td >Read Level B File</td>
-            </tr>
-            <tr>
-              <td ><input type="checkbox" name=""></td>
-              <td >Read Level C File</td>
-            </tr>
+
+
           </tbody>
         </table>
       </div>
@@ -37,14 +31,8 @@
         <h5>Folder Permissions</h5>
         <table border="3" style="padding: 5px;width: 90%">
           <tbody>
-            <tr>
-              <td style="padding: 15px"><input type="checkbox" name=""></td>
-              <td style="padding: 20px">Creat File in Folder</td>
-            </tr>
-            <tr>
-              <td style="padding: 15px"><input type="checkbox" name=""></td>
-              <td style="padding: 20px">Read File of A Folder</td>
-            </tr>
+
+
             <tr>
               <td style="padding: 15px"><input type="checkbox" name=""></td>
               <td style="padding: 20px"></td>
@@ -58,14 +46,8 @@
         <h5>Person Permissions</h5>
         <table border="3" style="padding: 5px;width: 90%">
           <tbody>
-            <tr>
-              <td style="padding: 15px"><input type="checkbox" name=""></td>
-              <td style="padding: 20px">Add Person</td>
-            </tr>
-            <tr>
-              <td style="padding: 15px"><input type="checkbox" name=""></td>
-              <td style="padding: 20px">Assign Role To Person</td>
-            </tr>
+
+
             <tr>
               <td style="padding: 15px"><input type="checkbox" name=""></td>
               <td style="padding: 20px">Deactivate Person</td>
@@ -77,14 +59,8 @@
         <h5>Institution Permissions</h5>
         <table border="3" style="padding: 5px;width: 90%">
           <tbody>
-            <tr>
-              <td style="padding: 15px"><input type="checkbox" name=""></td>
-              <td style="padding: 20px">Create Institution</td>
-            </tr>
-            <tr>
-              <td style="padding: 15px"><input type="checkbox" name=""></td>
-              <td style="padding: 20px">View Institution Information</td>
-            </tr>
+
+
             <tr>
               <td style="padding: 15px"><input type="checkbox" name=""></td>
               <td style="padding: 20px">Edite Institution</td>

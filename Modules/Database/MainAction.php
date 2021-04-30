@@ -1,12 +1,5 @@
 <?php
-require_once BUSINESS_BASE_PATH."/Person.php";
-require_once BUSINESS_BASE_PATH."/PersonRole.php";
-require_once './../Paths.php';
-require_once DATABASE_BASE_PATH."/Action.php";
-require_once BUSINESS_BASE_PATH."/Institution.php";
-require_once BUSINESS_BASE_PATH."/City.php";
-require_once EXCEPTIONS_BASE_PATH."/SQLStatmentException.php";
-require_once EXCEPTIONS_BASE_PATH."/DuplicateDataEntry.php";
+require_once 'Action.php';
 
 
 class MainAction extends Action
@@ -74,7 +67,7 @@ class MainAction extends Action
     {
         $con = $this->getDatabaseConnection();
         $sql = "SELECT ID FROM Person WHERE Person.academic_number=? OR Person.contact_email=? AND user_password=?";
-        $params = array($email, $email, $password);
+        $params = array($email, $email, EncryptionManager::Encrypt($password));
         $stmt = $this->getParameterizedStatement($sql, $con, $params);
         if ($stmt == false) {
             $this->closeConnection($con);
@@ -98,8 +91,7 @@ class MainAction extends Action
     public function getAllAvailableRoles(int $priorit_lvl)
     {
         $conn = $this->getDatabaseConnection();
-        //FIXME::make the roles < prioritylevel
-        $sql="SELECT role_name,role_front_name FROM Roles   ";
+        $sql="SELECT ID,role_front_name FROM Roles WHERE role_priority_lvl>?";
         $params=array($priorit_lvl);
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false) {
@@ -111,7 +103,7 @@ class MainAction extends Action
         else {
             $array_of_roles = array();
             while ($row = sqlsrv_fetch_object($stmt)) {
-                $array_of_roles[] =  PersonRole::Builder()->setRoleName($row->role_name)
+                $array_of_roles[] =  PersonRole::Builder()->setID($row->ID)
                 ->setJobTitle($row->role_front_name)->build();
 
             }

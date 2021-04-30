@@ -1,14 +1,9 @@
 <?php
-
 require_once VALIDATION_BASE_PATH."/PersonValidator.php";
-
-require_once BUSINESS_BASE_PATH."/Person.php";
-require_once DATABASE_BASE_PATH."/MainAction.php";
-require_once EXCEPTIONS_BASE_PATH."/NoPermissionsGrantedException.php";
-
-require_once SESSIONS_BASE_PATH."/SessionManager.php";
 require_once DATABASE_BASE_PATH."/PersonAction.php";
-require_once BUSINESS_BASE_PATH."/PersonRole.php";
+
+require_once DATABASE_BASE_PATH."/MainAction.php";
+
 
 /*
  * STEPS ON HOW THIS PAGE WORKS
@@ -80,7 +75,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         $date_hired = $_POST['date_hired'];
         $job_title = $_POST['job_title'];
         $institution = $_POST['institution'];
-        $job_role = $_POST['roles'];
+        $job_role_id = $_POST['roles'];
         $city = $_POST['city'];
         $gender=$_POST['gender'];
 
@@ -101,7 +96,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         else
             {
                 if ($password == $confirm_password && strlen($password) >= 8) {
-                    $roleToAttach = new PersonRole($job_role, 0, $job_title, $mainAction->getInstitutionNameByID($institution));
+                    $roleToAttach = PersonRole::Builder()->setID($job_role_id)->setJobTitle($job_title)->build();
 
 
                     $creator = Person::Builder()->setID((int)SessionManager::getID())
@@ -208,8 +203,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
                 $title=$_position->getJobTitle();
 
-                $role_name=$_position->getRoleName();
-                echo "<option value=" . htmlspecialchars($role_name) . ">" . htmlspecialchars($title) . "</option>";
+                $role_id=$_position->getID();
+                echo "<option value=" . htmlspecialchars($role_id) . ">" . htmlspecialchars($title) . "</option>";
             }
 
             ?>

@@ -1,7 +1,7 @@
 <?php
 
 
-define('PUBLIC_BASE_PATH', __DIR__);
+define('PUBLIC_BASE_PATH', realpath(($_SERVER["DOCUMENT_ROOT"])).'/Repo');
 define('DATABASE_BASE_PATH', PUBLIC_BASE_PATH.'/Modules/Database');
 define('BUSINESS_BASE_PATH', PUBLIC_BASE_PATH.'/Modules/Business');
 define('ENCRYPTION_BASE_PATH', PUBLIC_BASE_PATH.'/Modules/Encryption');
@@ -13,7 +13,6 @@ define('SEARCH_BASE_PATH', PUBLIC_BASE_PATH.'/Modules/Search');
 define('SESSIONS_BASE_PATH', PUBLIC_BASE_PATH.'/Modules/Sessions');
 define('VALIDATION_BASE_PATH', PUBLIC_BASE_PATH.'/Modules/Validation');
 define('VENDOR_BASE_PATH', PUBLIC_BASE_PATH.'/Vendor');
-
 define('EMPLOYEES_BASE_PATH', PUBLIC_BASE_PATH.'/Employees');
 define('INSTITUTIONS_BASE_PATH', PUBLIC_BASE_PATH.'/Institutions');
 define('INCLUDE_BASE_PATH', PUBLIC_BASE_PATH.'/Include');

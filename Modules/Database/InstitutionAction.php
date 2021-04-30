@@ -1,14 +1,10 @@
 <?php
 
-require_once DATABASE_BASE_PATH."/Action.php";
-require_once EXCEPTIONS_BASE_PATH."/PermissionsCriticalFail.php";
-require_once EXCEPTIONS_BASE_PATH."/PersonHasNoRolesException.php";
-require_once EXCEPTIONS_BASE_PATH."/PersonOrDeactivated.php";
-require_once EXCEPTIONS_BASE_PATH."/NoPermissionsGrantedException.php";
+require_once 'Action.php';
 
-require_once PERMISSIONS_BASE_PATH."/InstitutionsPermissions.php";
-require_once EXCEPTIONS_BASE_PATH."/LogsError.php";
-require_once EXCEPTIONS_BASE_PATH."/InsertionError.php";
+
+
+
 
 
 class InstitutionAction extends Action
@@ -133,6 +129,15 @@ class InstitutionAction extends Action
         }
     }
 
+    public function canCreateRole(): bool
+    {
+        try {
+            return $this->myInstitutionPermissions->getPermissionsFromBitArray($this->myInstitutionPermissions->CREATE_ROLE);
+        } catch (Exception $e) {
+            throw new  NoPermissionsGrantedException('Role Creation Permissions Is Not Granted');
+        }
+    }
+
     public function canViewPersonsOfInstitution(): bool
     {
         try {
@@ -152,9 +157,8 @@ class InstitutionAction extends Action
     public function createInstitution(Institution $institutionToCreate): bool
     {
 
-        $con = $this->getDatabaseConnection();
         //REQUIRED_PERMISSION=$CREATE_INSTITUTION=1
-        sqlsrv_begin_transaction($con);
+
         if ($this->canCreateInstitution()) {
             $permission_value = 2 ** ($this->myInstitutionPermissions->CREATE_INSTITUTION);
 
@@ -162,7 +166,9 @@ class InstitutionAction extends Action
                 throw new DuplicateDataEntry("Institution Already Created");
 
             }
+            $con = $this->getDatabaseConnection();
 
+            sqlsrv_begin_transaction($con);
             $sql = "SET NOCOUNT ON;INSERT INTO Institution(institution_name,
                         institution_type,
                         institution_active,
@@ -295,6 +301,35 @@ class InstitutionAction extends Action
         return false;
 
     }
+
+
+
+
+    //TODO:: check whether it's needed or not
+/*    Public function createNewRole(int $my_id,int $my_role_id,string $name,int $role_pri_level,int $files_permissions_sum,int $folders_permissions_sum,int $person_permissions_sum,int $institutions_permissions_sum)
+    {
+        if ($this->canCreateInstitution()) {
+            $permission_value = 2 ** ($this->myInstitutionPermissions->CREATE_INSTITUTION);
+            $conn=$this->getDatabaseConnection();
+            $sql='';
+            $params=array();
+            $stmt=$this->getParameterizedStatement($sql,$conn,$params);
+            if($stmt==false)
+            {
+                //TODO :PRODUCTION UNCOMMENT THIS
+                //$error="Could not get the roles of this person";
+                $error=sqlsrv_errors()[0]['message'];
+                $this->closeConnection($conn);
+                throw new PersonHasNoRolesException($error);
+
+        }
+        else
+        {
+
+
+        }
+
+    }*/
 
 
 }

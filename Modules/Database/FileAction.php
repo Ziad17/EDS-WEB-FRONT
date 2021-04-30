@@ -1,13 +1,11 @@
 <?php
-require_once './../Paths.php';
+require_once 'Action.php';
 
 
 //TODO:ADD active file stats and see if the files should be permanently deleted or just deactivated
 class FileAction extends Action
 {
     private FilePermissions $myFilesPermissions;
-
-
 
 
 

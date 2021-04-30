@@ -1,6 +1,35 @@
 <?php
-require_once './../Paths.php';
-require_once EXCEPTIONS_BASE_PATH.'/SQLStatmentException.php';
+/*require_once __DIR__.'/../../Paths.php';
+require_once EXCEPTIONS_BASE_PATH . '/CannotCreateHigherEmployeeException.php';
+require_once EXCEPTIONS_BASE_PATH . '/ConnectionException.php';
+require_once EXCEPTIONS_BASE_PATH . '/DataNotFound.php';
+require_once EXCEPTIONS_BASE_PATH . '/DuplicateDataEntry.php';
+require_once EXCEPTIONS_BASE_PATH . '/FileHandlerException.php';
+require_once EXCEPTIONS_BASE_PATH . '/FileNotFoundException.php';
+require_once EXCEPTIONS_BASE_PATH . '/FolderUploadingSqlException.php';
+require_once EXCEPTIONS_BASE_PATH . '/InsertionError.php';
+require_once EXCEPTIONS_BASE_PATH . '/LogsError.php';
+require_once EXCEPTIONS_BASE_PATH . '/LowRoleForSuchActionException.php';
+require_once EXCEPTIONS_BASE_PATH . '/NoNotificationsFoundException.php';
+require_once EXCEPTIONS_BASE_PATH . '/NoPermissionsGrantedException.php';
+require_once EXCEPTIONS_BASE_PATH . '/PermissionsCriticalFail.php';
+require_once EXCEPTIONS_BASE_PATH . '/PersonHasNoRolesException.php';
+require_once EXCEPTIONS_BASE_PATH . '/PersonOrDeactivated.php';
+require_once EXCEPTIONS_BASE_PATH . '/SearchQueryInsuffecient.php';
+require_once EXCEPTIONS_BASE_PATH . '/SQLStatmentException.php';
+require_once FILE_MANAGEMENT_BASE_PATH."/FileRepoHandler.php";
+require_once VALIDATION_BASE_PATH."/PersonValidator.php";
+require_once ENCRYPTION_BASE_PATH."/EncryptionManager.php";
+require_once PERMISSIONS_BASE_PATH."/PersonPermissions.php";
+require_once PERMISSIONS_BASE_PATH."/InstitutionsPermissions.php";
+require_once SESSIONS_BASE_PATH."/SessionManager.php";
+require_once BUSINESS_BASE_PATH."/Institution.php";
+require_once BUSINESS_BASE_PATH."/Person.php";
+require_once BUSINESS_BASE_PATH."/PersonRole.php";
+require_once BUSINESS_BASE_PATH."/City.php";*/
+
+
+
 abstract class Action
 {
     protected Person $myPersonRef;
@@ -128,7 +157,7 @@ echo $error['message'];
     public function getRolesOfPerson(string $personEmail):array
     {
         $conn=$this->getDatabaseConnection();
-        $sql="SELECT role_name,	role_front_name,role_priority_lvl,institution_name FROM [dbo].[PersonRolesAndPermissions_view] WHERE active=1 AND contact_email=?";
+        $sql="SELECT ID,role_front_name,role_priority_lvl,institution_name FROM [dbo].[PersonRolesAndPermissions_view] WHERE active=1 AND contact_email=?";
         $params=array($personEmail);
         $stmt=$this->getParameterizedStatement($sql,$conn,$params);
         if($stmt==false)
@@ -147,7 +176,7 @@ echo $error['message'];
             $roles[]= PersonRole::Builder()->setPriorityLevel((int)$row->role_priority_lvl)
             ->setInstitutionName((string)$row->institution_name)
             ->setJobTitle((string)$row->role_front_name)
-            ->setRoleName((string)$row->role_name)
+            ->setID((int)$row->ID)
             ->build();
                  }
         return $roles;
@@ -193,6 +222,47 @@ echo $error['message'];
         $email = sqlsrv_fetch_array($stmt)[0][0];
         $this->closeConnection($conn);
         return $email;
+    }
+    protected function getSpecificEmployee(int $person_id,int $institution_id,int $role_id): PersonRole
+    {
+        $conn=$this->getDatabaseConnection();
+        $sql='SELECT * FROM Employees WHERE person_id=? AND institution_id=? AND role_id=? INNER JOIN Roles ON Employees.role_id=Roles.ID;';
+        $params=array($person_id,$institution_id,$role_id);
+        $stmt=$this->getParameterizedStatement($sql,$conn,$params);
+        if($stmt==false)
+        {
+            //TODO :PRODUCTION UNCOMMENT THIS
+            //$error="Could not get the roles of this person";
+            $error=sqlsrv_errors()[0]['message'];
+            $this->closeConnection($conn);
+            throw new PersonHasNoRolesException($error);
+        }
+        if(!sqlsrv_has_rows($stmt))
+        {
+            $error="Could Not Find This Employee";
+            $this->closeConnection($conn);
+            throw new DataNotFound($error);
+        }
+        $row=sqlsrv_fetch_object($stmt);
+        $active=(bool)$row->active;
+        if(!$active)
+        {
+            $error="This Employee Is Deactivated";
+            $this->closeConnection($conn);
+            throw new PersonOrDeactivated($error);
+        }
+        $personRole=PersonRole::Builder()->setID($role_id)
+            ->setPriorityLevel($row->role_priority_lvl)
+            ->setPersonsPermissionsSum($row->sada)
+            ->setInstitutionsPermissionsSum($row->sada)
+            ->setFilesPermissionsSum($row->sada)
+            ->setFoldersPermissionsSum($row->sada)
+            ->build();
+        $this->closeConnection($conn);
+        return $personRole;
+
+
+
     }
 
 
@@ -246,9 +316,25 @@ echo $error['message'];
 
     protected function setConnection(Action $action)
     {
-        $this->connectionInfo= array("UID" => "ziadmohamd456", "pwd" => "{01015790817aA}", "Database" => "DMS_db", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
+        $this->connectionInfo= array("UID" => "ziadmohamd456", "pwd" => "{01015790817aA}", "Database" => "DMS_db", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0,"CharacterSet" => "UTF-8");
         $this->SERVER_NAME= "tcp:dms-kfs1.database.windows.net,1433";
 
     }
 
+
+
+
+/*$conn=$this->getDatabaseConnection();
+$sql='';
+$params=array();
+$stmt=$this->getParameterizedStatement($sql,$conn,$params);
+if($stmt==false)
+{
+    //TODO :PRODUCTION UNCOMMENT THIS
+    //$error="Could not get the roles of this person";
+$error=sqlsrv_errors()[0]['message'];
+$this->closeConnection($conn);
+throw new PersonHasNoRolesException($error);
+}
+*/
 }

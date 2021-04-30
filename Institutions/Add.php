@@ -1,9 +1,39 @@
 <?php
   $name = 'Add-New-Institution';
-require_once './../Paths.php';
+require_once '../Paths.php';
 
-  require_once INCLUDE_BASE_PATH."/headtag.php";
-require_once SESSIONS_BASE_PATH."/SessionManager.php";
+require_once '../Include/headtag.php';
+require_once '../Modules/Database/MainAction.php';
+require_once '../Modules/Database/FileAction.php';
+require_once '../Modules/Database/PersonAction.php';
+require_once '../Modules/Database/InstitutionAction.php';
+require_once '../Modules/Sessions/SessionManager.php';
+require_once '../Modules/Exceptions/' . 'CannotCreateHigherEmployeeException.php';
+require_once '../Modules/Exceptions/' . 'ConnectionException.php';
+require_once '../Modules/Exceptions/' . 'DataNotFound.php';
+require_once '../Modules/Exceptions/' . 'DuplicateDataEntry.php';
+require_once '../Modules/Exceptions/' . 'FileHandlerException.php';
+require_once '../Modules/Exceptions/' . 'FileNotFoundException.php';
+require_once '../Modules/Exceptions/' . 'FolderUploadingSqlException.php';
+require_once '../Modules/Exceptions/' . 'InsertionError.php';
+require_once '../Modules/Exceptions/' . 'LogsError.php';
+require_once '../Modules/Exceptions/' . 'LowRoleForSuchActionException.php';
+require_once '../Modules/Exceptions/' . 'NoNotificationsFoundException.php';
+require_once '../Modules/Exceptions/' . 'NoPermissionsGrantedException.php';
+require_once '../Modules/Exceptions/' . 'PermissionsCriticalFail.php';
+require_once '../Modules/Exceptions/' . 'PersonHasNoRolesException.php';
+require_once '../Modules/Exceptions/' . 'PersonOrDeactivated.php';
+require_once '../Modules/Exceptions/' . 'SearchQueryInsuffecient.php';
+require_once '../Modules/Exceptions/' . 'SQLStatmentException.php';
+require_once '../Modules/FileManagement/'."FileRepoHandler.php";
+require_once '../Modules/Validation/'."PersonValidator.php";
+require_once '../Modules/Encryption/'."EncryptionManager.php";
+require_once '../Modules/Permissions/'."PersonPermissions.php";
+require_once '../Modules/Permissions/'."InstitutionsPermissions.php";
+require_once '../Modules/Business/'."Institution.php";
+require_once '../Modules/Business/'."Person.php";
+require_once '../Modules/Business/'."PersonRole.php";
+require_once '../Modules/Business/'."City.php";
 
 error_reporting(0);
 
@@ -15,7 +45,6 @@ error_reporting(0);
 
 
 //TODO:: REMOVE
-//SessionManager::sessionSignIn('admin@gmail.com',2);
 
 if(!SessionManager::validateSession())
 {

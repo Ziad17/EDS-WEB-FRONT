@@ -1,9 +1,40 @@
 <?php
-require_once './../Paths.php';
 
+require_once '../Paths.php';
 
-  require_once(INCLUDE_BASE_PATH.'/headtag.php');
-require_once SESSIONS_BASE_PATH."/SessionManager.php";
+require_once '../Include/headtag.php';
+require_once '../Modules/Database/MainAction.php';
+require_once '../Modules/Database/FileAction.php';
+require_once '../Modules/Database/PersonAction.php';
+require_once '../Modules/Database/InstitutionAction.php';
+require_once '../Modules/Sessions/SessionManager.php';
+require_once '../Modules/Exceptions/' . 'CannotCreateHigherEmployeeException.php';
+require_once '../Modules/Exceptions/' . 'ConnectionException.php';
+require_once '../Modules/Exceptions/' . 'DataNotFound.php';
+require_once '../Modules/Exceptions/' . 'DuplicateDataEntry.php';
+require_once '../Modules/Exceptions/' . 'FileHandlerException.php';
+require_once '../Modules/Exceptions/' . 'FileNotFoundException.php';
+require_once '../Modules/Exceptions/' . 'FolderUploadingSqlException.php';
+require_once '../Modules/Exceptions/' . 'InsertionError.php';
+require_once '../Modules/Exceptions/' . 'LogsError.php';
+require_once '../Modules/Exceptions/' . 'LowRoleForSuchActionException.php';
+require_once '../Modules/Exceptions/' . 'NoNotificationsFoundException.php';
+require_once '../Modules/Exceptions/' . 'NoPermissionsGrantedException.php';
+require_once '../Modules/Exceptions/' . 'PermissionsCriticalFail.php';
+require_once '../Modules/Exceptions/' . 'PersonHasNoRolesException.php';
+require_once '../Modules/Exceptions/' . 'PersonOrDeactivated.php';
+require_once '../Modules/Exceptions/' . 'SearchQueryInsuffecient.php';
+require_once '../Modules/Exceptions/' . 'SQLStatmentException.php';
+require_once '../Modules/FileManagement/'."FileRepoHandler.php";
+require_once '../Modules/Validation/'."PersonValidator.php";
+require_once '../Modules/Encryption/'."EncryptionManager.php";
+require_once '../Modules/Permissions/'."PersonPermissions.php";
+require_once '../Modules/Permissions/'."InstitutionsPermissions.php";
+require_once '../Modules/Business/'."Institution.php";
+require_once '../Modules/Business/'."Person.php";
+require_once '../Modules/Business/'."PersonRole.php";
+require_once '../Modules/Business/'."City.php";
+
 /*
  * STEPS ON HOW THIS PAGE WORKS
  * (A)
@@ -12,7 +43,6 @@ require_once SESSIONS_BASE_PATH."/SessionManager.php";
 
 
 
-SessionManager::sessionSignIn('admin@gmail.com',2);
 if(!SessionManager::validateSession())
 {
     header("Location: index.php");
@@ -35,7 +65,7 @@ if(!isset($name) || trim($name)=="")
 
       <!-- ----------------------------- start  sidebar ---------------------------------------------->
 
-        <?php require_once(INCLUDE_BASE_PATH.'/sidebar.php');?>
+        <?php require_once('../Include/sidebar.php');?>
 
       <!-- ----------------------------- End  sidebar ---------------------------------------------->
 
@@ -46,13 +76,13 @@ if(!isset($name) || trim($name)=="")
 
     <!----------------------------------- Start nav N 2-------------- --------------------------->
 
-      <?php require_once(INCLUDE_BASE_PATH.'/nav2.php'); ?>
+      <?php require_once('../Include/nav2.php'); ?>
 
     <!----------------------------------- End nav N 2-------------- --------------------------->
 
       <!----------------------------------- Start nav N 3-------------- --------------------------->
         
-        <?php require_once(INCLUDE_BASE_PATH.'/nav3.php'); ?>
+        <?php require_once('../Include/nav3.php'); ?>
 
     <!----------------------------------- End nav N 3-------------- --------------------------->
 
@@ -60,7 +90,7 @@ if(!isset($name) || trim($name)=="")
 
       <div class="container">
           <div class="row">
-              <?php require_once(INCLUDE_BASE_PATH.'/institutions_content.php'); ?>
+              <?php require_once('../Include/institutions_content.php'); ?>
           </div>
 
           <footer class="row">
@@ -72,7 +102,7 @@ if(!isset($name) || trim($name)=="")
 
 	    </div>
       <?php 
-        require_once(INCLUDE_BASE_PATH.'/script.php');
+        require_once('../Include/script.php');
       ?>
             <script src="../js/jquery.dataTables.js"></script>
     <script type = "text/javascript">

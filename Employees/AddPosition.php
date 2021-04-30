@@ -1,7 +1,10 @@
 <?php
   $name = 'Add-New-Position';
+  require_once '../Paths.php';
   require_once(INCLUDE_BASE_PATH.'/headtag.php');
+
  ?>
+
  <link rel="stylesheet" type="text/css" href="../css/jquery.dataTables.css">
   <body>
 		<div  class="wrapper d-flex align-items-stretch">

@@ -1,18 +1,6 @@
 <?php
-require_once DATABASE_BASE_PATH."/Action.php";
-require_once PERMISSIONS_BASE_PATH."/PersonPermissions.php";
-require_once BUSINESS_BASE_PATH."/Person.php";
-require_once BUSINESS_BASE_PATH."/PersonRole.php";
 
-require_once './../Paths.php';
-require_once EXCEPTIONS_BASE_PATH."/SQLStatmentException.php";
-require_once EXCEPTIONS_BASE_PATH."/PermissionsCriticalFail.php";
-require_once EXCEPTIONS_BASE_PATH."/PersonHasNoRolesException.php";
-require_once EXCEPTIONS_BASE_PATH."/PersonOrDeactivated.php";
-require_once EXCEPTIONS_BASE_PATH."/NoPermissionsGrantedException.php";
-require_once EXCEPTIONS_BASE_PATH."/InsertionError.php";
-require_once EXCEPTIONS_BASE_PATH."/CannotCreateHigherEmployeeException.php";
-require_once EXCEPTIONS_BASE_PATH."/DataNotFound.php";
+require_once "Action.php";
 
 
 class PersonAction extends Action
@@ -48,8 +36,6 @@ class PersonAction extends Action
             $error = sqlsrv_errors()[0]['message'];
             $this->closeConnection($conn);
             throw new SQLStatmentException($error);
-
-
         }
         if (sqlsrv_has_rows($stmt)) {
             //FIXME: add logic if a person has more than one role
@@ -233,7 +219,6 @@ class PersonAction extends Action
         }
         $row = sqlsrv_fetch_array($stmt)[0];
         $count = (int)$row[0];
-        echo "TOTAL COUNT OF ROLES=" . $count;
         $this->closeConnection($conn);
         return $count;
 
@@ -242,7 +227,7 @@ class PersonAction extends Action
     public function getMyRoles(int $id): array
     {
         $conn = $this->getDatabaseConnection();
-        $sql = "SELECT role_name,	role_front_name,role_priority_lvl,institution_name FROM [dbo].[PersonRolesAndPermissions_view] WHERE active=1 AND person_id=?";
+        $sql = "SELECT role_id,	role_front_name,role_priority_lvl,institution_name FROM [dbo].[PersonRolesAndPermissions_view] WHERE active=1 AND person_id=?";
         $params = array($id);
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false) {
@@ -260,7 +245,7 @@ class PersonAction extends Action
                 ->setPriorityLevel((int)$row->role_priority_lvl)
                 ->setInstitutionName((string)$row->institution_name)
                 ->setJobTitle((string)$row->role_front_name)
-                ->setRoleName((string)$row->role_name)
+                ->setID((string)$row->role_id)
                 ->build();
 
         }
@@ -292,7 +277,7 @@ class PersonAction extends Action
         //TODO::Complete the logic depending on whether the user can change their names,emails,academicNumbers
         $conn = $this->getDatabaseConnection();
         sqlsrv_begin_transaction($conn);
-        $contactsSql = "UPDATE PersonContacts SET phone_number=?,phd_certificate=?,image_ref=?,bio=? WHERE email=?;";
+        $contactsSql = "UPDATE PersonContacts SET phone_number=?,phd_certificate=N?,image_ref=?,bio=N? WHERE email=?;";
         $contactsParams = array($newRef->getPhoneNumber(), $newRef->getPhd(), $newRef->getImgRef(), $newRef->getBio(), $newRef->getEmail());
         $contactsStmt = $this->getParameterizedStatement($contactsSql, $conn, $contactsParams);
         if ($contactsStmt == false) {
@@ -312,7 +297,6 @@ class PersonAction extends Action
 
     }
 
-    //CRITICAL :: MAKE THE PASSWORDS ENCRYPTED UPON PRODUCTION
     public function updateMyPassword(string $email, string $oldPassword, string $newPassword): string
     {
 
@@ -332,9 +316,10 @@ class PersonAction extends Action
         }
         $row1 = sqlsrv_fetch_object($stmt1);
         $actualPassword = $row1->user_password;
+        $actualPassword=EncryptionManager::Decrypt($actualPassword);
         if ($oldPassword == $actualPassword) {
-            $sql2 = "UPDATE Person SET user_password=? WHERE contact_email=? AND ID=?";
-            $params2 = array($newPassword, $email, $this->myPersonRef->getID());
+            $sql2 = "UPDATE Person SET user_password=N? WHERE contact_email=? AND ID=?";
+            $params2 = array(EncryptionManager::Encrypt($newPassword), $email, $this->myPersonRef->getID());
             $stmt2 = $this->getParameterizedStatement($sql2, $conn, $params2);
             if ($stmt2 == false) {
 
@@ -447,22 +432,22 @@ class PersonAction extends Action
         */
 
 
-        if (!$this->compareRoleLevel($myRole->getRoleName(), $role->getRoleName())) {
+        if (!$this->compareRoleLevel($myRole->getRoleName(), $role->getID())) {
             throw new CannotCreateHigherEmployeeException("User Cannot Create Higher Roles");
 
         }
         if ($this->canCreatePerson() && $this->isEmployeeOfInstitution($role->getInstitutionName())) {
 
             $permission_value = 2 ** ($this->myPersonPermissions->CREATE_PERSON_WITHIN_INSTITUTION);
-            $conn = $this->getDatabaseConnection();
-            sqlsrv_begin_transaction($conn);
+
             //check if email exists
             if ($this->isUserExists($person->getEmail())) {
                 $this->closeConnection($conn);
 
                 throw new DuplicateDataEntry("The Email or AcademicNumber already exists");
             }
-
+            $conn = $this->getDatabaseConnection();
+            sqlsrv_begin_transaction($conn);
 
             //PersonContacts
             $sql1 = "INSERT INTO PersonContacts(email,phone_number,base_faculty) VALUES(?,?,?)";
@@ -489,7 +474,7 @@ class PersonAction extends Action
                    contact_email,
                    academic_number,
                    gender,
-                   city_shortcut) VALUES(?,?,?,?,?,?,?,?); SELECT SCOPE_IDENTITY()";
+                   city_shortcut) VALUES(N?,N?,N?,N?,?,?,?,?); SELECT SCOPE_IDENTITY()";
             $params2 = array("{$person->getFirstName()}",
                 "{$person->getMiddleName()}",
                 "{$person->getLastName()}",
@@ -516,13 +501,13 @@ class PersonAction extends Action
 
 
             $sql3 = "INSERT INTO Employees(person_id,
-                     role_name,
+                     role_id,
                       institution_id,
                       hiring_date,
                       employee_job_desc,
-                      active) VALUES (?,?,?,?,?,1)";
+                      active) VALUES (?,?,?,?,N?,1)";
             $params3 = array($createdID,
-                $role->getRoleName(),
+                $role->getID(),
                 $this->getInstitutionIDByName($role->getInstitutionName()),
                 $date,
                 $role->getJobDesc());
@@ -568,22 +553,22 @@ class PersonAction extends Action
         return true;
     }
 
-    private function compareRoleLevel(string $myRole, string $toCreateRole): bool
+    private function compareRoleLevel(int $myRoleID, int $toCreateRoleID): bool
     {
-        //the first has to always be > the target
-        $makerRoleLevel = $this->getRoleDetails($myRole)->getPriorityLevel();
-        $targetRoleLevel = $this->getRoleDetails($toCreateRole)->getPriorityLevel();
-        if ($makerRoleLevel > $targetRoleLevel) {
+        //the first has to always be < the target because 1 is the max as in a tree indexing
+        $makerRoleLevel = $this->getRoleDetails($myRoleID)->getPriorityLevel();
+        $targetRoleLevel = $this->getRoleDetails($toCreateRoleID)->getPriorityLevel();
+        if ($makerRoleLevel < $targetRoleLevel) {
             return true;
         }
         return false;
     }
 
-    private function getRoleDetails(string $role_name): PersonRole
+    private function getRoleDetails(int $role_id): PersonRole
     {
         $conn = $this->getDatabaseConnection();
-        $sql = "SELECT * FROM Roles WHERE role_name=?";
-        $params = array($role_name);
+        $sql = "SELECT * FROM Roles WHERE ID=?";
+        $params = array($role_id);
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false || !sqlsrv_has_rows($stmt)) {
 
@@ -595,7 +580,7 @@ class PersonAction extends Action
         $personRole = PersonRole::Builder()->setPriorityLevel((int)$row->role_priority_lvl)
             ->setInstitutionName((string)$row->institution_name)
             ->setJobTitle((string)$row->role_front_name)
-            ->setRoleName((string)$row->role_name)
+            ->setID((int)$row->role_id)
             ->build();
 
         $this->closeConnection($conn);
@@ -787,6 +772,8 @@ class PersonAction extends Action
         return $array_of_institutions;
 
     }
+
+
 
 
 }

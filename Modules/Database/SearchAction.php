@@ -1,6 +1,7 @@
 <?php /** @noinspection ALL */
+require_once 'Action.php';
 
-
+//CRITICAL DEPRECATED
 class SearchAction extends Action
 {
 

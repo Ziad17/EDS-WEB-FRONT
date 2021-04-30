@@ -4,21 +4,93 @@
 class PersonRole
 {
 
-    private ?string $role_name;
+    private ?int $ID;
 
 
     private ?String $jobTitle;
     private ?int $priorityLevel;
     private ?String $jobDesc;
     private ?String $institution_name;
+    private ?int $filesPermissionsSum;
+    private ?int $personsPermissionsSum;
+    private ?int $foldersPermissionsSum;
+    private ?int $institutionsPermissionsSum;
+
+    /**
+     * @return int|null
+     */
+    public function getFilesPermissionsSum(): ?int
+    {
+        return $this->filesPermissionsSum;
+    }
+
+    /**
+     * @param int|null $filesPermissionsSum
+     */
+    public function setFilesPermissionsSum(?int $filesPermissionsSum): void
+    {
+        $this->filesPermissionsSum = $filesPermissionsSum;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPersonsPermissionsSum(): ?int
+    {
+        return $this->personsPermissionsSum;
+    }
+
+    /**
+     * @param int|null $personsPermissionsSum
+     */
+    public function setPersonsPermissionsSum(?int $personsPermissionsSum): void
+    {
+        $this->personsPermissionsSum = $personsPermissionsSum;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getFoldersPermissionsSum(): ?int
+    {
+        return $this->foldersPermissionsSum;
+    }
+
+    /**
+     * @param int|null $foldersPermissionsSum
+     */
+    public function setFoldersPermissionsSum(?int $foldersPermissionsSum): void
+    {
+        $this->foldersPermissionsSum = $foldersPermissionsSum;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getInstitutionsPermissionsSum(): ?int
+    {
+        return $this->institutionsPermissionsSum;
+    }
+
+    /**
+     * @param int|null $institutionsPermissionsSum
+     */
+    public function setInstitutionsPermissionsSum(?int $institutionsPermissionsSum): void
+    {
+        $this->institutionsPermissionsSum = $institutionsPermissionsSum;
+    }
 
     public function __construct(PersonRoleBuilder $builder)
     {
         $this->setInstitutionName($builder->getInstitutionName());
-        $this->setRoleName($builder->getRoleName());
+        $this->setID($builder->getID());
         $this->setJobTitle($builder->getJobTitle());
         $this->setJobDesc($builder->getJobDesc());
         $this->setPriorityLevel($builder->getPriorityLevel());
+        $this->setFilesPermissionsSum($builder->getFilesPermissionsSum());
+        $this->setFoldersPermissionsSum($builder->getFoldersPermissionsSum());
+        $this->setInstitutionsPermissionsSum($builder->getInstitutionsPermissionsSum());
+        $this->setPersonsPermissionsSum($builder->getPersonsPermissionsSum());
 
     }
     public static function Builder() : PersonRoleBuilder
@@ -28,19 +100,19 @@ class PersonRole
 
 
     /**
-     * @return string|null
+     * @return int|null
      */
-    public function getRoleName(): ?string
+    public function getID(): ?int
     {
-        return $this->role_name;
+        return $this->ID;
     }
 
     /**
-     * @param string|null $role_name
+     * @param int|null $ID
      */
-    public function setRoleName(?string $role_name): void
+    public function setID(?int $ID): void
     {
-        $this->role_name = $role_name;
+        $this->ID = $ID;
     }
 
     /**
@@ -115,11 +187,86 @@ class PersonRoleBuilder
 {
 
 
-    private ?string $role_name="";
+    private ?int $ID=0;
     private ?String $jobTitle="";
     private ?int $priorityLevel=0;
     private ?String $jobDesc="";
+    private ?int $filesPermissionsSum=0;
+    private ?int $personsPermissionsSum=0;
+    private ?int $foldersPermissionsSum=0;
+    private ?int $institutionsPermissionsSum=0;
 
+    /**
+     * @return int|null
+     */
+    public function getFilesPermissionsSum(): ?int
+    {
+        return $this->filesPermissionsSum;
+    }
+
+    /**
+     * @param int|null $filesPermissionsSum
+     */
+    public function setFilesPermissionsSum(?int $filesPermissionsSum): PersonRoleBuilder
+    {
+        $this->filesPermissionsSum = $filesPermissionsSum;
+        return $this;
+
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPersonsPermissionsSum(): ?int
+    {
+        return $this->personsPermissionsSum;
+    }
+
+    /**
+     * @param int|null $personsPermissionsSum
+     */
+    public function setPersonsPermissionsSum(?int $personsPermissionsSum): PersonRoleBuilder
+    {
+        $this->personsPermissionsSum = $personsPermissionsSum;
+        return $this;
+
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getFoldersPermissionsSum(): ?int
+    {
+        return $this->foldersPermissionsSum;
+    }
+
+    /**
+     * @param int|null $foldersPermissionsSum
+     */
+    public function setFoldersPermissionsSum(?int $foldersPermissionsSum): PersonRoleBuilder
+    {
+        $this->foldersPermissionsSum = $foldersPermissionsSum;
+        return $this;
+
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getInstitutionsPermissionsSum(): ?int
+    {
+        return $this->institutionsPermissionsSum;
+    }
+
+    /**
+     * @param int|null $institutionsPermissionsSum
+     */
+    public function setInstitutionsPermissionsSum(?int $institutionsPermissionsSum): PersonRoleBuilder
+    {
+        $this->institutionsPermissionsSum = $institutionsPermissionsSum;
+        return $this;
+
+    }
     private ?String $institution_name="";
 
     public function build():PersonRole
@@ -127,19 +274,19 @@ class PersonRoleBuilder
 
 
     /**
-     * @return string|null
+     * @return int|null
      */
-    public function getRoleName(): ?string
+    public function getID(): ?int
     {
-        return $this->role_name;
+        return $this->ID;
     }
 
     /**
-     * @param string|null $role_name
+     * @param int|null $ID
      */
-    public function setRoleName(?string $role_name): PersonRoleBuilder
+    public function setID(?int $ID): PersonRoleBuilder
     {
-        $this->role_name = $role_name;
+        $this->ID = $ID;
         return $this;
     }
 
