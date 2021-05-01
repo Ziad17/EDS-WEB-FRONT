@@ -118,19 +118,21 @@ class MainAction extends Action
     {
 
         $conn = $this->getDatabaseConnection();
-        $sql="SELECT institution_type FROM InstitutionType";
+        $sql="SELECT * FROM InstitutionType";
         $stmt = $this->getSingleStatement($sql, $conn);
         if ($stmt == false) {
             $error=sqlsrv_errors()[0];
             $this->closeConnection($conn);
-
             throw new SQLStatmentException($error['message']);
         }
         else {
             $array_of_types = array();
-            while ($row = sqlsrv_fetch_array($stmt)) {
-                $array_of_types[] = (string)$row[0];
-
+            while ($row = sqlsrv_fetch_object($stmt)) {
+                $id = (int)$row->ID;
+                $type = (string)$row->institution_type;
+                $desc = (string)$row->institution_type_description;
+                $type=new InstitutionType($id,$type,$desc);
+$array_of_types[]=$type;
             }
         }
         $this->closeConnection($conn);

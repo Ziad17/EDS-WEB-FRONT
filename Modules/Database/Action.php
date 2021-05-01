@@ -81,7 +81,6 @@ abstract class Action
         catch (Exception $e)
         {
             $error = sqlsrv_errors()[0];
-echo $error['message'];
             throw new SQLStatmentException($error['message']);
 
         }
@@ -114,12 +113,19 @@ echo $error['message'];
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
 
         if ($stmt == false) {
-            throw new SQLStatmentException("Couldn't execute this statement");
+            //TODO :PRODUCTION UNCOMMENT THIS
+            //$error="Couldn't execute this statement";
+            $error=sqlsrv_errors()[0]['message'];
+            $this->closeConnection($conn);
+            throw new SQLStatmentException($error);
         }
         if (sqlsrv_has_rows($stmt)) {
+            $this->closeConnection($conn);
             $row=sqlsrv_fetch_object($stmt);
             return true;
         }
+        $this->closeConnection($conn);
+
         return false;
     }
 
@@ -183,12 +189,12 @@ echo $error['message'];
 
     }
 
-    public function isEmployeeOfInstitution(string $getInstitutionName) : bool
+    public function isEmployeeOfInstitution(int $getInstitutionID) : bool
     {
 
         $conn = $this->getDatabaseConnection();
         $sql = "SELECT person_id FROM Employees WHERE person_id=? AND institution_id=? AND active=1";
-        $params = array($this->myPersonRef->getID(),$this->getInstitutionIDByName($getInstitutionName));
+        $params = array($this->myPersonRef->getID(),$getInstitutionID);
         $stmt = $this->getParameterizedStatement($sql, $conn, $params);
         if ($stmt == false ) {
             $this->closeConnection($conn);
@@ -292,6 +298,7 @@ echo $error['message'];
     {
 
         try {
+
             sqlsrv_close($conn);
         } catch (Exception $e) {
         }

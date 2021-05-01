@@ -24,8 +24,21 @@
                     <td>File Size :</td>
                   </tr>
                   <tr>
-                    <td>File Extantion :</td>
+                    <td>File Extension :</td>
                   </tr>
                 </tbody>
               </table>
         </div>
+
+
+
+        <!-- TO DELETE-->
+        <h1> testing paths</h1>
+
+        <a href="../Employees/Add.php">ADD EMPLOYEE</a>
+
+
+        <a href="../Employees/MyProfile.php">MY PROFILE</a>
+
+
+        <a href="../Employees/EditProfile.php">EDIT MY PROFILE</a>

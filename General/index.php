@@ -1,6 +1,11 @@
 <?php 
   //check if user coming From A Requset
-require_once 'Modules/Database/MainAction.php';
+require_once '../Modules/Database/MainAction.php';
+require_once '../Modules/Sessions/SessionManager.php';
+require_once '../Modules/Exceptions/' . 'SQLStatmentException.php';
+require_once '../Modules/Encryption/'."EncryptionManager.php";
+
+
 error_reporting(E_ERROR | E_PARSE);
 if(SessionManager::validateSession())
 {
@@ -70,10 +75,7 @@ if ($_SERVER['REQUEST_METHOD']== 'POST') {
       {
           //FIXME::handle errors on production
 
-          $FormErrors[]=$e->getMessage();
-          $FormErrors[]=$e->getFile();
-
-          $FormErrors[]=$e->getLine();
+         echo $e->getMessage();
           /*    header("HTTP/1.1 503 Not Found");
     exit();*/
 

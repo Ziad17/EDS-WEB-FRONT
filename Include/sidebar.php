@@ -1,18 +1,47 @@
 
 <?php
 
-require_once "./Modules/Database/PersonAction.php";
-require_once "./Modules/Sessions/SessionManager.php";
-require_once "./Modules/Business/Person.php";
-require_once "./Modules/File Managment/FileRepoHandler.php";
-require_once "./Modules/Database/FileAction.php";
+require_once '../Paths.php';
+
+require_once '../Include/headtag.php';
+require_once '../Modules/Database/MainAction.php';
+require_once '../Modules/Database/FileAction.php';
+require_once '../Modules/Database/PersonAction.php';
+require_once '../Modules/Database/InstitutionAction.php';
+require_once '../Modules/Sessions/SessionManager.php';
+require_once '../Modules/Exceptions/' . 'CannotCreateHigherEmployeeException.php';
+require_once '../Modules/Exceptions/' . 'ConnectionException.php';
+require_once '../Modules/Exceptions/' . 'DataNotFound.php';
+require_once '../Modules/Exceptions/' . 'DuplicateDataEntry.php';
+require_once '../Modules/Exceptions/' . 'FileHandlerException.php';
+require_once '../Modules/Exceptions/' . 'FileNotFoundException.php';
+require_once '../Modules/Exceptions/' . 'FolderUploadingSqlException.php';
+require_once '../Modules/Exceptions/' . 'InsertionError.php';
+require_once '../Modules/Exceptions/' . 'LogsError.php';
+require_once '../Modules/Exceptions/' . 'LowRoleForSuchActionException.php';
+require_once '../Modules/Exceptions/' . 'NoNotificationsFoundException.php';
+require_once '../Modules/Exceptions/' . 'NoPermissionsGrantedException.php';
+require_once '../Modules/Exceptions/' . 'PermissionsCriticalFail.php';
+require_once '../Modules/Exceptions/' . 'PersonHasNoRolesException.php';
+require_once '../Modules/Exceptions/' . 'PersonOrDeactivated.php';
+require_once '../Modules/Exceptions/' . 'SearchQueryInsuffecient.php';
+require_once '../Modules/Exceptions/' . 'SQLStatmentException.php';
+require_once '../Modules/FileManagement/'."FileRepoHandler.php";
+require_once '../Modules/Validation/'."PersonValidator.php";
+require_once '../Modules/Encryption/'."EncryptionManager.php";
+require_once '../Modules/Permissions/'."PersonPermissions.php";
+require_once '../Modules/Permissions/'."InstitutionsPermissions.php";
+require_once '../Modules/Business/'."Institution.php";
+require_once '../Modules/Business/'."Person.php";
+require_once '../Modules/Business/'."PersonRole.php";
+require_once '../Modules/Business/'."City.php";
 function signOut(){
     header("Location: index.php");
     header('Cache-Control: no-cache, must-revalidate');
     exit();
 }
 
-
+error_reporting(0);
 
 try
 {
@@ -115,7 +144,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
           </div>
 	        <ul  class="list-unstyled components mb-5">
 	          <li <?php if ($name === 'KfsDocs') {echo 'class="active"';};?>>
-              <a href="Home.php"><i class="fas fa-home"></i> Home</a>
+              <a href="../General/Home.php"><i class="fas fa-home"></i> Home</a>
 	          <li  <?php if ($name === 'Activity') {echo 'class="active"';};?>>
 	              <a href="Activity.php"><i class="fas fa-chart-line"></i> Activity</a>
 	          </li>
@@ -129,7 +158,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
                       {
                           for($i=0;$i<count($myRoles);$i++)
                           {
-                                  echo '<a class="drobli" href="institutions.php?institution='.htmlspecialchars($myRoles[$i]->getInstitutionName()).'"><i class="fas fa-university"></i>'.htmlspecialchars($myRoles[$i]->getInstitutionName()).'</a>';
+                                  echo '<a class="drobli" href="../institutions/View.php?institution='.htmlspecialchars($myRoles[$i]->getInstitutionName()).'"><i class="fas fa-university"></i>'.htmlspecialchars($myRoles[$i]->getInstitutionName()).'</a>';
                           }
                       }
                       else{
@@ -147,7 +176,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
 	          </li>
 
 	          <li <?php if ($name === 'MyProfile') {echo 'class="active"';};?>>
-              <a href="MyProfile.php"><i class="far fa-user"></i> My Profile</a>
+              <a href="../Employees/MyProfile.php"><i class="far fa-user"></i> My Profile</a>
 	          </li>
 	          <li>
               <a  href="#">

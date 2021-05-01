@@ -76,6 +76,7 @@ class InstitutionAction extends Action
         $logSQL = "INSERT INTO InstitutionActionLogs(person_id,institution_id,action_date,institution_permission_action_performed) VALUES(?,?,GETDATE(),?);";
         $logParams = array($this->myPersonRef->getID(), $InstitutionID, $actionPerformed);
         $logsStmt = $this->getParameterizedStatement($logSQL, $conn, $logParams);
+
         if ($logsStmt == false) {
             $this->closeConnection($conn);
             return false;
@@ -145,7 +146,9 @@ class InstitutionAction extends Action
         } catch (Exception $e) {
             throw new  NoPermissionsGrantedException('Institution View Permissions Is Not Granted');
         }
-    }   public function canEditInstitutionInfo(): bool
+    }
+
+    public function canEditInstitutionInfo(): bool
 {
     try {
         return $this->myInstitutionPermissions->getPermissionsFromBitArray($this->myInstitutionPermissions->EDIT_INSTITUTION);
@@ -170,7 +173,7 @@ class InstitutionAction extends Action
 
             sqlsrv_begin_transaction($con);
             $sql = "SET NOCOUNT ON;INSERT INTO Institution(institution_name,
-                        institution_type,
+                        institution_type_id,
                         institution_active,
                         institution_parent_id,
                         institution_website,
@@ -182,7 +185,7 @@ class InstitutionAction extends Action
                         ) VALUES(?,?,1,?,?,?,?,?,?,?); SELECT SCOPE_IDENTITY()";
             $params = array(
                 $institutionToCreate->getName(),
-                $institutionToCreate->getType(),
+                (int)$institutionToCreate->getType(),
 
                 $institutionToCreate->getParent(),
                 $institutionToCreate->getWebsite(),
@@ -206,8 +209,6 @@ class InstitutionAction extends Action
                 throw new InsertionError($error);
 
             }
-
-
             //ID THAT IS RETURNED
             $row = sqlsrv_fetch_array($stmt);
             $institution_created_ID = (int)$row[0];
@@ -234,6 +235,61 @@ class InstitutionAction extends Action
         return false;
     }
 
+    public function editInstitutionInfo(Institution $oldInstitutionInfo,Institution $newInstitutionInfo): bool
+    {
+        if($this->canEditInstitutionInfo() && $this->isEmployeeOfInstitution($oldInstitutionInfo->getID()))
+        {
+            if (!$this->isInstitutionExists($oldInstitutionInfo->getName())) {
+                throw new DataNotFound("Could not get the institution info");
+
+            }
+            $permission_value = 2 ** ($this->myInstitutionPermissions->EDIT_INSTITUTION);
+            $conn=$this->getDatabaseConnection();
+            sqlsrv_begin_transaction($conn);
+
+            $sql='UPDATE Institution SET institution_name=?,institution_type_id=?,institution_website=?,institution_img=?,primary_phone=?,secondary_phone=?,fax=?,email=? WHERE ID=?';
+            $params=array($newInstitutionInfo->getName(),
+                $newInstitutionInfo->getType(),
+                $newInstitutionInfo->getWebsite(),
+                $newInstitutionInfo->getInstitutionImg(),
+                $newInstitutionInfo->getPrimaryPhone(),
+                $newInstitutionInfo->getSecondaryPhone(),
+                $newInstitutionInfo->getFax(),
+                $newInstitutionInfo->getEmail(),
+                $oldInstitutionInfo->getID());
+            $stmt=$this->getParameterizedStatement($sql,$conn,$params);
+            if ($stmt == false) {
+                //TODO :PRODUCTION UNCOMMENT THIS
+                //$error="Could not Update Institution";
+                $error = sqlsrv_errors()[0]['message'];
+                sqlsrv_rollback($conn);
+                $this->closeConnection($conn);
+                throw new InsertionError($error);
+            }
+            if ($this->injectLog($permission_value, $oldInstitutionInfo->getID(), $conn) == false) {
+                //TODO :PRODUCTION UNCOMMENT THIS
+                //$error="Could Not Insert Institution Logs";
+                $error= sqlsrv_errors($conn)[0]['message'];
+                sqlsrv_rollback($conn);
+
+                $this->closeConnection($conn);
+                throw new LogsError($error);
+            }
+            sqlsrv_commit($conn);
+            $this->closeConnection($conn);
+            return true;
+
+        }
+        else
+        {
+            throw new NoPermissionsGrantedException("User does not have the permissions required for this process");
+        }
+
+
+
+
+    }
+
     public function getSingleInstitutionInfo(string $name): Institution
     {
         $con = $this->getDatabaseConnection();
@@ -245,13 +301,15 @@ class InstitutionAction extends Action
         $stmt = $this->getParameterizedStatement($sql, $con, $params);
         if ($stmt == false || !sqlsrv_has_rows($stmt)) {
             $this->closeConnection($conn);
-            throw new SQLStatmentException("Error fetching the required data");
+            throw new DataNotFound("Error fetching the required data");
         } else {
+
             $row = sqlsrv_fetch_object($stmt);
-            return Institution::Builder()
+
+            $institution= Institution::Builder()
                 ->setID($row->ID)
                 ->setName($row->institution_name)
-                ->setType($row->institution_type)
+                ->setTypeId($row->institution_type_id)
                 ->setActive($row->institution_active)
                 ->setParent($this->getInstitutionNameByID($row->institution_parent_id))
                 ->setLevel($row->institution_level)
@@ -263,6 +321,8 @@ class InstitutionAction extends Action
                 ->setWebsite((string)$row->institution_website)
                 ->build();
 
+            $this->closeConnection($conn);
+            return $institution;
         }
 
     }

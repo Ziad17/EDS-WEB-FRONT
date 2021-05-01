@@ -1,19 +1,14 @@
 <?php
 
+require_once '../Modules/Validation/'."PersonValidator.php";
+require_once '../Modules/Database/PersonAction.php';
+require_once '../Modules/FileManagement/'."FileRepoHandler.php";
+require_once '../Modules/Database/FileAction.php';
 
-require_once VALIDATION_BASE_PATH."/PersonValidator.php";
-require_once DATABASE_BASE_PATH."/PersonAction.php";
-require_once FILE_MANAGEMENT_BASE_PATH."/FileRepoHandler.php";
-require_once DATABASE_BASE_PATH."/FileAction.php";
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+
+
 error_reporting(E_ALL);
-function signOut(){
-    header("Location: index.php");
-    header('Cache-Control: no-cache, must-revalidate');
-    exit();
-}
 
 
 

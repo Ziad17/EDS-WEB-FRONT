@@ -2,12 +2,6 @@
 <?php
 
 
-require_once VALIDATION_BASE_PATH."/PersonValidator.php";
-require_once BUSINESS_BASE_PATH."/Person.php";
-require_once DATABASE_BASE_PATH."/MainAction.php";
-require_once SESSIONS_BASE_PATH."/SessionManager.php";
-require_once DATABASE_BASE_PATH."/InstitutionAction.php";
-
 /*
  * STEPS ON HOW THIS PAGE WORKS
  *
@@ -67,7 +61,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
         $email = $_POST['email'];
         $website = $_POST['website'];
         $institution_sup = $_POST['institution_sup'];
-        $institution_type = $_POST['institution_type'];
+        $institution_type_id = $_POST['institution_type'];
         //TODO:: CHECK WHETHER THE SESSION IS VALID
         unset($personRef);
         unset($institutionAction);
@@ -82,7 +76,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
             ->setEmail($email)
             ->setWebsite($website)
             ->setParent($institution_sup)
-            ->setType($institution_type)
+            ->setTypeId($institution_type_id)
             ->build();
 
         if($institutionAction->createInstitution($institutionToCreate))
@@ -172,9 +166,9 @@ if($_SERVER['REQUEST_METHOD']=='POST')
 
             foreach ($types as $type) {
 
-
-                $title=(string)$type;
-                echo "<option value=" . htmlspecialchars($title) . ">" . htmlspecialchars($title) . "</option>";
+                $id=(int)$type->getId();
+                $title=(string)$type->getType();
+                echo "<option value=" . htmlspecialchars($id) . ">" . htmlspecialchars($title) . "</option>";
             }
 
             ?>

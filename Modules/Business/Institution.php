@@ -7,7 +7,7 @@ class Institution
     //TODO:APPLY GENERICS
     private ?Int $ID;
     private ?String $name;
-    private ?String $type;
+    private ?int $type_id;
     private ?bool $active;
     private ?Int $level;
     private ?String $parent;
@@ -64,7 +64,7 @@ class Institution
         $this->setPrimaryPhone($builder->getPrimaryPhone());
         $this->setSecondaryPhone($builder->getSecondaryPhone());
         $this->setLevel($builder->getLevel());
-        $this->setType($builder->getType());
+        $this->setTypeID($builder->getTypeId());
         $this->setInstitutionImg($builder->getInstitutionImg());
         //FIXME:: ERROR HERE
         $this->setParent($builder->getParent());
@@ -93,11 +93,11 @@ class Institution
     }
 
     /**
-     * @return String
+     * @return int
      */
-    public function getType(): ?string
+    public function getType(): ?int
     {
-        return $this->type;
+        return $this->type_id;
     }
 
     /**
@@ -185,9 +185,9 @@ class Institution
     /**
      * @param String $type
      */
-    private function setType(?string $type): void
+    private function setTypeID(?int $type): void
     {
-        $this->type = $type;
+        $this->type_id = $type;
     }
 
     /**
@@ -261,7 +261,7 @@ class InstitutionBuilder
 {
     private ?Int $ID=0;
     private ?String $name="";
-    private ?String $type="";
+    private ?int $type_id=0;
     private ?bool $active=false;
     private ?Int $level=0;
     private ?String $parent="";
@@ -269,7 +269,7 @@ class InstitutionBuilder
     private ?String $fax="";
     private ?String $primaryPhone="";
     private ?String $secondaryPhone="";
-    private String $email="";
+    private ?String $email="";
     private ?string $website="";
     private ?string $institution_img="";
 
@@ -332,11 +332,11 @@ class InstitutionBuilder
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getType(): ?string
+    public function getTypeId(): ?int
     {
-        return $this->type;
+        return $this->type_id;
     }
 
     /**
@@ -424,11 +424,11 @@ class InstitutionBuilder
     }
 
     /**
-     * @param string $type
+     * @param int $type_id
      */
-    public function setType(?string $type): InstitutionBuilder
+    public function setTypeId(?int $type_id): InstitutionBuilder
     {
-        $this->type = $type;        return $this;
+        $this->type_id = $type_id;        return $this;
 
     }
 

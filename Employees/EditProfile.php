@@ -42,36 +42,20 @@ if(!SessionManager::validateSession())
     header('Cache-Control: no-cache, must-revalidate');
     exit();
 }
-
-
-
 ?>
   <body>
 		<div  class="wrapper d-flex align-items-stretch">
-
       <!-- ----------------------------- start  sidebar ---------------------------------------------->
-
             <?php require_once( '../Include/sidebar.php');?>
-
       <!-- ----------------------------- End  sidebar ---------------------------------------------->
-
         <!-- Page Content  -->
-
   <div id="content" class="p-4 p-md-5">
-
-
-
     <!----------------------------------- Start nav N 2-------------- --------------------------->
       <?php require_once( '../Include/nav2.php'); ?>
-
     <!----------------------------------- End nav N 2-------------- --------------------------->
-
       <!----------------------------------- Start nav N 3-------------- --------------------------->
-
       <?php require_once('../Include/nav3.php'); ?>
-
     <!----------------------------------- End nav N 3-------------- --------------------------->
-
     <!----------------------------------- Content -------------- --------------------------->
 
 		<div class="container">

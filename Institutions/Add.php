@@ -31,6 +31,8 @@ require_once '../Modules/Encryption/'."EncryptionManager.php";
 require_once '../Modules/Permissions/'."PersonPermissions.php";
 require_once '../Modules/Permissions/'."InstitutionsPermissions.php";
 require_once '../Modules/Business/'."Institution.php";
+require_once '../Modules/Business/'."InstitutionType.php";
+
 require_once '../Modules/Business/'."Person.php";
 require_once '../Modules/Business/'."PersonRole.php";
 require_once '../Modules/Business/'."City.php";
@@ -60,7 +62,7 @@ if(!SessionManager::validateSession())
 
       <!-- ----------------------------- start  sidebar ---------------------------------------------->
 
-        <?php require_once INCLUDE_BASE_PATH."/sidebar.php";?>
+        <?php require_once "../Include/sidebar.php";?>
 
       <!-- ----------------------------- End  sidebar ---------------------------------------------->
 
@@ -69,7 +71,7 @@ if(!SessionManager::validateSession())
   <div id="content" class="p-4 p-md-3">
       <!----------------------------------- Start nav N 3-------------- --------------------------->
         
-        <?php require_once INCLUDE_BASE_PATH."/nav3.php"; ?>
+        <?php require_once "../Include/nav3.php"; ?>
 
     <!----------------------------------- End nav N 3-------------- --------------------------->
 
@@ -77,7 +79,7 @@ if(!SessionManager::validateSession())
 
 		<div class="container">
 			<div class="row m-auto d-block">
-        <?php require_once INCLUDE_BASE_PATH."/Add-New-Institution-content.php"; ?>
+        <?php require_once "../Include/Add-New-Institution-content.php"; ?>
 			</div>					 
 
           <footer class="row">
@@ -89,7 +91,7 @@ if(!SessionManager::validateSession())
 
 	    </div>
       <?php 
-        require_once INCLUDE_BASE_PATH."/script.php";
+        require_once "../Include/script.php";
       ?>
       <script src="../js/jquery.dataTables.js"></script>
     <script type = "text/javascript">

@@ -1,14 +1,6 @@
 <?php
 
-require_once './../Paths.php';
-require_once VALIDATION_BASE_PATH."/PersonValidator.php";
-require_once BUSINESS_BASE_PATH."/Person.php";
-require_once BUSINESS_BASE_PATH."/Institution.php";
-require_once DATABASE_BASE_PATH."/InstitutionAction.php";
-require_once ENCRYPTION_BASE_PATH."/EncryptionManager.php";
 
-require_once DATABASE_BASE_PATH."/MainAction.php";
-require_once SESSIONS_BASE_PATH."/SessionManager.php";
 
 /*
  * STEPS ON HOW THIS PAGE WORKS
@@ -23,33 +15,35 @@ require_once SESSIONS_BASE_PATH."/SessionManager.php";
  * */
 
 //TODO:: uncomment
-//error_reporting(E_ERROR | E_PARSE);
+error_reporting(E_ALL);
 
 //FIXME::
 $name=$_GET['institution'];
-
 if(!isset($name) || trim($name)=="")
 {
     echo 'Nothing To Show';
     exit();
 }
-
-
 try {
-
 
     $person=Person::Builder()->setID((int)SessionManager::getID())->setEmail(SessionManager::getEmail())->build();
     $institutionAction = new InstitutionAction($person);
      $institution=$institutionAction->getSingleInstitutionInfo($name);
      $id=$institutionAction->getInstitutionIDByName($name);
-
-
     $bool1=$institutionAction->canEditInstitutionInfo();
-    $bool2=$institutionAction->isEmployeeOfInstitution($name);
+    $bool2=$institutionAction->isEmployeeOfInstitution($id);
     $canEdit=$bool1 && $bool2;
 
 
-} catch (Exception $e) {
+}
+
+catch (DataNotFound $Ee)
+{
+    echo 'Nothing To Show Wrong Institution';
+    exit();
+}
+catch (Exception $e) {
+
     //FIXME::HANDLE ERRORS
     echo $e->getMessage();
     $FormErrors[] = $e->getMessage();
@@ -79,7 +73,7 @@ if($_SERVER['REQUEST_METHOD'=='POST'])
 			    top: 0px;
 			    color: #343a40;
 			    font-size: 20px;
-			"  href="Add.php"><i class="fas fa-user-edit"></i></a>';
+			  "href="../Institutions/Edit.php?institution='.$institution->getName().'"><i class="fas fa-user-edit"></i></a>';
 
     }
     ?>
