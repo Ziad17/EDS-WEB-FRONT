@@ -144,10 +144,25 @@ if($_SERVER['REQUEST_METHOD']=='POST')
           </div>
 	        <ul  class="list-unstyled components mb-5">
 	          <li <?php if ($name === 'KfsDocs') {echo 'class="active"';};?>>
+<<<<<<< Updated upstream
               <a href="../General/Home.php"><i class="fas fa-home"></i> Home</a>
+=======
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+              <a href="../Home.php"><i class="fas fa-home"></i> Home</a>
+=======
+              <a href="../General/Home.php"><i class="fas fa-home"></i> Home</a>
+>>>>>>> 03e145f96d2ee3521755cd75fe625120fda6863c
+>>>>>>> Stashed changes
 	          <li  <?php if ($name === 'Activity') {echo 'class="active"';};?>>
 	              <a href="Activity.php"><i class="fas fa-chart-line"></i> Activity</a>
 	          </li>
+=======
+              <a href="Home.php"><i class="fas fa-home"></i> Home</a>
+<!-- 	          <li  <?php if ($name === 'Activity') {echo 'class="active"';};?>>
+	              <a href="Activity.php"><i class="fas fa-chart-line"></i> Activity</a>
+	          </li> -->
+>>>>>>> Stashed changes
 	          <li>
               <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fab fa-wpexplorer"></i> Institutions </a>
               <ul class="collapse list-unstyled" id="pageSubmenu">
@@ -178,14 +193,21 @@ if($_SERVER['REQUEST_METHOD']=='POST')
 	          <li <?php if ($name === 'MyProfile') {echo 'class="active"';};?>>
               <a href="../Employees/MyProfile.php"><i class="far fa-user"></i> My Profile</a>
 	          </li>
-	          <li>
+            <li <?php if ($name === 'Add-New-Person') {echo 'class="active"';};?>>
+              <a href="Add-New-Person.php"><i class="far fa-user"></i>  Add-New-Person</a>
+            </li>
+            </li>
+            <li <?php if ($name === 'Folder') {echo 'class="active"';};?>>
+              <a href="Folder.php"><i class="fas fa-folder-plus"></i>  Folder</a>
+            </li>
+<!-- 	          <li>
               <a  href="#">
                 <button onMouseOver="this.style.color='#f8b739'" onMouseOut="this.style.color='#f8b739'" type="button" class="btn " data-toggle="modal" data-target="#section">
                   <i class="fas fa-stream"></i>
                    Create new section
                 </button>
               </a>
-	          </li>
+	          </li> -->
 	        </ul>
 	      </div>
     	</nav>
